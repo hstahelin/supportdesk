@@ -14,6 +14,26 @@ Customer support teams often struggle with delayed response times, inconsistent 
 
 SupportDesk is intended for use by customer support teams across various industries, including technology, retail, finance, and more. The primary users will be customer support agents, team leads, and managers. Special considerations include the need for a user-friendly interface, real-time updates, and role-based access control to ensure that users only see the information relevant to their role.
 
+- **Agents**
+
+  - **Create, View, Edit Tickets**: Can create new support tickets, view assigned tickets, and update ticket status, priority or details.
+  - **Comment on Tickets**: Add comments to tickets they are working on or assigned to.
+  - **Access Knowledge Base**: Search and view articles in the Knowledge Base to resolve issues.
+
+- **Team Lead / Managers**
+
+  - **Full Dashboard Access**: View comprehensive team performance, including ticket statistics and agent activities.
+  - **Assign Tickets**: Can assign or reassign tickets to specific agents based on workload or expertise.
+  - **Prioritize and Escalate Tickets**: Ability to change ticket priority or escalate issues to higher levels agents.
+  - **View, Edit All Tickets**: Can view and edit any ticket in their org (Agents that report to them).
+  - **Comment on Tickets**: Add comments to any ticket and provide guidance or feedback to agents.
+  - **Manage Knowledge Base**: Create, edit, or delete articles in the Knowledge Base.
+
+- **Customer**
+  - **Submit Tickets**: Create new support tickets by providing details of their issues or questions.
+  - **View Ticket Status**: Track the status of their submitted tickets, including updates and resolutions.
+  - **Access Public Knowledge Base**: Search and view public articles in the Knowledge Base.
+
 ### Features
 
 - **Ticket Creation and Management**: Users can create new support tickets, including details like customer information, issue description, and priority level.
@@ -24,6 +44,7 @@ SupportDesk is intended for use by customer support teams across various industr
 - **Knowledge Base/FAQ**: A centralized repository of information that both agents and customers can access for self-service.
 - **Reporting and Analytics**: Comprehensive reports on ticket volume, response times, customer satisfaction, and team performance.
 - **Role-Based Access Control**: Different access levels for agents, team leads, and managers, ensuring data security and relevant visibility.
+  ![User Interaction](/images/UserInteraction.png)
 
 ## Implementation
 
@@ -40,8 +61,8 @@ SupportDesk is intended for use by customer support teams across various industr
 
 ### APIs
 
-- **Third-Party Email API**: For sending automated email notifications (e.g., SendGrid).
-- **Third-Party AI**: For sending automated responses (e.g., OpenAI).
+- **Third-Party Email API**: For sending automated email notifications (SendGrid: https://www.twilio.com/docs/sendgrid/for-developers/sending-email/quickstart-nodejs#nodejs).
+- **Third-Party AI**: For creating automated responses (OpenAI: https://platform.openai.com/docs/libraries/node-js-library).
 
 ### Sitemap
 
@@ -63,6 +84,7 @@ SupportDesk is intended for use by customer support teams across various industr
 ### Data
 
 - **SQL Diagram**
+  ![SQL Diagram](images/ER.Diagram.png)
 
 ### Endpoints
 
@@ -85,7 +107,7 @@ Authentication will be implemented using _TBD_. Users will need to sign in to ac
 
 - Set up project structure and environment.
 - Implement basic authentication (Sign Up, Login).
-- Design database schema and create initial migrations.
+- Create database schema and create initial migrations/seeds.
 
 ### Sprint 2: Core Features (Weeks 2-3)
 
