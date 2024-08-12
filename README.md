@@ -1,6 +1,4 @@
-# Project Title
-
-SupportDesk
+# SupportDesk
 
 ## Overview
 
@@ -40,7 +38,7 @@ SupportDesk is intended for use by customer support teams across various industr
 - **Ticket Prioritization**: Tickets can be prioritized based on factors such as urgency, customer importance, and issue type.
 - **Assignment and Escalation**: Tickets can be assigned to specific agents or teams, with the ability to escalate tickets if needed.
 - **Status Tracking**: Real-time tracking of ticket status, including updates on progress and resolution.
-- **Automated Responses**: Predefined responses to common issues, reducing response times for frequently asked questions.
+- **Automated Responses**: When a ticket is created, an automated response is created with first troubleshooting steps, based on the ticket description, reducing response times.
 - **Knowledge Base/FAQ**: A centralized repository of information that both agents and customers can access for self-service.
 - **Reporting and Analytics**: Comprehensive reports on ticket volume, response times, customer satisfaction, and team performance.
 - **Role-Based Access Control**: Different access levels for agents, team leads, and managers, ensuring data security and relevant visibility.
@@ -85,6 +83,9 @@ SupportDesk is intended for use by customer support teams across various industr
 
 - **SQL Diagram**
   ![SQL Diagram](images/ER.Diagram.png)
+- **ER Considerations**:
+  - **USER_ROLES**: A user could have multiple roles.
+  - **ROLES, STATUS & PRIORITIES**: Tables to store roles, status and priority options, making it easier to populate dropdowns or lists.
 
 ### Endpoints
 
@@ -99,7 +100,7 @@ SupportDesk is intended for use by customer support teams across various industr
 
 ### Auth
 
-Authentication will be implemented using _TBD_. Users will need to sign in to access most features, with role-based access control ensuring that each user can only access appropriate data.
+Authentication will be implemented using JWT. Users will need to sign in to access most features, with role-based access control ensuring that each user can only access appropriate data.
 
 ## Roadmap
 
