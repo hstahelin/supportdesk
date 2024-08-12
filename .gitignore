@@ -1,0 +1,32 @@
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage directory
+coverage/
+
+# Build files
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/
+
+# Generated files
+.next/
+out/

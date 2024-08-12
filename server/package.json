@@ -1,0 +1,21 @@
+{
+  "name": "supportdesk-server",
+  "version": "1.0.0",
+  "description": "Support Desk - Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:migrate": "knex migrate:latest",
+    "db:seed": "knex seed:run",
+    "start": "nodemon index.js"
+  },
+  "author": "Hugo Stahelin",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "knex": "^3.1.0",
+    "mysql2": "^3.11.0"
+  }
+}
