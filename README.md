@@ -52,7 +52,7 @@ SupportDesk is intended for use by customer support teams across various industr
 - **Frontend**: React.js for building dynamic user interfaces.
 - **Backend**: Node.js with Express for building the server-side logic.
 - **Database**: MySQL for managing relational data.
-- **Authentication**: TBD.
+- **Authentication**: Passport.js.
 - **Libraries**:
   - `Knex.js` for SQL query building.
   - `express-validator` for input validation.
@@ -100,7 +100,7 @@ SupportDesk is intended for use by customer support teams across various industr
 
 ### Auth
 
-Authentication will be implemented using JWT. Users will need to sign in to access most features, with role-based access control ensuring that each user can only access appropriate data.
+Authentication will be implemented using Passport.js. Users will need to sign in to access most features, with role-based access control ensuring that each user can only access appropriate data.
 
 ## Roadmap
 
