@@ -8,9 +8,11 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 
-app.use("/", (req, res) => {
-  res.send("SUPPORTDESK");
-});
+const ticketsRoutes = require("./routes/tickets-routes");
+const usersRoutes = require("./routes/users-routes");
+
+app.use("/tickets", ticketsRoutes);
+app.use("/users", usersRoutes);
 
 app.listen(PORT, () => {
   console.log(`running at http://localhost:${PORT}`);
