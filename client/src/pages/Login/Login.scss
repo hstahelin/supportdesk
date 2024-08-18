@@ -1,0 +1,26 @@
+@use "../../styles/partials/variables";
+@use "../../styles/partials/mixins";
+@use "../../styles/partials/globals";
+
+.container {
+  //   border: 2px solid red;
+  padding: 2rem 2rem;
+}
+
+.box {
+  //   border: 2px solid blue;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  //   border-radius: 5px;
+}
+
+.logo {
+  width: 3rem;
+  display: inline-block;
+}
+
+// .paper {
+//   background: linear-gradient(#42a5f5, #1565c0);
+// }

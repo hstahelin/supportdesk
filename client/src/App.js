@@ -1,12 +1,13 @@
 import "./App.scss";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login/Login";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<h1>Support Desk</h1>} />
+        <Route path="/" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
