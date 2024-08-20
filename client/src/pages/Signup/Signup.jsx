@@ -7,14 +7,18 @@ import {
   Typography,
   Divider,
   Stack,
+  Alert,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
 import { useState } from "react";
+import axios from "axios";
 import "./Signup.scss";
 
 function Signup() {
+  const navigate = useNavigate();
   const initialValues = {
     email: "",
     fname: "",
@@ -30,6 +34,7 @@ function Signup() {
     password: true,
     verifyPassword: true,
   });
+  const [registerError, setRegisterError] = useState(null);
 
   const handleChange = (e) => {
     setFormValues({
@@ -38,7 +43,7 @@ function Signup() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (
       !formValues.email ||
       !formValues.password ||
@@ -59,9 +64,20 @@ function Signup() {
       setIsFormValid({ ...isFormValid, verifyPassword: false });
       return;
     }
-    alert(
-      `email: ${formValues.email}, password: ${formValues.password}, verifyPassword: ${formValues.verifyPassword}`
-    );
+    try {
+      const createdUser = await axios.post(
+        "http://localhost:8080/auth/register",
+        {
+          first_name: formValues.fname,
+          last_name: formValues.lname,
+          email: formValues.email,
+          password: formValues.password,
+        }
+      );
+      navigate("/");
+    } catch (error) {
+      setRegisterError(error.response.data.message);
+    }
   };
 
   return (
@@ -149,6 +165,8 @@ function Signup() {
             error={!isFormValid.verifyPassword}
             helperText={!isFormValid.verifyPassword && "Passwords must match."}
           />
+          {registerError && <Alert severity="error">{registerError}</Alert>}
+
           <Button variant="contained" size="large" onClick={handleSubmit}>
             Sign Up
           </Button>

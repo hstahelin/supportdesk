@@ -8,20 +8,26 @@ import {
   Divider,
   Stack,
   Snackbar,
+  Alert,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-
+import axios from "axios";
 import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./Login.scss";
 
 function Login() {
+  const navigate = useNavigate();
+
   const initialValues = { email: "", password: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [isFormValid, setIsFormValid] = useState({
     email: true,
     password: true,
   });
+  const [loginError, setLoginError] = useState();
   const [openForgot, setOpenForgot] = useState(false);
 
   const handleOpenForgetPassword = () => {
@@ -41,7 +47,7 @@ function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (!formValues.email || !formValues.password) {
       setIsFormValid({
         email: formValues.email,
@@ -49,7 +55,18 @@ function Login() {
       });
       return;
     }
-    alert(`email: ${formValues.email}, password: ${formValues.password}`);
+    // alert(`email: ${formValues.email}, password: ${formValues.password}`);
+    try {
+      const response = await axios.post("http://localhost:8080/auth/login", {
+        email: formValues.email,
+        password: formValues.password,
+      });
+      navigate("/dashboard");
+      // console.log(response);
+    } catch (error) {
+      // console.error(error);
+      setLoginError(error.response.data.message);
+    }
   };
 
   return (
@@ -91,6 +108,7 @@ function Login() {
             error={!isFormValid.password}
             helperText={!isFormValid.password && "Password can not be blank."}
           />
+          {loginError && <Alert severity="error">{loginError}</Alert>}
           <Button variant="contained" size="large" onClick={handleSubmit}>
             Login
           </Button>
@@ -116,7 +134,7 @@ function Login() {
             open={openForgot}
             autoHideDuration={3000}
             onClose={handleCloseForgetPassword}
-            message="Not yet implemented."
+            message="Coming soon."
           />
         </Box>
       </Paper>
