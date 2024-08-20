@@ -9,7 +9,6 @@ const getAll = async (req, res) => {
     if (email) {
       query = query.where("created_email", email);
     }
-    console.log(query);
 
     const tickets = await query;
     res.status(200).json(tickets);

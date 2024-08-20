@@ -9,6 +9,7 @@ exports.seed = async function (knex) {
       manager_user_id: null,
       is_active: true,
       role_id: 2,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 2,
@@ -18,6 +19,7 @@ exports.seed = async function (knex) {
       manager_user_id: 1,
       is_active: true,
       role_id: 3,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 3,
@@ -27,6 +29,7 @@ exports.seed = async function (knex) {
       manager_user_id: 1,
       is_active: true,
       role_id: 3,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 4,
@@ -36,6 +39,7 @@ exports.seed = async function (knex) {
       manager_user_id: 2,
       is_active: true,
       role_id: 1,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 5,
@@ -45,6 +49,7 @@ exports.seed = async function (knex) {
       manager_user_id: 2,
       is_active: true,
       role_id: 1,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 6,
@@ -54,6 +59,7 @@ exports.seed = async function (knex) {
       manager_user_id: 2,
       is_active: true,
       role_id: 1,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 7,
@@ -63,6 +69,7 @@ exports.seed = async function (knex) {
       manager_user_id: 3,
       is_active: true,
       role_id: 1,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 8,
@@ -72,6 +79,7 @@ exports.seed = async function (knex) {
       manager_user_id: 3,
       is_active: true,
       role_id: 1,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 9,
@@ -81,6 +89,7 @@ exports.seed = async function (knex) {
       manager_user_id: 3,
       is_active: true,
       role_id: 1,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 10,
@@ -90,6 +99,7 @@ exports.seed = async function (knex) {
       manager_user_id: null,
       is_active: true,
       role_id: 4,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 11,
@@ -99,6 +109,7 @@ exports.seed = async function (knex) {
       manager_user_id: null,
       is_active: true,
       role_id: 4,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 12,
@@ -108,6 +119,7 @@ exports.seed = async function (knex) {
       manager_user_id: null,
       is_active: true,
       role_id: 4,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 13,
@@ -117,6 +129,7 @@ exports.seed = async function (knex) {
       manager_user_id: null,
       is_active: true,
       role_id: 4,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 14,
@@ -126,6 +139,7 @@ exports.seed = async function (knex) {
       manager_user_id: null,
       is_active: true,
       role_id: 4,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
     {
       user_id: 15,
@@ -135,6 +149,7 @@ exports.seed = async function (knex) {
       manager_user_id: null,
       is_active: true,
       role_id: 4,
+      password: "$2a$10$9f6RjhRnL7pSa6PkjlZ3u.kfmCFfM9StLYsoKuaK8o0UIKH3qTdKC",
     },
   ]);
 };
