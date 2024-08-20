@@ -7,7 +7,10 @@ import {
   Typography,
   Divider,
   Stack,
+  Snackbar,
 } from "@mui/material";
+import { Link } from "react-router-dom";
+
 import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
 import { useState } from "react";
 import "./Login.scss";
@@ -19,6 +22,17 @@ function Login() {
     email: true,
     password: true,
   });
+  const [openForgot, setOpenForgot] = useState(false);
+
+  const handleOpenForgetPassword = () => {
+    setOpenForgot(true);
+  };
+  const handleCloseForgetPassword = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenForgot(false);
+  };
 
   const handleChange = (e) => {
     setFormValues({
@@ -82,18 +96,28 @@ function Login() {
           </Button>
           <Divider />
           <Button
+            component={Link}
+            to="/signup"
             variant="contained"
             color="secondary"
-            onClick={() => alert("Go to SignUp")}
           >
             New user? Sign up
           </Button>
           <Button
+            variant="outlined"
             color="secondary"
-            onClick={() => alert("Go to password reset")}
+            size="small"
+            onClick={handleOpenForgetPassword}
           >
             Forgot your password?
           </Button>
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            open={openForgot}
+            autoHideDuration={3000}
+            onClose={handleCloseForgetPassword}
+            message="Not yet implemented."
+          />
         </Box>
       </Paper>
     </Container>

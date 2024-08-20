@@ -8,6 +8,8 @@ import {
   Divider,
   Stack,
 } from "@mui/material";
+import { Link } from "react-router-dom";
+
 import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
 import { useState } from "react";
 import "./Signup.scss";
@@ -151,13 +153,23 @@ function Signup() {
             Sign Up
           </Button>
           <Divider />
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => alert("Go to SignUp")}
+          <Stack
+            className="stack"
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
           >
-            Already have an account? Sign in
-          </Button>
+            <Typography variant="caption">Already have an account?</Typography>
+            <Button
+              component={Link}
+              to="/"
+              variant="contained"
+              color="secondary"
+            >
+              Sign in
+            </Button>
+          </Stack>
         </Box>
       </Paper>
     </Container>
