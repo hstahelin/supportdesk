@@ -35,8 +35,15 @@ const login = (req, res, next) => {
       if (err) {
         return res.status(500).json({ message: "Failed to log in user." });
       }
-
-      return res.json({ message: "Login successful", user });
+      const sanitizedUser = {
+        user_id: user.user_id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        role_id: user.role_id,
+        manager_user_id: user.manager_user_id,
+      };
+      return res.json({ message: "Login successful", user: sanitizedUser });
     });
   })(req, res, next);
 };

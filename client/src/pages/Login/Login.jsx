@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 import "./Login.scss";
 
-function Login() {
+function Login({ setUser }) {
   const navigate = useNavigate();
 
   const initialValues = { email: "", password: "" };
@@ -55,16 +55,16 @@ function Login() {
       });
       return;
     }
-    // alert(`email: ${formValues.email}, password: ${formValues.password}`);
     try {
       const response = await axios.post("http://localhost:8080/auth/login", {
         email: formValues.email,
         password: formValues.password,
       });
+      const user = response.data.user;
+      sessionStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
       navigate("/dashboard");
-      // console.log(response);
     } catch (error) {
-      // console.error(error);
       setLoginError(error.response.data.message);
     }
   };
