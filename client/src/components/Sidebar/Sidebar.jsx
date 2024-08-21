@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   Box,
@@ -26,6 +27,11 @@ import PersonOutlineTwoToneIcon from "@mui/icons-material/PersonOutlineTwoTone";
 import NotificationsNoneTwoToneIcon from "@mui/icons-material/NotificationsNoneTwoTone";
 import ImportContactsTwoToneIcon from "@mui/icons-material/ImportContactsTwoTone";
 import LogoutTwoToneIcon from "@mui/icons-material/LogoutTwoTone";
+
+import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
+
+import UserMenu from "../UserMenu/UserMenu";
+import "./Sidebar.scss";
 
 const drawerWidth = 220;
 
@@ -103,7 +109,7 @@ function Sidebar({ Content }) {
     console.error("No user found.");
   }
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -130,13 +136,15 @@ function Sidebar({ Content }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div">
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} noWrap>
             {user.first_name} {user.last_name} Dashboard
           </Typography>
+          <UserMenu />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
+          <img src={SupportDeskIcon} alt="" className="sidebar-logo" />
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
@@ -147,7 +155,12 @@ function Sidebar({ Content }) {
         </DrawerHeader>
         <Divider />
         <List>
-          <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItem
+            disablePadding
+            sx={{ display: "block", color: "primary.dark" }}
+            component={Link}
+            to="/dashboard"
+          >
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -169,7 +182,12 @@ function Sidebar({ Content }) {
               <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItem
+            disablePadding
+            sx={{ display: "block", color: "primary.dark" }}
+            component={Link}
+            to="/dashboard/tickets"
+          >
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -192,7 +210,12 @@ function Sidebar({ Content }) {
             </ListItemButton>
           </ListItem>
 
-          <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItem
+            disablePadding
+            sx={{ display: "block", color: "primary.dark" }}
+            component={Link}
+            to="/dashboard/users"
+          >
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -215,7 +238,12 @@ function Sidebar({ Content }) {
             </ListItemButton>
           </ListItem>
 
-          <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItem
+            disablePadding
+            sx={{ display: "block", color: "primary.dark" }}
+            component={Link}
+            to="/dashboard/notifications"
+          >
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -241,7 +269,12 @@ function Sidebar({ Content }) {
             </ListItemButton>
           </ListItem>
 
-          <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItem
+            disablePadding
+            sx={{ display: "block", color: "primary.dark" }}
+            component={Link}
+            to="/dashboard/kb"
+          >
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -269,7 +302,10 @@ function Sidebar({ Content }) {
         </List>
         <Divider />
         <List>
-          <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItem
+            disablePadding
+            sx={{ display: "block", color: "error.light" }}
+          >
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -295,7 +331,6 @@ function Sidebar({ Content }) {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {/* <MyTickets /> */}
         <Content />
       </Box>
     </Box>

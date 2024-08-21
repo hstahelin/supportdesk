@@ -66,15 +66,13 @@ function Signup() {
     }
     try {
       // eslint-disable-next-line
-      const createdUser = await axios.post(
-        "http://localhost:8080/auth/register",
-        {
-          first_name: formValues.fname,
-          last_name: formValues.lname,
-          email: formValues.email,
-          password: formValues.password,
-        }
-      );
+      // const createdUser =
+      await axios.post("http://localhost:8080/auth/register", {
+        first_name: formValues.fname,
+        last_name: formValues.lname,
+        email: formValues.email,
+        password: formValues.password,
+      });
       navigate("/");
     } catch (error) {
       setRegisterError(error.response.data.message);
