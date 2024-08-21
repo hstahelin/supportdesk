@@ -65,6 +65,7 @@ function Signup() {
       return;
     }
     try {
+      // eslint-disable-next-line
       const createdUser = await axios.post(
         "http://localhost:8080/auth/register",
         {
