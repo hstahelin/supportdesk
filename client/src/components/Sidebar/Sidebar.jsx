@@ -16,6 +16,7 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
+  Collapse,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
@@ -27,6 +28,8 @@ import PersonOutlineTwoToneIcon from "@mui/icons-material/PersonOutlineTwoTone";
 import NotificationsNoneTwoToneIcon from "@mui/icons-material/NotificationsNoneTwoTone";
 import ImportContactsTwoToneIcon from "@mui/icons-material/ImportContactsTwoTone";
 import LogoutTwoToneIcon from "@mui/icons-material/LogoutTwoTone";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
 import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
 
@@ -112,6 +115,8 @@ function Sidebar({ Content }) {
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
+    setOpen(false);
+    setOpenTickets(false);
   };
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -122,6 +127,14 @@ function Sidebar({ Content }) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+    setOpenTickets(false);
+  };
+
+  const [openTickets, setOpenTickets] = useState(false);
+
+  const handleClickTickets = () => {
+    handleDrawerOpen();
+    setOpenTickets(!openTickets);
   };
 
   return (
@@ -189,11 +202,11 @@ function Sidebar({ Content }) {
               <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
+
+          {/* TICKETS */}
           <ListItem
             disablePadding
             sx={{ display: "block", color: "primary.dark" }}
-            component={Link}
-            to="/dashboard/tickets"
           >
             <ListItemButton
               sx={{
@@ -201,8 +214,7 @@ function Sidebar({ Content }) {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              selected={selectedIndex === 1}
-              onClick={(event) => handleListItemClick(event, 1)}
+              onClick={handleClickTickets}
             >
               <Tooltip title="Tickets">
                 <ListItemIcon
@@ -216,9 +228,80 @@ function Sidebar({ Content }) {
                 </ListItemIcon>
               </Tooltip>
               <ListItemText primary="Tickets" sx={{ opacity: open ? 1 : 0 }} />
+              {open && (openTickets ? <ExpandLess /> : <ExpandMore />)}
             </ListItemButton>
           </ListItem>
+          {/* NEW */}
+          <Collapse in={openTickets} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {/* <ListItem
+                disablePadding
+                sx={{ display: "block", color: "primary.dark", pl: 4 }}
+                component={Link}
+                to="/dashboard/tickets"
+              > */}
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 10,
+                }}
+                selected={selectedIndex === 5}
+                onClick={(event) => handleListItemClick(event, 5)}
+                component={Link}
+                to="/dashboard/tickets"
+              >
+                {/* <Tooltip title="All Tickets">
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <ConfirmationNumberTwoToneIcon />
+                  </ListItemIcon>
+                </Tooltip> */}
+                <ListItemText
+                  primary="All Tickets"
+                  sx={{ opacity: open ? 1 : 0, color: "primary.dark" }}
+                />
+              </ListItemButton>
 
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 10,
+                }}
+                selected={selectedIndex === 6}
+                onClick={(event) => handleListItemClick(event, 6)}
+                component={Link}
+                to="/dashboard/createticket"
+              >
+                {/* <Tooltip title="All Tickets">
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <ConfirmationNumberTwoToneIcon />
+                  </ListItemIcon>
+                </Tooltip> */}
+                <ListItemText
+                  primary="Create Ticket"
+                  sx={{ opacity: open ? 1 : 0, color: "primary.dark" }}
+                />
+              </ListItemButton>
+
+              {/* </ListItem> */}
+            </List>
+            <Divider />
+          </Collapse>
+          {/* NEW */}
+          {/* TICKETS */}
           <ListItem
             disablePadding
             sx={{ display: "block", color: "primary.dark" }}

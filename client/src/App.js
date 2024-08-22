@@ -1,52 +1,60 @@
-import "./App.scss";
-
+import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import React, { useState } from "react";
 import { ColorModeProvider } from "./contexts/ColorModeContext";
 import { ThemeProvider } from "./themes/ThemeProvider";
+import CircularProgress from "@mui/material/CircularProgress";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import Overview from "./components/Overview/Overview";
-import MyTickets from "./components/MyTickets/MyTickets";
 import NotFound from "./pages/NotFound/NotFound";
-import Users from "./components/Users/Users";
-import Notifications from "./components/Notifications/Notifications";
-import KB from "./components/KB/KB";
+import "./App.scss";
+import CreateTicket from "./components/CreateTicket/CreateTicket";
+
+const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
+const Overview = lazy(() => import("./components/Overview/Overview"));
+const MyTickets = lazy(() => import("./components/MyTickets/MyTickets"));
+const Users = lazy(() => import("./components/Users/Users"));
+const Notifications = lazy(() =>
+  import("./components/Notifications/Notifications")
+);
+const KB = lazy(() => import("./components/KB/KB"));
 
 function App() {
-  // eslint-disable-next-line
-  const [user, setUser] = useState(null);
-
   return (
     <ColorModeProvider>
       <ThemeProvider>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Login setUser={setUser} />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route
-              path="/dashboard"
-              element={<Dashboard Content={Overview} />}
-            />
-            <Route
-              path="/dashboard/tickets"
-              element={<Dashboard Content={MyTickets} />}
-            />
-            <Route
-              path="/dashboard/users"
-              element={<Dashboard Content={Users} />}
-            />
-            <Route
-              path="/dashboard/notifications"
-              element={<Dashboard Content={Notifications} />}
-            />
-            <Route path="/dashboard/kb" element={<Dashboard Content={KB} />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<CircularProgress />}>
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/dashboard/*" element={<DashboardRoutes />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </ThemeProvider>
     </ColorModeProvider>
+  );
+}
+
+function DashboardRoutes() {
+  return (
+    <Routes>
+      <Route path="" element={<Dashboard Content={Overview} />} />
+      <Route path="tickets" element={<Dashboard Content={MyTickets} />} />
+      <Route
+        path="createticket"
+        element={<Dashboard Content={CreateTicket} />}
+      />
+
+      <Route path="users" element={<Dashboard Content={Users} />} />
+      <Route
+        path="notifications"
+        element={<Dashboard Content={Notifications} />}
+      />
+      <Route path="kb" element={<Dashboard Content={KB} />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
