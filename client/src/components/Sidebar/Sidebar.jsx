@@ -108,6 +108,11 @@ function Sidebar({ Content }) {
   } else {
     console.error("No user found.");
   }
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -167,6 +172,8 @@ function Sidebar({ Content }) {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              selected={selectedIndex === 0}
+              onClick={(event) => handleListItemClick(event, 0)}
             >
               <Tooltip title="Home">
                 <ListItemIcon
@@ -194,6 +201,8 @@ function Sidebar({ Content }) {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              selected={selectedIndex === 1}
+              onClick={(event) => handleListItemClick(event, 1)}
             >
               <Tooltip title="Tickets">
                 <ListItemIcon
@@ -222,6 +231,8 @@ function Sidebar({ Content }) {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              selected={selectedIndex === 2}
+              onClick={(event) => handleListItemClick(event, 2)}
             >
               <Tooltip title="Users">
                 <ListItemIcon
@@ -250,6 +261,8 @@ function Sidebar({ Content }) {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              selected={selectedIndex === 3}
+              onClick={(event) => handleListItemClick(event, 3)}
             >
               <Tooltip title="Notifications">
                 <ListItemIcon
@@ -281,6 +294,8 @@ function Sidebar({ Content }) {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              selected={selectedIndex === 4}
+              onClick={(event) => handleListItemClick(event, 4)}
             >
               <Tooltip title="Knowledge Base">
                 <ListItemIcon
