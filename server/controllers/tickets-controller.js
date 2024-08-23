@@ -47,8 +47,6 @@ const create = async (req, res) => {
     } = req.body;
 
     const newTicket = { title, description, contact_user_id };
-    console.log(newTicket);
-
     const ticketResult = await trx("tickets").insert(newTicket);
     const newTicketId = ticketResult[0];
 

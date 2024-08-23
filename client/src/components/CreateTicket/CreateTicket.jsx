@@ -19,6 +19,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Alert,
 } from "@mui/material";
 import "./CreateTicket.scss";
 
@@ -41,6 +42,12 @@ function CreateTicket() {
     user_id: user.user_id,
   };
   const [formValues, setFormValues] = useState(initialValues);
+  const [isFormValid, setIsFormValid] = useState({
+    title: true,
+    description: true,
+  });
+
+  const [submitError, setSubmitError] = useState(null);
 
   const handleChange = (e) => {
     setFormValues({
@@ -50,16 +57,26 @@ function CreateTicket() {
   };
 
   const handleSubmit = async (e) => {
-    console.log(formValues);
+    const isFieldValid = (field) => {
+      return Boolean(field.trim());
+    };
+    if (
+      !isFieldValid(formValues.title) ||
+      !isFieldValid(formValues.description)
+    ) {
+      setIsFormValid({
+        title: isFieldValid(formValues.title),
+        description: isFieldValid(formValues.description),
+      });
+      return;
+    }
     try {
-      const response = await axios.post(
-        "http://localhost:8080/tickets",
-        formValues
-      );
-      console.log(response);
+      // const response =
+      await axios.post("http://localhost:8080/tickets", formValues);
       navigate("/dashboard/tickets");
     } catch (error) {
       console.error(error);
+      setSubmitError("Something went wrong, try again.");
     }
   };
 
@@ -86,6 +103,8 @@ function CreateTicket() {
             placeholder="Brief summary of the issue"
             value={formValues.title}
             onChange={handleChange}
+            error={!isFormValid.title}
+            helperText={!isFormValid.title ? "Title is required." : ""}
             required
           />
           <TextField
@@ -97,6 +116,10 @@ function CreateTicket() {
             placeholder="Describe the issue in detail, including any steps to reproduce it."
             value={formValues.description}
             onChange={handleChange}
+            error={!isFormValid.description}
+            helperText={
+              !isFormValid.description ? "Description is required." : ""
+            }
             required
           />
           <FormControl>
@@ -137,6 +160,7 @@ function CreateTicket() {
             </Select>
           </FormControl>
           <Divider />
+          {submitError && <Alert severity="error">{submitError}</Alert>}
           <Stack
             spacing={2}
             direction={{ xs: "column", sm: "row" }}

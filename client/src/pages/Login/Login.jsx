@@ -60,7 +60,6 @@ function Login() {
         email: formValues.email,
         password: formValues.password,
       });
-      console.log(response);
 
       const user = response.data.user;
       sessionStorage.setItem("user", JSON.stringify(user));
