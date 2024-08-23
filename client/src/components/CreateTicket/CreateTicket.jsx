@@ -1,5 +1,6 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   Box,
   Typography,
@@ -7,10 +8,61 @@ import {
   Link,
   Paper,
   Divider,
+  TextField,
+  Stack,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  Radio,
+  FormControlLabel,
+  Button,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import "./CreateTicket.scss";
 
 function CreateTicket() {
+  let user = null;
+  const userJson = sessionStorage.getItem("user");
+  if (userJson) {
+    user = JSON.parse(userJson);
+  } else {
+    console.error("No user found.");
+  }
+
+  const navigate = useNavigate();
+
+  const initialValues = {
+    title: "",
+    description: "",
+    priority: 3,
+    assign: "",
+    user_id: user.user_id,
+  };
+  const [formValues, setFormValues] = useState(initialValues);
+
+  const handleChange = (e) => {
+    setFormValues({
+      ...formValues,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    console.log(formValues);
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/tickets",
+        formValues
+      );
+      console.log(response);
+      navigate("/dashboard/tickets");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
@@ -22,7 +74,94 @@ function CreateTicket() {
 
       <Paper elevation={4} square={false}>
         <Divider />
-        <Typography>New Ticket</Typography>
+        <Typography variant="h5" p={2}>
+          Create New Ticket
+        </Typography>
+        <Stack spacing={2} p={4}>
+          <TextField
+            id="title"
+            name="title"
+            label="Title"
+            variant="outlined"
+            placeholder="Brief summary of the issue"
+            value={formValues.title}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            id="description"
+            name="description"
+            label="Description"
+            multiline
+            rows={8}
+            placeholder="Describe the issue in detail, including any steps to reproduce it."
+            value={formValues.description}
+            onChange={handleChange}
+            required
+          />
+          <FormControl>
+            <FormLabel id="priority-group-label">Priority</FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="priority-group-label"
+              name="priority"
+              value={formValues.priority}
+              onChange={handleChange}
+            >
+              <FormControlLabel value="3" control={<Radio />} label="Low" />
+              <FormControlLabel
+                value="2"
+                control={<Radio color="warning" />}
+                label="Medium"
+              />
+              <FormControlLabel
+                value="1"
+                control={<Radio color="error" />}
+                label="High"
+              />
+            </RadioGroup>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="assign-label">Assign to</InputLabel>
+            <Select
+              labelId="assign-label"
+              id="assign"
+              name="assign"
+              value={formValues.assign}
+              label="Assign to"
+              onChange={handleChange}
+            >
+              <MenuItem value="1">Bob Brown</MenuItem>
+              <MenuItem value="2">Eve Martinez</MenuItem>
+              <MenuItem value="3">Grace Miller</MenuItem>
+            </Select>
+          </FormControl>
+          <Divider />
+          <Stack
+            spacing={2}
+            direction={{ xs: "column", sm: "row" }}
+            justifyContent="flex-end"
+            alignItems="stretch"
+          >
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => navigate(-1)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setFormValues(initialValues)}
+            >
+              Clear
+            </Button>
+            <Button variant="contained" onClick={handleSubmit}>
+              Create
+            </Button>
+          </Stack>
+        </Stack>
       </Paper>
     </Box>
   );

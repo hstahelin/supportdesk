@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 import "./Login.scss";
 
-function Login({ setUser }) {
+function Login() {
   const navigate = useNavigate();
 
   const initialValues = { email: "", password: "" };
@@ -60,11 +60,15 @@ function Login({ setUser }) {
         email: formValues.email,
         password: formValues.password,
       });
+      console.log(response);
+
       const user = response.data.user;
       sessionStorage.setItem("user", JSON.stringify(user));
-      setUser(user);
+      // setUser(user);
       navigate("/dashboard");
     } catch (error) {
+      // console.log(error);
+
       setLoginError(error.response.data.message);
     }
   };
