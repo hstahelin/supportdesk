@@ -7,6 +7,7 @@ const {
 const router = express.Router();
 const usersController = require("../controllers/users-controller");
 
-router.route("/").get(ensureAuthenticated, ensureAdmin, usersController.getAll);
+// router.route("/").get(ensureAuthenticated, ensureAdmin, usersController.getAll);
+router.route("/").get(usersController.getAll);
 
 module.exports = router;

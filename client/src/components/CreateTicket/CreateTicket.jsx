@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -80,6 +80,21 @@ function CreateTicket() {
     }
   };
 
+  const [agents, setAgents] = useState([]);
+  const fetchAgents = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/users", {
+        params: { role: "Agent" },
+      });
+
+      setAgents(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchAgents();
+  }, []);
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
@@ -154,9 +169,11 @@ function CreateTicket() {
               label="Assign to"
               onChange={handleChange}
             >
-              <MenuItem value="1">Bob Brown</MenuItem>
-              <MenuItem value="2">Eve Martinez</MenuItem>
-              <MenuItem value="3">Grace Miller</MenuItem>
+              {agents.map((agent) => (
+                <MenuItem key={agent.user_id} value={agent.user_id}>
+                  {agent.user_name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <Divider />
