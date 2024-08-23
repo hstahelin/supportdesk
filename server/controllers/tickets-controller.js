@@ -83,9 +83,29 @@ const create = async (req, res) => {
   }
 };
 
+const getOne = async (req, res) => {
+  try {
+    const ticketId = req.params.id;
+    const ticketFound = await knex("tickets_current")
+      .where("ticket_id", ticketId)
+      .first();
+    if (!ticketFound) {
+      return res.status(404).json({
+        message: `Ticket ID ${ticketId} not found`,
+      });
+    }
+    res.status(200).json(ticketFound);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to retrieve Ticket: ${error.message}`,
+    });
+  }
+};
+
 module.exports = {
   getAll,
   getStatusSummary,
   getPrioritySummary,
   create,
+  getOne,
 };

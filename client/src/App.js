@@ -8,6 +8,7 @@ import Signup from "./pages/Signup/Signup";
 import NotFound from "./pages/NotFound/NotFound";
 import "./App.scss";
 import CreateTicket from "./components/CreateTicket/CreateTicket";
+import TicketDetails from "./components/TicketDetails/TicketDetails";
 
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const Overview = lazy(() => import("./components/Overview/Overview"));
@@ -42,6 +43,10 @@ function DashboardRoutes() {
     <Routes>
       <Route path="" element={<Dashboard Content={Overview} />} />
       <Route path="tickets" element={<Dashboard Content={MyTickets} />} />
+      <Route
+        path="tickets/:id"
+        element={<Dashboard Content={TicketDetails} />}
+      />
       <Route
         path="createticket"
         element={<Dashboard Content={CreateTicket} />}

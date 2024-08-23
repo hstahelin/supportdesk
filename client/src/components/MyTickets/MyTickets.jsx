@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   Box,
   Chip,
@@ -14,6 +16,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import "./MyTickets.scss";
 
 function MyTickets({ user }) {
+  const navigate = useNavigate();
+
   const userJson = sessionStorage.getItem("user");
   if (userJson) {
     user = JSON.parse(userJson);
@@ -58,7 +62,7 @@ function MyTickets({ user }) {
   }, []);
 
   const ticketDetails = (ticketId) => {
-    alert(`TICKET: ${ticketId}`);
+    navigate(`/dashboard/tickets/${ticketId}`);
   };
   const columns = [
     {
