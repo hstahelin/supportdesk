@@ -5,14 +5,26 @@ exports.seed = async function (knex) {
       ticket_id: 1,
       comments: "Need to know if it is a Mac or Windows PC.",
       comments_by: 4,
-      created_date: "2024-09-01 10:05:00",
+      created_date: "2024-08-01 10:06:30",
     },
     {
       ticket_id: 1,
       comments:
-        "Received your message, will follow up with the information by the end of the day or tomorrow.",
+        "Received your message, will follow up with the information later today.",
       comments_by: 10,
-      created_date: "2024-09-02 10:05:00",
+      created_date: "2024-08-01 10:09:30",
+    },
+    {
+      ticket_id: 1,
+      comments: "System is MacBook Pro.",
+      comments_by: 10,
+      created_date: "2024-08-01 11:15:30",
+    },
+    {
+      ticket_id: 1,
+      comments: "Need to escalate to VPN agent.",
+      comments_by: 4,
+      created_date: "2024-08-01 11:22:00",
     },
     {
       ticket_id: 2,

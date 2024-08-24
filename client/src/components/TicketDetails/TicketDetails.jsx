@@ -1,4 +1,5 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+
 import {
   Box,
   Typography,
@@ -19,8 +20,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import TicketComments from "../TicketComments/TicketComments";
 import { formatDate } from "../../utils/utils";
+import TicketHistory from "../TicketHistory/TicketHistory";
 
 function TicketDetails() {
+  const navigate = useNavigate();
+  let user = null;
+  const userJson = sessionStorage.getItem("user");
+  if (userJson) {
+    user = JSON.parse(userJson);
+  } else {
+    console.error("No user found.");
+  }
   const { id } = useParams();
   const [ticketInfo, setTicketInfo] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,7 +41,7 @@ function TicketDetails() {
       setTicketInfo(response.data);
     } catch (error) {
       console.error(error);
-      setErrorMessage(error.response.data.message);
+      setErrorMessage(error.response?.data?.message || "An error occurred");
     }
   }
 
@@ -39,6 +49,21 @@ function TicketDetails() {
     fetchTicketInfo();
   }, [id]);
 
+  async function addComment(newComment) {
+    try {
+      await axios.post(`http://localhost:8080/tickets/${id}/comments`, {
+        comments: newComment,
+        comments_by: user.user_id,
+      });
+      fetchTicketInfo();
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        error.response?.data?.message ||
+          "An error occurred while adding the comment"
+      );
+    }
+  }
   //   function formatDate(date) {
   //     const dateObj = new Date(date);
   //     return dateObj.toISOString().split("T")[0];
@@ -212,16 +237,17 @@ function TicketDetails() {
                   </Grid>
                 </CardContent>
               </Card>
-              <TicketComments ticketId={id} />
+              <TicketComments ticketId={id} addComment={addComment} />
               {/* <Card>
                 <CardHeader title="Comments" className="card-header" />
               </Card> */}
             </Stack>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Card>
+            <TicketHistory />
+            {/* <Card>
               <CardHeader title="History" className="card-header" />
-            </Card>
+            </Card> */}
           </Grid>
         </Grid>
       </Paper>

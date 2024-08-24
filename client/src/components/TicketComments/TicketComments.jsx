@@ -15,9 +15,11 @@ import "./TicketComments.scss";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { formatDate } from "../../utils/utils";
+import NewComment from "../NewComment/NewComment";
 
-function TicketComments({ ticketId }) {
+function TicketComments({ ticketId, addComment }) {
   const [comments, setComments] = useState([]);
+  const [trigger, setTrigger] = useState(false);
 
   async function fetchComments() {
     try {
@@ -25,7 +27,6 @@ function TicketComments({ ticketId }) {
         `http://localhost:8080/tickets/${ticketId}/comments`
       );
       setComments(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -33,7 +34,12 @@ function TicketComments({ ticketId }) {
 
   useEffect(() => {
     fetchComments();
-  }, [ticketId]);
+  }, [ticketId, trigger]);
+
+  async function handleAddComment(comment) {
+    await addComment(comment);
+    setTrigger((prev) => !prev);
+  }
   return (
     <Card>
       <CardHeader
@@ -73,7 +79,7 @@ function TicketComments({ ticketId }) {
           </ListItem> */}
         </List>
         <Divider />
-        ADD COMMENT
+        <NewComment addComment={handleAddComment} />
       </CardContent>
     </Card>
   );

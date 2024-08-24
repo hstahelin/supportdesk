@@ -109,8 +109,31 @@ const getComments = async (req, res) => {
       .where("ticket_id", ticketId)
       .orderBy("created_date", "desc");
     res.status(200).json(comments);
-  } catch (err) {
-    res.status(400).send(`Error retrieving comments: ${err}`);
+  } catch (error) {
+    res.status(400).send(`Error retrieving comments: ${error}`);
+  }
+};
+
+const createComment = async (req, res) => {
+  try {
+    const { comments, comments_by } = req.body;
+    const ticketId = req.params.id;
+    const newComment = {
+      comments,
+      comments_by,
+      ticket_id: ticketId,
+    };
+    const commentResult = await knex("comments").insert(newComment);
+    const newCommentId = commentResult[0];
+    const createdComment = await knex("comments")
+      .where({ id: newCommentId })
+      .first();
+
+    res.status(201).json(createdComment);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to create new Comment: ${error}`,
+    });
   }
 };
 
@@ -121,4 +144,5 @@ module.exports = {
   create,
   getOne,
   getComments,
+  createComment,
 };

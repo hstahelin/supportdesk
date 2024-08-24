@@ -66,8 +66,6 @@ function Login() {
       // setUser(user);
       navigate("/dashboard");
     } catch (error) {
-      // console.log(error);
-
       setLoginError(error.response.data.message);
     }
   };

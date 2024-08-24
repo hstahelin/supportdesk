@@ -435,5 +435,33 @@ exports.seed = async function (knex) {
       status_id: 1,
       assigned_user_id: 7,
     },
+
+    // Change to In progress
+    {
+      ticket_id: 1,
+      change_date: "2024-08-01 10:05:00",
+      changed_by: 4,
+      priority_id: 3,
+      status_id: 2,
+      assigned_user_id: 4,
+    },
+    // Change to Medium
+    {
+      ticket_id: 1,
+      change_date: "2024-08-01 11:20:00",
+      changed_by: 4,
+      priority_id: 2,
+      status_id: 2,
+      assigned_user_id: 4,
+    },
+    // Change to Escalated
+    {
+      ticket_id: 1,
+      change_date: "2024-08-01 11:21:00",
+      changed_by: 4,
+      priority_id: 2,
+      status_id: 3,
+      assigned_user_id: 4,
+    },
   ]);
 };

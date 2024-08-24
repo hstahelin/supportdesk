@@ -33,3 +33,10 @@ export function formatDate(date) {
 
   return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
 }
+
+export function scrollToTop() {
+  window.scrollTo({
+    top: 0, // Scroll to the top of the page
+    behavior: "smooth", // Optional: Animate the scrolling
+  });
+}
