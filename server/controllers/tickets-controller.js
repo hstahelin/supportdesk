@@ -102,10 +102,21 @@ const getOne = async (req, res) => {
   }
 };
 
+const getComments = async (req, res) => {
+  try {
+    const ticketId = req.params.id;
+    const comments = await knex("comments").where("ticket_id", ticketId);
+    res.status(200).json(comments);
+  } catch (err) {
+    res.status(400).send(`Error retrieving comments: ${err}`);
+  }
+};
+
 module.exports = {
   getAll,
   getStatusSummary,
   getPrioritySummary,
   create,
   getOne,
+  getComments,
 };
