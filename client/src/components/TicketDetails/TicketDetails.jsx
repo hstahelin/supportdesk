@@ -17,6 +17,8 @@ import {
 import "./TicketDetails.scss";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import TicketComments from "../TicketComments/TicketComments";
+import { formatDate } from "../../utils/utils";
 
 function TicketDetails() {
   const { id } = useParams();
@@ -37,10 +39,10 @@ function TicketDetails() {
     fetchTicketInfo();
   }, [id]);
 
-  function formatDate(date) {
-    const dateObj = new Date(date);
-    return dateObj.toISOString().split("T")[0];
-  }
+  //   function formatDate(date) {
+  //     const dateObj = new Date(date);
+  //     return dateObj.toISOString().split("T")[0];
+  //   }
 
   function formatStatus(value) {
     const status = value;
@@ -145,16 +147,11 @@ function TicketDetails() {
                           Description
                         </Typography>
                         <Typography variant="body1" gutterBottom>
-                          {ticketInfo.description}
-                          Lorem ipsum dolor sit amet consectetur, adipisicing
-                          elit. Dolorum optio culpa laborum possimus eum natus
-                          laboriosam est deserunt amet odio commodi unde in sed
-                          aperiam, ipsam distinctio ipsum, voluptatum sit! Lorem
-                          ipsum dolor sit amet consectetur adipisicing elit.
-                          Minus atque corrupti quis doloribus obcaecati deleniti
-                          doloremque odio deserunt quas. Sapiente, molestiae
-                          quasi! Earum eius pariatur quis praesentium, iure
-                          ipsa? Expedita.
+                          {ticketInfo.description} Lorem ipsum dolor sit amet
+                          consectetur, adipisicing elit. Dolorum optio culpa
+                          laborum possimus eum natus laboriosam est deserunt
+                          amet odio commodi unde in sed aperiam, ipsam
+                          distinctio ipsum, voluptatum sit!
                         </Typography>
                       </Paper>
                     </Grid>
@@ -215,9 +212,10 @@ function TicketDetails() {
                   </Grid>
                 </CardContent>
               </Card>
-              <Card>
+              <TicketComments ticketId={id} />
+              {/* <Card>
                 <CardHeader title="Comments" className="card-header" />
-              </Card>
+              </Card> */}
             </Stack>
           </Grid>
           <Grid item xs={12} md={4}>

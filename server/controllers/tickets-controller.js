@@ -105,7 +105,9 @@ const getOne = async (req, res) => {
 const getComments = async (req, res) => {
   try {
     const ticketId = req.params.id;
-    const comments = await knex("comments").where("ticket_id", ticketId);
+    const comments = await knex("comments_history")
+      .where("ticket_id", ticketId)
+      .orderBy("created_date", "desc");
     res.status(200).json(comments);
   } catch (err) {
     res.status(400).send(`Error retrieving comments: ${err}`);
