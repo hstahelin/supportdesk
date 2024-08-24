@@ -6,6 +6,7 @@ import { scrollToTop } from "../../utils/utils";
 
 function NewComment({ addComment }) {
   const [comment, setComment] = useState("");
+  const [isCommentValid, setIsCommentValid] = useState(true);
 
   const handleChange = (e) => {
     setComment(e.target.value);
@@ -16,43 +17,51 @@ function NewComment({ addComment }) {
       container
       spacing={2}
       justifyContent="space-between"
-      alignItems="center"
+      alignItems="flex-end"
       marginTop={1}
     >
-      <Grid item xs={8} lg={10}>
+      <Grid item xs={12} sm={12} md={8} lg={10}>
         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-          <AccountCircleTwoToneIcon
-            sx={{ color: "action.active", mr: 1, my: 0.5 }}
-          />
+          {/* <AccountCircleTwoToneIcon sx={{ color: "action.active", mr: 1, my: 1.5 }}/> */}
           <TextField
             fullWidth
+            multiline
+            rows={6}
             id="comment"
             name="comment"
             label="Add Comment"
-            variant="standard"
+            variant="outlined"
             value={comment}
             onChange={handleChange}
+            error={!isCommentValid}
+            helperText={!isCommentValid ? "Please enter a comment." : ""}
           />
         </Box>
       </Grid>
       <Grid
         item
-        xs={4}
+        md={4}
         lg={2}
         container
         justifyContent="center"
-        alignItems="center"
+        // alignItems="baseline"
       >
         <Button
+          size="large"
           variant="contained"
           endIcon={<SendIcon />}
           onClick={() => {
+            if (!comment) {
+              setIsCommentValid(false);
+              return;
+            }
+            setIsCommentValid(true);
             addComment(comment);
             setComment("");
             scrollToTop();
           }}
         >
-          Send
+          Post
         </Button>
       </Grid>
     </Grid>

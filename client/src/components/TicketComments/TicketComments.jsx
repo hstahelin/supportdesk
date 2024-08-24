@@ -50,20 +50,23 @@ function TicketComments({ ticketId, addComment }) {
         <List>
           {comments.map((comment) => {
             return (
-              <ListItem key={comment.id}>
-                <ListItemIcon>
-                  <AccountCircleTwoToneIcon fontSize="large" />
-                </ListItemIcon>
-                <Box>
-                  <Typography variant="caption" display="block" gutterBottom>
-                    by {comment.comments_by}
-                  </Typography>
-                  <Typography variant="body1">{comment.comments}</Typography>
-                  <Typography variant="caption" display="block" gutterBottom>
-                    {formatDate(comment.created_date)}
-                  </Typography>
-                </Box>
-              </ListItem>
+              <div key={comment.id}>
+                <ListItem>
+                  <ListItemIcon>
+                    <AccountCircleTwoToneIcon fontSize="large" />
+                  </ListItemIcon>
+                  <Box>
+                    <Typography variant="caption" display="block" gutterBottom>
+                      by {comment.comments_by}
+                    </Typography>
+                    <Typography variant="body1">{comment.comments}</Typography>
+                    <Typography variant="caption" display="block" gutterBottom>
+                      {formatDate(comment.created_date)}
+                    </Typography>
+                  </Box>
+                </ListItem>
+                <Divider variant="inset" />
+              </div>
             );
           })}
           {/* <ListItem>
@@ -78,7 +81,7 @@ function TicketComments({ ticketId, addComment }) {
             </Box>
           </ListItem> */}
         </List>
-        <Divider />
+        {/* <Divider /> */}
         <NewComment addComment={handleAddComment} />
       </CardContent>
     </Card>
