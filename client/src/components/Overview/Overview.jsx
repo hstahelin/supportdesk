@@ -13,8 +13,12 @@ import {
   Grid,
   Divider,
 } from "@mui/material";
+
+import { PieChart as Pie } from "@mui/x-charts/PieChart";
 import "./Overview.scss";
 import PieChart from "../PieChart/PieChart";
+import PieTest from "../PieTest/PieTest";
+import KPI from "../KPI/KPI";
 
 function Overview() {
   const [statusData, setStatusData] = useState([]);
@@ -46,6 +50,27 @@ function Overview() {
     fetchPriorityData();
   }, []);
 
+  const [tickets, setTickets] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/tickets");
+      setTickets(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+    console.log(tickets[0].last_change_date);
+    console.log(tickets[0].created_date);
+
+    console.log(tickets[0].last_change_date - tickets[0].created_date);
+
+    // tickets.reduce((prev, curr) =>)
+  }, []);
+  console.log(tickets[0]);
+
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
@@ -57,6 +82,21 @@ function Overview() {
 
       <Paper elevation={4} square={false}>
         <Divider />
+        {/* <Grid
+          container
+          spacing={3}
+          direction="row"
+          sx={{
+            justifyContent: "space-evenly",
+            alignItems: "center",
+          }}
+          m={1}
+        >
+          <KPI label={"First Response Time (hours)"} />
+          <KPI label={"Resolution Time (days)"} />
+          <KPI label={"Backlog (tickets)"} />
+          <KPI label={"First Day Resolution (tickets)"} />
+        </Grid> */}
         <Grid
           container
           spacing={3}
@@ -65,6 +105,10 @@ function Overview() {
           alignItems="stretch"
           padding={2}
         >
+          <KPI label={"First Response Time (hours)"} value={"2.5"} />
+          <KPI label={"Resolution Time (days)"} value={"0.72"} />
+          <KPI label={"Backlog (tickets)"} value={"25"} />
+          <KPI label={"First Day Resolution (tickets)"} value={"12"} />
           <Grid item xs={12} md={6}>
             <Card>
               <CardHeader
@@ -72,7 +116,7 @@ function Overview() {
                 className="card-header"
               />
               <CardContent className="card-content">
-                <PieChart
+                {/* <PieChart
                   colors={[
                     "#ff9800",
                     "#ef5350",
@@ -81,7 +125,8 @@ function Overview() {
                     "#4caf50",
                   ]}
                   data={statusData}
-                />
+                /> */}
+                <PieTest data={statusData} />
               </CardContent>
             </Card>
           </Grid>
@@ -99,13 +144,16 @@ function Overview() {
             <Card className="card-container">
               <CardHeader
                 title="Ticket Priority Insights"
+                // title="PIE TEST"
                 className="card-header"
               />
-              <CardContent className="card-content">
-                <PieChart
+              <CardContent className="card-content" sx={{ height: "100" }}>
+                {/* <PieChart
                   colors={["#e53935", "#43a047", "#fb8c00"]}
                   data={priorityData}
-                />
+                /> */}
+
+                <PieTest data={priorityData} />
               </CardContent>
             </Card>
           </Grid>
