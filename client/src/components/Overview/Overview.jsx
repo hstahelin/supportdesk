@@ -62,10 +62,10 @@ function Overview() {
   };
   useEffect(() => {
     fetchData();
-    console.log(tickets[0].last_change_date);
-    console.log(tickets[0].created_date);
+    // console.log(tickets[0].last_change_date);
+    // console.log(tickets[0].created_date);
 
-    console.log(tickets[0].last_change_date - tickets[0].created_date);
+    // console.log(tickets[0].last_change_date - tickets[0].created_date);
 
     // tickets.reduce((prev, curr) =>)
   }, []);
