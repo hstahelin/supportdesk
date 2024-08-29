@@ -6,6 +6,7 @@ import {
   Paper,
   Divider,
 } from "@mui/material";
+import CreateKB from "../CreateKB/CreateKB";
 
 function KB() {
   return (
@@ -22,6 +23,7 @@ function KB() {
         <Typography variant="h5" p={2}>
           Knowledge Base
         </Typography>
+        <CreateKB />
       </Paper>
     </Box>
   );

@@ -26,11 +26,13 @@ app.use(passport.session());
 
 const ticketsRoutes = require("./routes/tickets-routes");
 const usersRoutes = require("./routes/users-routes");
+const kbRoutes = require("./routes/kb-routes");
 const authRoutes = require("./routes/auth-routes");
 
 app.use("/auth", authRoutes);
 app.use("/tickets", ticketsRoutes);
 app.use("/users", usersRoutes);
+app.use("/kb", kbRoutes);
 
 app.listen(PORT, () => {
   console.log(`running at http://localhost:${PORT}`);
