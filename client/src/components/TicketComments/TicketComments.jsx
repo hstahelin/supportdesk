@@ -61,7 +61,7 @@ function TicketComments({ ticketId, addComment }) {
                     </Typography>
                     <Typography variant="body1">{comment.comments}</Typography>
                     <Typography variant="caption" display="block" gutterBottom>
-                      {formatDate(comment.created_date)}
+                      {formatDate(comment.created_at)}
                     </Typography>
                   </Box>
                 </ListItem>

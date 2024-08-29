@@ -69,15 +69,15 @@ function Overview() {
 
     // tickets.reduce((prev, curr) =>)
   }, []);
-  console.log(tickets[0]);
+  // console.log(tickets[0]);
 
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
+        {/* <Link underline="hover" color="inherit" href="/dashboard">
           Dashboard
-        </Link>
-        <Typography color="text.primary">Tickets</Typography>
+        </Link> */}
+        <Typography color="text.primary">Dashboard</Typography>
       </Breadcrumbs>
 
       <Paper elevation={4} square={false}>

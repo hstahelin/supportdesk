@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import { DataGrid } from "@mui/x-data-grid";
+import { formatDate } from "../../utils/utils";
+
 import "./MyTickets.scss";
 
 function MyTickets({ user }) {
@@ -175,24 +177,22 @@ function MyTickets({ user }) {
     },
   ];
   const rows = tickets.map((ticket) => {
-    const dateObj = new Date(ticket.created_date);
-    const formattedDate = dateObj.toISOString().split("T")[0];
     return {
       id: ticket.ticket_id,
       title: ticket.title,
-      creationDate: formattedDate,
+      creationDate: formatDate(ticket.created_at),
       status: ticket.status,
       priority: ticket.priority,
       createdBy: ticket.created_email,
-      assignedFirstName: ticket.assigned_first_name,
-      assignedLastName: ticket.assigned_last_name,
+      assignedFirstName: ticket.assign_first_name,
+      assignedLastName: ticket.assign_last_name,
     };
   });
 
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
+        <Link underline="hover" color="inherit" href="/dashboard">
           Dashboard
         </Link>
 

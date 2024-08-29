@@ -10,7 +10,7 @@ const getAll = async (req, res) => {
       query = query.where("created_email", email);
     }
 
-    const tickets = await query.orderBy("created_date", "desc");
+    const tickets = await query.orderBy("created_at", "desc");
     res.status(200).json(tickets);
   } catch (err) {
     res.status(400).send(`Error retrieving tickets: ${err}`);
@@ -41,12 +41,12 @@ const create = async (req, res) => {
     const {
       title,
       description,
-      user_id: contact_user_id,
+      user_id: created_by_user_id,
       priority: priority_id,
-      assign: assigned_user_id,
+      assign: assign_user_id,
     } = req.body;
 
-    const newTicket = { title, description, contact_user_id };
+    const newTicket = { title, description, created_by_user_id };
     const ticketResult = await trx("tickets").insert(newTicket);
     const newTicketId = ticketResult[0];
 
@@ -54,23 +54,37 @@ const create = async (req, res) => {
       .where({ ticket_id: newTicketId })
       .first();
 
-    const newTicketHistory = {
+    const statusTicketHistory = {
       ticket_id: createdTicket.ticket_id,
-      change_date: createdTicket.created_date,
-      changed_by: createdTicket.contact_user_id,
-      priority_id: priority_id,
       status_id: 1,
-      assigned_user_id: assigned_user_id || null,
+      created_at: createdTicket.created_at,
+      created_by_user_id: createdTicket.created_by_user_id,
     };
-
-    const ticketHistoryResult = await trx("tickets_history").insert(
-      newTicketHistory
+    const statusTicketHistoryResult = await trx("status_history").insert(
+      statusTicketHistory
     );
-    const newTicketHistoryId = ticketHistoryResult[0];
 
-    const createdTicketHistory = await trx("tickets_history")
-      .where({ history_id: newTicketHistoryId })
-      .first();
+    const priorityTicketHistory = {
+      ticket_id: createdTicket.ticket_id,
+      priority_id: priority_id,
+      created_at: createdTicket.created_at,
+      created_by_user_id: createdTicket.created_by_user_id,
+    };
+    const priorityTicketHistoryResult = await trx("priority_history").insert(
+      priorityTicketHistory
+    );
+
+    if (assign_user_id) {
+      const assignTicketHistory = {
+        ticket_id: createdTicket.ticket_id,
+        assign_user_id: assign_user_id,
+        created_at: createdTicket.created_at,
+        created_by_user_id: createdTicket.created_by_user_id,
+      };
+      const assignTicketHistoryResult = await trx("assign_history").insert(
+        assignTicketHistory
+      );
+    }
 
     await trx.commit();
 
@@ -107,7 +121,7 @@ const getComments = async (req, res) => {
     const ticketId = req.params.id;
     const comments = await knex("comments_history")
       .where("ticket_id", ticketId)
-      .orderBy("created_date", "desc");
+      .orderBy("created_at", "desc");
     res.status(200).json(comments);
   } catch (error) {
     res.status(400).send(`Error retrieving comments: ${error}`);
@@ -120,13 +134,14 @@ const createComment = async (req, res) => {
     const ticketId = req.params.id;
     const newComment = {
       comments,
-      comments_by,
+      comments_by_user_id: comments_by,
       ticket_id: ticketId,
     };
     const commentResult = await knex("comments").insert(newComment);
     const newCommentId = commentResult[0];
+
     const createdComment = await knex("comments")
-      .where({ id: newCommentId })
+      .where("comment_id", newCommentId)
       .first();
 
     res.status(201).json(createdComment);

@@ -186,7 +186,7 @@ function TicketDetails() {
                           Creation Date
                         </Typography>
                         <Typography variant="body1" gutterBottom>
-                          {formatDate(ticketInfo.created_date)}
+                          {formatDate(ticketInfo.created_at)}
                         </Typography>
                       </Paper>
                     </Grid>
@@ -206,8 +206,8 @@ function TicketDetails() {
                           Assigned to
                         </Typography>
                         <Typography variant="body1" gutterBottom>
-                          {ticketInfo.assigned_first_name}{" "}
-                          {ticketInfo.assigned_last_name}
+                          {ticketInfo.assign_first_name}{" "}
+                          {ticketInfo.assign_last_name}
                         </Typography>
                       </Paper>
                     </Grid>

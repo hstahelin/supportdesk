@@ -98,7 +98,7 @@ function CreateTicket() {
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
+        <Link underline="hover" color="inherit" href="/dashboard">
           Dashboard
         </Link>
         <Typography color="text.primary">Create Ticket</Typography>
