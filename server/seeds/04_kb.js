@@ -2,7 +2,7 @@ exports.seed = async function (knex) {
   await knex("kb").del();
   await knex("kb").insert([
     {
-      id: 1,
+      kb_id: 1,
       title: "How to reset your VPN",
       description: "Step-by-step guide to reset your VPN connection.",
       solution:
@@ -10,7 +10,7 @@ exports.seed = async function (knex) {
       is_public: true,
     },
     {
-      id: 2,
+      kb_id: 2,
       title: "Troubleshooting printer issues",
       description: "Common problems with printers and how to solve them.",
       solution:
@@ -18,7 +18,7 @@ exports.seed = async function (knex) {
       is_public: true,
     },
     {
-      id: 3,
+      kb_id: 3,
       title: "Improving internet speed",
       description: "Tips to speed up your internet connection.",
       solution:
@@ -26,7 +26,7 @@ exports.seed = async function (knex) {
       is_public: true,
     },
     {
-      id: 4,
+      kb_id: 4,
       title: "Installing software on company devices",
       description: "Guide on installing approved software.",
       solution:
@@ -34,7 +34,7 @@ exports.seed = async function (knex) {
       is_public: true,
     },
     {
-      id: 5,
+      kb_id: 5,
       title: "Outlook email synchronization",
       description: "Fix issues with email not syncing in Outlook.",
       solution:
@@ -42,7 +42,7 @@ exports.seed = async function (knex) {
       is_public: true,
     },
     {
-      id: 6,
+      kb_id: 6,
       title: "Dealing with laptop overheating",
       description: "Prevent and manage laptop overheating.",
       solution:
@@ -50,7 +50,7 @@ exports.seed = async function (knex) {
       is_public: true,
     },
     {
-      id: 7,
+      kb_id: 7,
       title: "Accessing shared drives",
       description: "How to access shared network drives.",
       solution:
@@ -58,7 +58,7 @@ exports.seed = async function (knex) {
       is_public: true,
     },
     {
-      id: 8,
+      kb_id: 8,
       title: "System won't boot",
       description: "Steps to troubleshoot a non-booting system.",
       solution:
@@ -66,7 +66,7 @@ exports.seed = async function (knex) {
       is_public: true,
     },
     {
-      id: 9,
+      kb_id: 9,
       title: "Resetting your password",
       description: "Instructions for resetting a forgotten password.",
       solution:
@@ -74,7 +74,7 @@ exports.seed = async function (knex) {
       is_public: true,
     },
     {
-      id: 10,
+      kb_id: 10,
       title: "Troubleshooting monitor flickering",
       description: "Common causes of monitor flickering and how to fix them.",
       solution:
