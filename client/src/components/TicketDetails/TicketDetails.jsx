@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
   Box,
@@ -23,7 +23,7 @@ import { formatDate } from "../../utils/utils";
 import TicketHistory from "../TicketHistory/TicketHistory";
 
 function TicketDetails() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   let user = null;
   const userJson = sessionStorage.getItem("user");
   if (userJson) {
@@ -47,6 +47,7 @@ function TicketDetails() {
 
   useEffect(() => {
     fetchTicketInfo();
+    // eslint-disable-next-line
   }, [id]);
 
   async function addComment(newComment) {

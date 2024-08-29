@@ -7,7 +7,6 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
   Typography,
 } from "@mui/material";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
@@ -34,6 +33,7 @@ function TicketComments({ ticketId, addComment }) {
 
   useEffect(() => {
     fetchComments();
+    // eslint-disable-next-line
   }, [ticketId, trigger]);
 
   async function handleAddComment(comment) {

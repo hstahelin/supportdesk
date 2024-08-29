@@ -317,7 +317,7 @@ function Sidebar({ Content }) {
               selected={selectedIndex === 2}
               onClick={(event) => handleListItemClick(event, 2)}
             >
-              <Tooltip title="Users">
+              <Tooltip title="Users / Roles">
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
@@ -328,7 +328,10 @@ function Sidebar({ Content }) {
                   <PersonOutlineTwoToneIcon />
                 </ListItemIcon>
               </Tooltip>
-              <ListItemText primary="Users" sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText
+                primary="Users / Roles"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
             </ListItemButton>
           </ListItem>
 
