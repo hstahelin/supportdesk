@@ -1,13 +1,31 @@
 import "react-quill/dist/quill.snow.css";
 import { Button, Stack, TextField } from "@mui/material";
-import { Box, Typography, Breadcrumbs, Link, Paper } from "@mui/material";
-
+import {
+  Box,
+  Typography,
+  Breadcrumbs,
+  Link,
+  Paper,
+  Alert,
+} from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import ReactQuill from "react-quill";
 
 function ViewKB() {
+  const navigate = useNavigate();
+
   const { id } = useParams();
   const [initialValues, setInitialValues] = useState({
     title: "",
@@ -16,6 +34,18 @@ function ViewKB() {
   const [title, setTitle] = useState(initialValues.title);
   const [editorContent, setEditorContent] = useState(initialValues.solution);
   const [isReadOnly, setIsReadOnly] = useState(true);
+  const [submitError, setSubmitError] = useState(null);
+  const [updateConfirmation, setUpdateConfirmation] = useState(false);
+
+  const handleClickOpen = () => {
+    setSubmitError(null);
+    setUpdateConfirmation(true);
+  };
+
+  const handleClose = () => {
+    setUpdateConfirmation(false);
+    navigate("/dashboard/kb");
+  };
 
   async function fetchKB(kbId) {
     try {
@@ -42,9 +72,24 @@ function ViewKB() {
   };
 
   const handleSubmit = async () => {
-    console.log("Title:", title);
-    console.log("Editor Content:", editorContent);
-    // Add API call or further processing here
+    const isFieldValid = (field) => {
+      return Boolean(field.trim());
+    };
+    if (!isFieldValid(title) || !isFieldValid(editorContent)) {
+      setSubmitError("Please fill the Title and Content.");
+      return;
+    }
+
+    try {
+      await axios.put(`http://localhost:8080/kb/${id}`, {
+        title,
+        solution: editorContent,
+      });
+      handleClickOpen();
+    } catch (error) {
+      console.error(error);
+      setSubmitError("Something went wrong, try again.");
+    }
   };
 
   const TOOLBAR_OPTIONS = [
@@ -78,6 +123,7 @@ function ViewKB() {
           marginTop: 2,
         }}
       >
+        {submitError && <Alert severity="error">{submitError}</Alert>}
         {isReadOnly ? (
           <Typography variant="h4" p={2}>
             {title}
@@ -129,7 +175,11 @@ function ViewKB() {
               <Button
                 variant="contained"
                 color="error"
-                onClick={() => setIsReadOnly(true)}
+                onClick={() => {
+                  setEditorContent(initialValues.solution);
+                  setTitle(initialValues.title);
+                  setIsReadOnly(true);
+                }}
               >
                 Cancel
               </Button>
@@ -150,6 +200,24 @@ function ViewKB() {
           )}
         </Stack>
       </Paper>
+      <Dialog
+        open={updateConfirmation}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>
+          <PlaylistAddCheckIcon fontSize="large" />
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            KnowledgeBase article was successfully updated.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Continue</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

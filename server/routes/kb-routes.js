@@ -3,5 +3,5 @@ const router = express.Router();
 const kbController = require("../controllers/kb-controller");
 
 router.route("/").get(kbController.getAll).post(kbController.createKB);
-router.route("/:id").get(kbController.getOne);
+router.route("/:id").get(kbController.getOne).put(kbController.updateKB);
 module.exports = router;

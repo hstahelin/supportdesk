@@ -1,6 +1,14 @@
 import "react-quill/dist/quill.snow.css";
 import { Alert, Button, Divider, Stack, TextField } from "@mui/material";
 import { Box, Typography, Breadcrumbs, Link, Paper } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,13 +19,11 @@ import axios from "axios";
 function CreateKB() {
   const navigate = useNavigate();
 
-  const [initialValues, setInitialValues] = useState({
-    title: "",
-    solution: "",
-  });
+  const initialValues = { title: "", solution: "" };
   const [title, setTitle] = useState(initialValues.title);
   const [editorContent, setEditorContent] = useState(initialValues.solution);
   const [submitError, setSubmitError] = useState(null);
+  const [createConfirmation, setCreateConfirmation] = useState(false);
 
   const handleEditorChange = (value) => {
     setEditorContent(value);
@@ -33,11 +39,11 @@ function CreateKB() {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/kb", {
+      await axios.post("http://localhost:8080/kb", {
         title,
         solution: editorContent,
       });
-      navigate("/dashboard/kb");
+      handleClickOpen();
     } catch (error) {
       console.error(error);
       setSubmitError("Something went wrong, try again.");
@@ -52,6 +58,17 @@ function CreateKB() {
     [{ align: [] }],
     ["clean"],
   ];
+
+  const handleClickOpen = () => {
+    setSubmitError(null);
+    setCreateConfirmation(true);
+  };
+
+  const handleClose = () => {
+    setCreateConfirmation(false);
+    navigate("/dashboard/kb");
+  };
+
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
@@ -118,6 +135,24 @@ function CreateKB() {
           </Button>
         </Stack>
       </Paper>
+      <Dialog
+        open={createConfirmation}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>
+          <PlaylistAddCheckIcon fontSize="large" />
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            KnowledgeBase article was successfully created.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Continue</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

@@ -40,8 +40,38 @@ const createKB = async (req, res) => {
   }
 };
 
+const updateKB = async (req, res) => {
+  try {
+    const kbId = req.params.id;
+    const { title, solution } = req.body;
+
+    const newKBData = {
+      title,
+      solution,
+    };
+
+    const rowsUpdated = await knex("kb").where("kb_id", kbId).update(newKBData);
+
+    if (rowsUpdated === 0) {
+      return res.status(404).json({
+        message: `KB with ID ${kbId} not found`,
+      });
+    }
+
+    return res.status(200).json({
+      message: `KB with ID ${kbId} was successfully updated`,
+    });
+  } catch (error) {
+    console.error(`Error updating KB with ID ${kbId}:`, error);
+    return res.status(500).json({
+      message: `Unable to update KB with ID ${kbId}`,
+    });
+  }
+};
+
 module.exports = {
   getAll,
   getOne,
   createKB,
+  updateKB,
 };
