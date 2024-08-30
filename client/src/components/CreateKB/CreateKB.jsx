@@ -1,50 +1,47 @@
 import "react-quill/dist/quill.snow.css";
-import { Button, Stack, TextField } from "@mui/material";
+import { Alert, Button, Divider, Stack, TextField } from "@mui/material";
 import { Box, Typography, Breadcrumbs, Link, Paper } from "@mui/material";
 
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import ReactQuill from "react-quill";
+import axios from "axios";
 
 function CreateKB() {
-  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [initialValues, setInitialValues] = useState({
     title: "",
     solution: "",
   });
   const [title, setTitle] = useState(initialValues.title);
   const [editorContent, setEditorContent] = useState(initialValues.solution);
-  const [isReadOnly, setIsReadOnly] = useState(true);
-
-  async function fetchKB(kbId) {
-    try {
-      const response = await axios.get(`http://localhost:8080/kb/${kbId}`);
-      setInitialValues(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  useEffect(() => {
-    fetchKB(id);
-  }, [id]);
-
-  useEffect(() => {
-    if (initialValues) {
-      setTitle(initialValues.title);
-      setEditorContent(initialValues.solution);
-    }
-  }, [initialValues]);
+  const [submitError, setSubmitError] = useState(null);
 
   const handleEditorChange = (value) => {
     setEditorContent(value);
   };
 
   const handleSubmit = async () => {
-    console.log("Title:", title);
-    console.log("Editor Content:", editorContent);
-    // Add API call or further processing here
+    const isFieldValid = (field) => {
+      return Boolean(field.trim());
+    };
+    if (!isFieldValid(title) || !isFieldValid(editorContent)) {
+      setSubmitError("Please fill the Title and Content.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:8080/kb", {
+        title,
+        solution: editorContent,
+      });
+      navigate("/dashboard/kb");
+    } catch (error) {
+      console.error(error);
+      setSubmitError("Something went wrong, try again.");
+    }
   };
 
   const TOOLBAR_OPTIONS = [
@@ -64,7 +61,7 @@ function CreateKB() {
         <Link underline="hover" color="inherit" href="/dashboard/kb">
           Knowledge Base
         </Link>
-        <Typography color="text.primary">{id}</Typography>
+        <Typography color="text.primary">Create</Typography>
       </Breadcrumbs>
 
       <Paper
@@ -78,22 +75,17 @@ function CreateKB() {
           marginTop: 2,
         }}
       >
-        {isReadOnly ? (
-          <Typography variant="h4" p={2}>
-            {title}
-          </Typography>
-        ) : (
-          <TextField
-            fullWidth
-            name="title"
-            id="title"
-            label="Title"
-            variant="outlined"
-            value={title || ""}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        )}
+        {submitError && <Alert severity="error">{submitError}</Alert>}
+        <TextField
+          fullWidth
+          name="title"
+          id="title"
+          label="Title"
+          variant="outlined"
+          value={title || ""}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
         <ReactQuill
           value={editorContent}
           onChange={handleEditorChange}
@@ -111,43 +103,19 @@ function CreateKB() {
             "align",
           ]}
           placeholder="Write something amazing..."
-          readOnly={isReadOnly}
+          style={{ height: "300px" }}
         />
         <Stack
-          spacing={2}
-          padding={1}
+          // spacing={2}
+          paddingTop={{ xs: 8, md: 6 }}
           direction={{ xs: "column-reverse", sm: "row" }}
           justifyContent="flex-end"
           alignItems="stretch"
         >
-          {isReadOnly ? (
-            <Button variant="contained" onClick={() => setIsReadOnly(false)}>
-              Edit
-            </Button>
-          ) : (
-            <>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => setIsReadOnly(true)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => {
-                  setEditorContent(initialValues.solution);
-                  setTitle(initialValues.title);
-                }}
-              >
-                Reset
-              </Button>
-              <Button variant="contained" onClick={handleSubmit}>
-                Save
-              </Button>
-            </>
-          )}
+          <Divider />
+          <Button variant="contained" onClick={handleSubmit}>
+            Save
+          </Button>
         </Stack>
       </Paper>
     </Box>

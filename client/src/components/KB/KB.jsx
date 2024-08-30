@@ -86,6 +86,7 @@ function KB() {
         <Button
           variant="contained"
           endIcon={<PostAddIcon />}
+          href="/dashboard/kb/create"
           sx={{
             width: {
               sm: "100%",

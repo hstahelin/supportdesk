@@ -10,6 +10,7 @@ import "./App.scss";
 import CreateTicket from "./components/CreateTicket/CreateTicket";
 import TicketDetails from "./components/TicketDetails/TicketDetails";
 // import ViewKB from "./components/ViewKB/ViewKB";
+import ViewKB from "./components/ViewKB/ViewKB";
 import CreateKB from "./components/CreateKB/CreateKB";
 
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
@@ -60,7 +61,8 @@ function DashboardRoutes() {
         element={<Dashboard Content={Notifications} />}
       />
       <Route path="kb" element={<Dashboard Content={KB} />} />
-      <Route path="kb/:id" element={<Dashboard Content={CreateKB} />} />
+      <Route path="kb/create" element={<Dashboard Content={CreateKB} />} />
+      <Route path="kb/:id" element={<Dashboard Content={ViewKB} />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
