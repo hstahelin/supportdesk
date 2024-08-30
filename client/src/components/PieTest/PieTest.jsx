@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { Box } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
-import { ResponsiveChartContainer } from "@mui/x-charts/ResponsiveChartContainer";
 
 export default function PieTest({ data }) {
-
   const formattedData = data.map((elem) => {
-
     if (elem.name === "High" || elem.name === "Escalated") {
       return {
         label: elem.name,

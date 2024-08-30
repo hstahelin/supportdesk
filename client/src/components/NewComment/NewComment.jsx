@@ -1,6 +1,5 @@
 import { TextField, Box, Button, Grid } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import { useState } from "react";
 import { scrollToTop } from "../../utils/utils";
 
