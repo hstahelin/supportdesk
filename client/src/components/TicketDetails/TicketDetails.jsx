@@ -34,10 +34,12 @@ function TicketDetails() {
   const { id } = useParams();
   const [ticketInfo, setTicketInfo] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [remountKey, setRemountKey] = useState(true);
 
   async function fetchTicketInfo() {
     try {
       const response = await axios.get(`http://localhost:8080/tickets/${id}`);
+
       setTicketInfo(response.data);
     } catch (error) {
       console.error(error);
@@ -48,7 +50,7 @@ function TicketDetails() {
   useEffect(() => {
     fetchTicketInfo();
     // eslint-disable-next-line
-  }, [id]);
+  }, [id, remountKey]);
 
   async function addComment(newComment) {
     try {
@@ -173,11 +175,7 @@ function TicketDetails() {
                           Description
                         </Typography>
                         <Typography variant="body1" gutterBottom>
-                          {ticketInfo.description} Lorem ipsum dolor sit amet
-                          consectetur, adipisicing elit. Dolorum optio culpa
-                          laborum possimus eum natus laboriosam est deserunt
-                          amet odio commodi unde in sed aperiam, ipsam
-                          distinctio ipsum, voluptatum sit!
+                          {ticketInfo.description}
                         </Typography>
                       </Paper>
                     </Grid>
@@ -207,8 +205,9 @@ function TicketDetails() {
                           Assigned to
                         </Typography>
                         <Typography variant="body1" gutterBottom>
-                          {ticketInfo.assign_first_name}{" "}
-                          {ticketInfo.assign_last_name}
+                          {ticketInfo.assign_first_name
+                            ? `${ticketInfo.assign_first_name} ${ticketInfo.assign_last_name}`
+                            : "Not Assigned"}
                         </Typography>
                       </Paper>
                     </Grid>
@@ -238,14 +237,18 @@ function TicketDetails() {
                   </Grid>
                 </CardContent>
               </Card>
-              <TicketComments ticketId={id} addComment={addComment} />
+              <TicketComments
+                ticketId={id}
+                addComment={addComment}
+                setRemountKey={setRemountKey}
+              />
               {/* <Card>
                 <CardHeader title="Comments" className="card-header" />
               </Card> */}
             </Stack>
           </Grid>
           <Grid item xs={12} md={4}>
-            <TicketHistory />
+            <TicketHistory ticketId={id} remountKey={remountKey} />
             {/* <Card>
               <CardHeader title="History" className="card-header" />
             </Card> */}

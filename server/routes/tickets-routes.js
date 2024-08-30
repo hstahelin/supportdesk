@@ -10,4 +10,5 @@ router
   .route("/:id/comments")
   .get(ticketsController.getComments)
   .post(ticketsController.createComment);
+router.route("/:id/timeline").get(ticketsController.getTimeline);
 module.exports = router;

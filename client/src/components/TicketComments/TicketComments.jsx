@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Box,
   Card,
@@ -10,13 +12,14 @@ import {
   Typography,
 } from "@mui/material";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
+import SupportAgentTwoToneIcon from "@mui/icons-material/SupportAgentTwoTone";
 import "./TicketComments.scss";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { formatDate } from "../../utils/utils";
 import NewComment from "../NewComment/NewComment";
 
-function TicketComments({ ticketId, addComment }) {
+function TicketComments({ ticketId, addComment, setRemountKey }) {
   const [comments, setComments] = useState([]);
   const [trigger, setTrigger] = useState(false);
 
@@ -39,6 +42,7 @@ function TicketComments({ ticketId, addComment }) {
   async function handleAddComment(comment) {
     await addComment(comment);
     setTrigger((prev) => !prev);
+    setRemountKey((prev) => !prev);
   }
   return (
     <Card>
@@ -50,10 +54,14 @@ function TicketComments({ ticketId, addComment }) {
         <List>
           {comments.map((comment) => {
             return (
-              <div key={comment.id}>
+              <React.Fragment key={comment.comment_id}>
                 <ListItem>
                   <ListItemIcon>
-                    <AccountCircleTwoToneIcon fontSize="large" />
+                    {comment.comments_by_role_name === "Customer" ? (
+                      <AccountCircleTwoToneIcon fontSize="large" />
+                    ) : (
+                      <SupportAgentTwoToneIcon fontSize="large" />
+                    )}
                   </ListItemIcon>
                   <Box>
                     <Typography variant="caption" display="block" gutterBottom>
@@ -66,22 +74,10 @@ function TicketComments({ ticketId, addComment }) {
                   </Box>
                 </ListItem>
                 <Divider variant="inset" />
-              </div>
+              </React.Fragment>
             );
           })}
-          {/* <ListItem>
-            <ListItemIcon>
-              <AccountCircleTwoToneIcon fontSize="large" />
-            </ListItemIcon>
-            <Box>
-              <Typography variant="caption" display="block" gutterBottom>
-                by user name
-              </Typography>
-              <Typography variant="body1">Lorem ipsum dolor</Typography>
-            </Box>
-          </ListItem> */}
         </List>
-        {/* <Divider /> */}
         <NewComment addComment={handleAddComment} />
       </CardContent>
     </Card>

@@ -152,6 +152,21 @@ const createComment = async (req, res) => {
   }
 };
 
+const getTimeline = async (req, res) => {
+  try {
+    const ticketId = req.params.id;
+    const timeline = await knex("tickets_timeline")
+      .where("ticket_id", ticketId)
+      .orderBy("created_at");
+
+    res.status(200).json(timeline);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to retrieve timeline for Ticket: ${error.message}`,
+    });
+  }
+};
+
 module.exports = {
   getAll,
   getStatusSummary,
@@ -160,4 +175,5 @@ module.exports = {
   getOne,
   getComments,
   createComment,
+  getTimeline,
 };

@@ -79,20 +79,28 @@ SELECT
     t.created_by_user_id as created_user_id,
     uc.email as created_email,
     t.created_at, 
-    GREATEST(sc.created_at, pc.created_at, COALESCE(ac.created_at, t.created_at)) as last_change_date, 
-    sc.status_id, 
-    sc.status, 
-    pc.priority_id, 
-    pc.priority, 
-    ac.assign_user_id, 
-    ac.first_name as assign_first_name, 
-    ac.last_name as assign_last_name,
-    ac.email as assign_email
-FROM TICKETS t JOIN 
-    USERS uc ON t.created_by_user_id = uc.user_id JOIN 
-    STATUS_CURRENT sc ON t.ticket_id = sc.ticket_id JOIN
-    PRIORITIES_CURRENT pc ON t.ticket_id = pc.ticket_id LEFT OUTER JOIN
-    ASSIGN_CURRENT ac ON t.ticket_id = ac.ticket_id
+    GREATEST(MAX(sc.created_at), MAX(pc.created_at), COALESCE(MAX(ac.created_at), t.created_at), COALESCE(MAX(c.created_at), t.created_at)) as last_change_date, 
+    MAX(sc.status_id) as status_id, 
+    MAX(sc.status) as status, 
+    MAX(pc.priority_id) as priority_id, 
+    MAX(pc.priority) as priority, 
+    MAX(ac.assign_user_id) as assign_user_id, 
+    MAX(ac.first_name) as assign_first_name, 
+    MAX(ac.last_name) as assign_last_name,
+    MAX(ac.email) as assign_email
+FROM TICKETS t 
+JOIN USERS uc ON t.created_by_user_id = uc.user_id 
+JOIN STATUS_CURRENT sc ON t.ticket_id = sc.ticket_id 
+JOIN PRIORITIES_CURRENT pc ON t.ticket_id = pc.ticket_id 
+LEFT OUTER JOIN ASSIGN_CURRENT ac ON t.ticket_id = ac.ticket_id 
+LEFT OUTER JOIN COMMENTS c ON t.ticket_id = c.ticket_id
+GROUP BY 
+    t.ticket_id, 
+    t.title,
+    t.description,
+    t.created_by_user_id,
+    uc.email,
+    t.created_at
 ;`;
 
   const createViewStatusSummary = `
@@ -143,9 +151,12 @@ SELECT
     c.comments, 
     c.created_at, 
     CONCAT(u.first_name, " ", u.last_name) as comments_by_name, 
-    c.comments_by_user_id
+    c.comments_by_user_id,
+    r.role_id as comments_by_role_id,
+    r.name as comments_by_role_name
 FROM COMMENTS c JOIN
-    USERS u ON c.comments_by_user_id = u.user_id
+    USERS u ON c.comments_by_user_id = u.user_id JOIN
+    ROLES r ON u.role_id = r.role_id
 ;`;
 
   const createViewTicketsTimeline = `
