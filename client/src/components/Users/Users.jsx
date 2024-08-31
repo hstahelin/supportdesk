@@ -25,7 +25,8 @@ function Users() {
 
   const fetchUsersData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/users/1");
+      console.log("FIX API CALL, hardcoded user id");
+      const response = await axios.get("http://localhost:8080/users/2");
       setUsers(response.data);
     } catch (error) {
       console.error(error);

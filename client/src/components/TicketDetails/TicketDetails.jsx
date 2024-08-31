@@ -52,11 +52,11 @@ function TicketDetails() {
     // eslint-disable-next-line
   }, [id, remountKey]);
 
-  async function addComment(newComment) {
+  async function addComment(newComment, userId = user.user_id) {
     try {
       await axios.post(`http://localhost:8080/tickets/${id}/comments`, {
         comments: newComment,
-        comments_by: user.user_id,
+        comments_by: userId,
       });
       fetchTicketInfo();
     } catch (error) {
@@ -241,6 +241,7 @@ function TicketDetails() {
                 ticketId={id}
                 addComment={addComment}
                 setRemountKey={setRemountKey}
+                input={ticketInfo.description}
               />
               {/* <Card>
                 <CardHeader title="Comments" className="card-header" />

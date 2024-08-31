@@ -17,5 +17,9 @@ exports.seed = async function (knex) {
       role_id: 4,
       name: "Customer",
     },
+    {
+      role_id: 5,
+      name: "AI Assistant",
+    },
   ]);
 };
