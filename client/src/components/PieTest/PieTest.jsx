@@ -30,7 +30,6 @@ export default function PieTest({ data }) {
         maxWidth: "500px",
         display: "flex",
         justifyContent: "center",
-        // alignItems: "stretch",
       }}
     >
       <PieChart
@@ -48,7 +47,6 @@ export default function PieTest({ data }) {
         ]}
         width={400}
         height={300}
-        // slotProps={{legend: { hidden: true },}}
       />
     </Box>
   );

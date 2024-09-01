@@ -20,7 +20,7 @@ const getReportingUsers = async (req, res) => {
       .withRecursive("user_hierarchy", (qb) => {
         qb.select("user_id")
           .select(knex.raw("0 AS level"))
-          .select(knex.raw("CAST(LPAD(user_id, 5, '0') AS CHAR(255)) AS path")) // Create a path for ordering
+          .select(knex.raw("CAST(LPAD(user_id, 5, '0') AS CHAR(255)) AS path")) //Path for ordering
           .from("USERS")
           .where("user_id", userId)
           .unionAll(function () {

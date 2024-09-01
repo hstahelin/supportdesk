@@ -1,4 +1,3 @@
-// const knex = require("knex")(require("../knexfile").development);
 const knex = require("knex")(require("../knexfile"));
 const User = {
   create: async (user) => {

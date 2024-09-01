@@ -56,14 +56,17 @@ function Login() {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:8080/auth/login", {
-        email: formValues.email,
-        password: formValues.password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/auth/login",
+        {
+          email: formValues.email,
+          password: formValues.password,
+        },
+        { withCredentials: true }
+      );
 
       const user = response.data.user;
       sessionStorage.setItem("user", JSON.stringify(user));
-      // setUser(user);
       navigate("/dashboard");
     } catch (error) {
       setLoginError(error.response.data.message);

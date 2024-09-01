@@ -1,4 +1,6 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { ColorModeContext } from "../../contexts/ColorModeContext";
 
 import { IconButton, MenuItem, Menu } from "@mui/material";
@@ -6,8 +8,11 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useTheme } from "@mui/material/styles";
+import axios from "axios";
 
 function UserMenu() {
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenu = (event) => {
@@ -19,6 +24,20 @@ function UserMenu() {
   };
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:8080/auth/logout",
+        {},
+        { withCredentials: true }
+      );
+      sessionStorage.removeItem("user");
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error.response?.data || error.message);
+    }
+  };
 
   return (
     <>
@@ -62,7 +81,7 @@ function UserMenu() {
             )}
           </IconButton>
         </MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </>
   );

@@ -71,8 +71,9 @@ function CreateTicket() {
       return;
     }
     try {
-      // const response =
-      await axios.post("http://localhost:8080/tickets", formValues);
+      await axios.post("http://localhost:8080/tickets", formValues, {
+        withCredentials: true,
+      });
       navigate("/dashboard/tickets");
     } catch (error) {
       console.error(error);
@@ -83,9 +84,13 @@ function CreateTicket() {
   const [agents, setAgents] = useState([]);
   const fetchAgents = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/users", {
-        params: { role: "Agent" },
-      });
+      const response = await axios.get(
+        "http://localhost:8080/users",
+        {
+          params: { role: "Agent" },
+        },
+        { withCredentials: true }
+      );
 
       setAgents(response.data);
     } catch (error) {

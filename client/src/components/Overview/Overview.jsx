@@ -24,7 +24,8 @@ function Overview() {
   const fetchStatusData = async () => {
     try {
       const response = await axios(
-        "http://localhost:8080/tickets/status-summary"
+        "http://localhost:8080/tickets/status-summary",
+        { withCredentials: true }
       );
       setStatusData(response.data);
     } catch (error) {
@@ -35,7 +36,8 @@ function Overview() {
   const fetchPriorityData = async () => {
     try {
       const response = await axios(
-        "http://localhost:8080/tickets/priority-summary"
+        "http://localhost:8080/tickets/priority-summary",
+        { withCredentials: true }
       );
       setPriorityData(response.data);
     } catch (error) {
@@ -51,7 +53,9 @@ function Overview() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/tickets");
+      const response = await axios.get("http://localhost:8080/tickets", {
+        withCredentials: true,
+      });
       setTickets(response.data);
     } catch (error) {
       console.error(error);

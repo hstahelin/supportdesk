@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   Box,
@@ -35,6 +35,7 @@ import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
 
 import UserMenu from "../UserMenu/UserMenu";
 import "./Sidebar.scss";
+import axios from "axios";
 
 const drawerWidth = 220;
 
@@ -104,6 +105,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 function Sidebar({ Content }) {
+  const navigate = useNavigate();
   let user = null;
   const userJson = sessionStorage.getItem("user");
   if (userJson) {
@@ -135,6 +137,20 @@ function Sidebar({ Content }) {
   const handleClickTickets = () => {
     handleDrawerOpen();
     setOpenTickets(!openTickets);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:8080/auth/logout",
+        {},
+        { withCredentials: true }
+      );
+      sessionStorage.removeItem("user");
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error.response?.data || error.message);
+    }
   };
 
   return (
@@ -413,6 +429,7 @@ function Sidebar({ Content }) {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              onClick={handleLogout}
             >
               <Tooltip title="Logout">
                 <ListItemIcon

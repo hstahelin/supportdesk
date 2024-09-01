@@ -1,8 +1,3 @@
-// export function formatDate(date) {
-//   const dateObj = new Date(date);
-//   return dateObj.toISOString().split("T")[0];
-// }
-
 export function formatDate(date) {
   const dateObj = new Date(date);
 
@@ -29,14 +24,14 @@ export function formatDate(date) {
   const minutes = String(dateObj.getMinutes()).padStart(2, "0");
 
   const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12; // Convert to 12-hour format
+  hours = hours % 12 || 12;
 
   return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
 }
 
 export function scrollToTop() {
   window.scrollTo({
-    top: 0, // Scroll to the top of the page
-    behavior: "smooth", // Optional: Animate the scrolling
+    top: 0,
+    behavior: "smooth",
   });
 }

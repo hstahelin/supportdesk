@@ -39,10 +39,14 @@ function CreateKB() {
     }
 
     try {
-      await axios.post("http://localhost:8080/kb", {
-        title,
-        solution: editorContent,
-      });
+      await axios.post(
+        "http://localhost:8080/kb",
+        {
+          title,
+          solution: editorContent,
+        },
+        { withCredentials: true }
+      );
       handleClickOpen();
     } catch (error) {
       console.error(error);
@@ -123,7 +127,6 @@ function CreateKB() {
           style={{ height: "300px" }}
         />
         <Stack
-          // spacing={2}
           paddingTop={{ xs: 8, md: 6 }}
           direction={{ xs: "column-reverse", sm: "row" }}
           justifyContent="flex-end"

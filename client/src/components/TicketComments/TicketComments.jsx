@@ -29,7 +29,8 @@ function TicketComments({ ticketId, addComment, setRemountKey, input }) {
   async function fetchComments() {
     try {
       const response = await axios.get(
-        `http://localhost:8080/tickets/${ticketId}/comments`
+        `http://localhost:8080/tickets/${ticketId}/comments`,
+        { withCredentials: true }
       );
 
       setComments(response.data);

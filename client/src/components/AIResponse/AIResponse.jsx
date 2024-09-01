@@ -11,8 +11,6 @@ import {
 import axios from "axios";
 
 function AIResponse({ input, openAI, setOpenAI, handleAddComment }) {
-  // console.log("AIResponse: ", input);
-
   const [responseAI, setResponseAI] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const handleCloseAI = () => {
@@ -20,10 +18,12 @@ function AIResponse({ input, openAI, setOpenAI, handleAddComment }) {
   };
 
   async function fetchDataAI(text) {
-    // console.log("fetchDataAI: ", text);
-
     try {
-      const response = await axios.post("http://localhost:8080/ai", { text });
+      const response = await axios.post(
+        "http://localhost:8080/ai",
+        { text },
+        { withCredentials: true }
+      );
       setResponseAI(response.data.summary);
       setIsLoading(false);
     } catch (error) {

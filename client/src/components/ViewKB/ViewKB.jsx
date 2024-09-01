@@ -49,7 +49,9 @@ function ViewKB() {
 
   async function fetchKB(kbId) {
     try {
-      const response = await axios.get(`http://localhost:8080/kb/${kbId}`);
+      const response = await axios.get(`http://localhost:8080/kb/${kbId}`, {
+        withCredentials: true,
+      });
       setInitialValues(response.data);
     } catch (error) {
       console.error(error);
@@ -81,10 +83,14 @@ function ViewKB() {
     }
 
     try {
-      await axios.put(`http://localhost:8080/kb/${id}`, {
-        title,
-        solution: editorContent,
-      });
+      await axios.put(
+        `http://localhost:8080/kb/${id}`,
+        {
+          title,
+          solution: editorContent,
+        },
+        { withCredentials: true }
+      );
       handleClickOpen();
     } catch (error) {
       console.error(error);

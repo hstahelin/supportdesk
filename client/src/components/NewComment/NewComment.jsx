@@ -37,14 +37,7 @@ function NewComment({ addComment }) {
           />
         </Box>
       </Grid>
-      <Grid
-        item
-        md={4}
-        lg={2}
-        container
-        justifyContent="center"
-        // alignItems="baseline"
-      >
+      <Grid item md={4} lg={2} container justifyContent="center">
         <Button
           size="large"
           variant="contained"

@@ -9,7 +9,6 @@ import NotFound from "./pages/NotFound/NotFound";
 import "./App.scss";
 import CreateTicket from "./components/CreateTicket/CreateTicket";
 import TicketDetails from "./components/TicketDetails/TicketDetails";
-// import ViewKB from "./components/ViewKB/ViewKB";
 import ViewKB from "./components/ViewKB/ViewKB";
 import CreateKB from "./components/CreateKB/CreateKB";
 

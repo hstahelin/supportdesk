@@ -24,7 +24,9 @@ function KB() {
 
   const fetchKBData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/kb");
+      const response = await axios.get("http://localhost:8080/kb", {
+        withCredentials: true,
+      });
       setKBs(response.data);
     } catch (error) {
       console.error(error);

@@ -10,14 +10,23 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.use(cors());
-//app.use(cors({ origin: "http://localhost:3000", credentials: true })); //*
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.use(
   session({
-    secret: "supportdesk_secret_key",
+    secret: process.env.SESSION_SECRET || "supportdesk_secret_key",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // Set to true if using HTTPS
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 3600000, // 1 hour
+    },
   })
 );
 

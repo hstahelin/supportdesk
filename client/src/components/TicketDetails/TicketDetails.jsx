@@ -23,7 +23,6 @@ import { formatDate } from "../../utils/utils";
 import TicketHistory from "../TicketHistory/TicketHistory";
 
 function TicketDetails() {
-  // const navigate = useNavigate();
   let user = null;
   const userJson = sessionStorage.getItem("user");
   if (userJson) {
@@ -38,7 +37,9 @@ function TicketDetails() {
 
   async function fetchTicketInfo() {
     try {
-      const response = await axios.get(`http://localhost:8080/tickets/${id}`);
+      const response = await axios.get(`http://localhost:8080/tickets/${id}`, {
+        withCredentials: true,
+      });
 
       setTicketInfo(response.data);
     } catch (error) {
@@ -54,10 +55,14 @@ function TicketDetails() {
 
   async function addComment(newComment, userId = user.user_id) {
     try {
-      await axios.post(`http://localhost:8080/tickets/${id}/comments`, {
-        comments: newComment,
-        comments_by: userId,
-      });
+      await axios.post(
+        `http://localhost:8080/tickets/${id}/comments`,
+        {
+          comments: newComment,
+          comments_by: userId,
+        },
+        { withCredentials: true }
+      );
       fetchTicketInfo();
     } catch (error) {
       console.error(error);
@@ -67,10 +72,6 @@ function TicketDetails() {
       );
     }
   }
-  //   function formatDate(date) {
-  //     const dateObj = new Date(date);
-  //     return dateObj.toISOString().split("T")[0];
-  //   }
 
   function formatStatus(value) {
     const status = value;
@@ -78,7 +79,6 @@ function TicketDetails() {
     let variant = "outlined";
     let disabled = false;
 
-    // Set chip color based on status
     if (status === "New") color = "primary";
     else if (status === "In Progress") color = "secondary";
     else if (status === "Escalated") {
@@ -106,7 +106,6 @@ function TicketDetails() {
     let color = "default";
     let variant = "outlined";
 
-    // Set chip color based on status
     if (priority === "High") color = "error";
     else if (priority === "Medium") color = "warning";
     else if (priority === "Low") color = "success";

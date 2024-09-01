@@ -9,10 +9,6 @@ function TicketStatusPie() {
   ];
   const dataIn = [{ name: "GourpA", value: 400 }];
 
-  // const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
-  // const renderLabel = ({ name, value }) => `${name}: ${value}`;
-
   return (
     <div>
       <ResponsiveContainer width={300} height={400} className="pie-container">

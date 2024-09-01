@@ -21,7 +21,8 @@ function TicketHistory({ ticketId, remountKey }) {
   async function fetchHistoryData(id) {
     try {
       const response = await axios.get(
-        `http://localhost:8080/tickets/${id}/timeline`
+        `http://localhost:8080/tickets/${id}/timeline`,
+        { withCredentials: true }
       );
       setTimeline(response.data);
     } catch (error) {

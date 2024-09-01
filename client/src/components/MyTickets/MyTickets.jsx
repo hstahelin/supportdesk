@@ -30,7 +30,9 @@ function MyTickets({ user }) {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/tickets");
+      const response = await axios.get("http://localhost:8080/tickets", {
+        withCredentials: true,
+      });
       setTickets(response.data);
     } catch (error) {
       console.error(error);
@@ -53,7 +55,7 @@ function MyTickets({ user }) {
   };
 
   useEffect(() => {
-    updateColumnVisibility(); // Set initial visibility based on current screen size
+    updateColumnVisibility();
 
     const handleResize = () => updateColumnVisibility();
     window.addEventListener("resize", handleResize);
@@ -86,9 +88,6 @@ function MyTickets({ user }) {
             </IconButton>
             {id}
           </>
-          //   <Button variant="outlined" startIcon={<TextSnippetIcon />}>
-          //     {id}
-          //   </Button>
         );
       },
     },
@@ -116,7 +115,6 @@ function MyTickets({ user }) {
         let variant = "outlined";
         let disabled = false;
 
-        // Set chip color based on status
         if (status === "New") color = "primary";
         else if (status === "In Progress") color = "secondary";
         else if (status === "Escalated") {
@@ -150,7 +148,6 @@ function MyTickets({ user }) {
         let color = "default";
         let variant = "outlined";
 
-        // Set chip color based on status
         if (priority === "High") color = "error";
         else if (priority === "Medium") color = "warning";
         else if (priority === "Low") color = "success";
@@ -168,7 +165,6 @@ function MyTickets({ user }) {
       field: "fullName",
       headerName: "Assigned to",
       description: "Assigned to",
-      //   sortable: false,
       flex: 1,
       headerClassName: "grid--header",
 

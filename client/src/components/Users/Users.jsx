@@ -26,7 +26,9 @@ function Users() {
   const fetchUsersData = async () => {
     try {
       console.log("FIX API CALL, hardcoded user id");
-      const response = await axios.get("http://localhost:8080/users/2");
+      const response = await axios.get("http://localhost:8080/users/2", {
+        withCredentials: true,
+      });
       setUsers(response.data);
     } catch (error) {
       console.error(error);
@@ -35,7 +37,8 @@ function Users() {
   const fetchCustomersData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/users?role=Customer"
+        "http://localhost:8080/users?role=Customer",
+        { withCredentials: true }
       );
       setCustomers(response.data);
     } catch (error) {
