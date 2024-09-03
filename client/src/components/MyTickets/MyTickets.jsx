@@ -2,17 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  Box,
-  Chip,
-  Typography,
-  Breadcrumbs,
-  Link,
-  Paper,
-  IconButton,
-} from "@mui/material";
-import TextSnippetIcon from "@mui/icons-material/TextSnippet";
-import { DataGrid } from "@mui/x-data-grid";
+import { Box, Chip, Typography, Breadcrumbs, Link, Paper } from "@mui/material";
+import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { formatDate } from "../../utils/utils";
 
 import "./MyTickets.scss";
@@ -68,28 +62,67 @@ function MyTickets({ user }) {
   const ticketDetails = (ticketId) => {
     navigate(`/dashboard/tickets/${ticketId}`);
   };
+
+  const ticketEdit = (ticketId) => {
+    navigate(`/dashboard/tickets/${ticketId}/edit`);
+  };
+
   const columns = [
+    {
+      field: "actions",
+      type: "actions",
+      flex: 0.9,
+      headerClassName: "grid--header",
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<InfoOutlinedIcon />}
+          label="Info"
+          onClick={() => ticketDetails(params.id)}
+        />,
+        <GridActionsCellItem
+          icon={<EditNoteTwoToneIcon />}
+          label="Edit"
+          onClick={() => ticketEdit(params.id)}
+        />,
+      ],
+    },
+    // {
+    //   field: "id",
+    //   headerName: "ID",
+    //   flex: 0.8,
+    //   headerClassName: "grid--header",
+    //   renderCell: (params) => {
+    //     const id = params.value;
+
+    //     return (
+    //       <>
+    //         <IconButton
+    //           color="primary"
+    //           aria-label="Ticket details"
+    //           size="small"
+    //           onClick={() => ticketDetails(id)}
+    //         >
+    //           <InfoOutlinedIcon />
+    //         </IconButton>
+
+    //         <IconButton
+    //           color="primary"
+    //           aria-label="Ticket details"
+    //           size="small"
+    //           onClick={() => ticketDetails(id)}
+    //         >
+    //           <EditNoteTwoToneIcon />
+    //         </IconButton>
+    //         {id}
+    //       </>
+    //     );
+    //   },
+    // },
     {
       field: "id",
       headerName: "ID",
       flex: 0.8,
       headerClassName: "grid--header",
-      renderCell: (params) => {
-        const id = params.value;
-
-        return (
-          <>
-            <IconButton
-              color="primary"
-              aria-label="Ticket details"
-              onClick={() => ticketDetails(id)}
-            >
-              <TextSnippetIcon />
-            </IconButton>
-            {id}
-          </>
-        );
-      },
     },
     {
       field: "title",

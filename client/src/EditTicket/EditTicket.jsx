@@ -1,80 +1,44 @@
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 import {
   Box,
   Typography,
   Breadcrumbs,
   Link,
   Paper,
+  Grid,
   Stack,
   Card,
   CardHeader,
-  Grid,
   CardContent,
   Chip,
-  Button,
 } from "@mui/material";
-import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
-import "./TicketDetails.scss";
+
 import { useEffect, useState } from "react";
-import axios from "axios";
-import TicketComments from "../TicketComments/TicketComments";
-import { formatDate } from "../../utils/utils";
-import TicketHistory from "../TicketHistory/TicketHistory";
+import { useParams } from "react-router-dom";
+import { formatDate } from "../utils/utils";
 
-function TicketDetails() {
-  const navigate = useNavigate();
-
-  let user = null;
-  const userJson = sessionStorage.getItem("user");
-  if (userJson) {
-    user = JSON.parse(userJson);
-  } else {
-    console.error("No user found.");
-  }
+function EditTicket() {
   const { id } = useParams();
   const [ticketInfo, setTicketInfo] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [remountKey, setRemountKey] = useState(true);
 
   async function fetchTicketInfo() {
     try {
       const response = await axios.get(`http://localhost:8080/tickets/${id}`, {
         withCredentials: true,
       });
+      console.log(response.data);
 
       setTicketInfo(response.data);
     } catch (error) {
       console.error(error);
-      setErrorMessage(error.response?.data?.message || "An error occurred");
+      //   setErrorMessage(error.response?.data?.message || "An error occurred");
     }
   }
 
   useEffect(() => {
     fetchTicketInfo();
     // eslint-disable-next-line
-  }, [id, remountKey]);
-
-  async function addComment(newComment, userId = user.user_id) {
-    try {
-      await axios.post(
-        `http://localhost:8080/tickets/${id}/comments`,
-        {
-          comments: newComment,
-          comments_by: userId,
-        },
-        { withCredentials: true }
-      );
-      fetchTicketInfo();
-    } catch (error) {
-      console.error(error);
-      setErrorMessage(
-        error.response?.data?.message ||
-          "An error occurred while adding the comment"
-      );
-    }
-  }
+  }, [id]);
 
   function formatStatus(value) {
     const status = value;
@@ -116,12 +80,8 @@ function TicketDetails() {
     return <Chip label={priority} color={color} variant={variant} />;
   }
 
-  const ticketEdit = (ticketId) => {
-    navigate(`/dashboard/tickets/${ticketId}/edit`);
-  };
-
   if (!ticketInfo) {
-    return <h1>{errorMessage}</h1>;
+    return <h1>{"errorMessage"}</h1>;
   }
   return (
     <Box component="section" sx={{ p: 2 }}>
@@ -131,6 +91,13 @@ function TicketDetails() {
         </Link>
         <Link underline="hover" color="inherit" href="/dashboard/tickets">
           Tickets
+        </Link>
+        <Link
+          underline="hover"
+          color="inherit"
+          href={`/dashboard/tickets/${id}`}
+        >
+          Detail
         </Link>
         <Typography color="text.primary">{id}</Typography>
       </Breadcrumbs>
@@ -146,26 +113,7 @@ function TicketDetails() {
           marginTop: 2,
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography variant="h5">Ticket {id} Details</Typography>
-
-          <Button
-            variant="contained"
-            size="large"
-            color="secondary"
-            endIcon={<EditNoteTwoToneIcon />}
-            onClick={() => ticketEdit(id)}
-          >
-            Edit
-          </Button>
-        </Box>
-
+        <Typography variant="h5">Edit Ticket</Typography>
         <Grid
           container
           spacing={3}
@@ -261,29 +209,10 @@ function TicketDetails() {
                         </Typography>
                       </Paper>
                     </Grid>
-                    {/* <Grid item xs={12} sm={6} lg={4} xl={3}>
-                      PAPER
-
-                    </Grid> */}
                   </Grid>
                 </CardContent>
               </Card>
-              <TicketComments
-                ticketId={id}
-                addComment={addComment}
-                setRemountKey={setRemountKey}
-                input={ticketInfo.description}
-              />
-              {/* <Card>
-                <CardHeader title="Comments" className="card-header" />
-              </Card> */}
             </Stack>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <TicketHistory ticketId={id} remountKey={remountKey} />
-            {/* <Card>
-              <CardHeader title="History" className="card-header" />
-            </Card> */}
           </Grid>
         </Grid>
       </Paper>
@@ -291,4 +220,4 @@ function TicketDetails() {
   );
 }
 
-export default TicketDetails;
+export default EditTicket;

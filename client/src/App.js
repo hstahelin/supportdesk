@@ -11,6 +11,7 @@ import CreateTicket from "./components/CreateTicket/CreateTicket";
 import TicketDetails from "./components/TicketDetails/TicketDetails";
 import ViewKB from "./components/ViewKB/ViewKB";
 import CreateKB from "./components/CreateKB/CreateKB";
+import EditTicket from "./EditTicket/EditTicket";
 
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const Overview = lazy(() => import("./components/Overview/Overview"));
@@ -48,6 +49,10 @@ function DashboardRoutes() {
       <Route
         path="tickets/:id"
         element={<Dashboard Content={TicketDetails} />}
+      />
+      <Route
+        path="tickets/:id/edit"
+        element={<Dashboard Content={EditTicket} />}
       />
       <Route
         path="createticket"
