@@ -50,7 +50,37 @@ const getReportingUsers = async (req, res) => {
   }
 };
 
+const getNotifications = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const notifications = await knex
+      .withRecursive("user_hierarchy", (qb) => {
+        qb.select("user_id")
+          .from("USERS")
+          .where("user_id", userId)
+          .unionAll(function () {
+            this.select("u.user_id")
+              .from("USERS as u")
+              .innerJoin(
+                "user_hierarchy as uh",
+                "u.manager_user_id",
+                "uh.user_id"
+              );
+          });
+      })
+      .select("uh.user_id", "tt.*", "tc.title")
+      .from("user_hierarchy as uh")
+      .join("tickets_current as tc", "uh.user_id", "tc.assign_user_id")
+      .join("tickets_timeline as tt", "tc.ticket_id", "tt.ticket_id")
+      .orderBy("tt.created_at");
+    res.status(200).json(notifications);
+  } catch (error) {
+    res.status(400).send(`Error retrieving data: ${error}`);
+  }
+};
 module.exports = {
   getAll,
   getReportingUsers,
+  getNotifications,
 };

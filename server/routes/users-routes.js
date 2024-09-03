@@ -13,4 +13,7 @@ router.route("/").get(ensureAuthenticated, ensureAdmin, usersController.getAll);
 router
   .route("/:id")
   .get(ensureAuthenticated, usersController.getReportingUsers);
+router
+  .route("/:id/notifications")
+  .get(ensureAuthenticated, usersController.getNotifications);
 module.exports = router;
