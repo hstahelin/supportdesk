@@ -4,3 +4,16 @@
     color: #fff;
   }
 }
+
+.kpi-box {
+  color: #fff;
+  &__high {
+    background-color: #ef5350b0;
+  }
+  &__warning {
+    background-color: #ff9800b0;
+  }
+  &__normal {
+    background-color: #4caf50b0;
+  }
+}

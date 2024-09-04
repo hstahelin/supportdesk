@@ -81,10 +81,30 @@ function Overview() {
           alignItems="stretch"
           padding={2}
         >
-          <KPI label={"First Response Time (hours)"} value={"2.5"} />
-          <KPI label={"Resolution Time (days)"} value={"0.72"} />
-          <KPI label={"Backlog (tickets)"} value={"25"} />
-          <KPI label={"First Day Resolution (tickets)"} value={"12"} />
+          <KPI
+            label={"First Response Time"}
+            value={"2.5"}
+            unit="hours"
+            temperature="high"
+          />
+          <KPI
+            label={"Resolution Time"}
+            value={"0.72"}
+            unit="days"
+            temperature="normal"
+          />
+          <KPI
+            label={"Backlog"}
+            value={"25"}
+            unit="tickets"
+            temperature="warning"
+          />
+          <KPI
+            label={"First Day Resolution"}
+            value={"12"}
+            unit="tickets"
+            temperature="normal"
+          />
           <Grid item xs={12} md={6}>
             <Card>
               <CardHeader
