@@ -144,6 +144,14 @@ function Users() {
               {customers.map((user) => (
                 <TableRow key={user.user_id}>
                   <TableCell align="left" component="th" scope="row">
+                    <IconButton
+                      color="primary"
+                      onClick={() =>
+                        navigate(`/dashboard/users/${user.user_id}`)
+                      }
+                    >
+                      <EditNoteTwoToneIcon />
+                    </IconButton>
                     {user.user_name}
                   </TableCell>
                   <TableCell align="left">{user.user_email}</TableCell>

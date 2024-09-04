@@ -108,7 +108,7 @@ const updateUser = async (req, res) => {
     last_name,
     email,
     role_id,
-    manager_user_id,
+    manager_user_id: role_id == 4 ? null : manager_user_id,
   };
 
   try {

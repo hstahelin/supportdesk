@@ -8,6 +8,7 @@ import {
   Select,
   FormControl,
   MenuItem,
+  Alert,
 } from "@mui/material";
 import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
 import axios from "axios";
@@ -22,6 +23,7 @@ function UserDetail() {
   const [initialValues, setInitialValues] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [managers, setManagers] = useState([]);
+  const [submitError, setSubmitError] = useState(null);
 
   const handleChange = (e) => {
     setUserInfo({
@@ -63,6 +65,7 @@ function UserDetail() {
   useEffect(() => {
     fetchUsersData();
     fetchManagerData();
+    // eslint-disable-next-line
   }, []);
 
   const handleSubmit = async () => {
@@ -71,10 +74,11 @@ function UserDetail() {
     };
     if (
       !isFieldValid(userInfo.first_name) ||
-      !isFieldValid(userInfo.last_name)
+      !isFieldValid(userInfo.last_name) ||
+      !isFieldValid(userInfo.email)
     ) {
       console.log("DISPLAY ERROR ON FAILED VALIDATION");
-
+      setSubmitError("Please fill the required fields.");
       return;
     }
     try {
@@ -85,7 +89,7 @@ function UserDetail() {
       navigate("/dashboard/users");
     } catch (error) {
       console.error(error);
-      //   setSubmitError("Something went wrong, try again.");
+      setSubmitError("Something went wrong, try again.");
     }
   };
 
@@ -127,6 +131,7 @@ function UserDetail() {
             justifyContent="space-between"
           >
             <TextField
+              required
               fullWidth
               id="first_name"
               name="first_name"
@@ -134,10 +139,9 @@ function UserDetail() {
               variant="outlined"
               value={userInfo.first_name}
               onChange={handleChange}
-              //   error={!isFormValid.fname}
-              //   helperText={!isFormValid.fname ? "First Name can not be blank." : ""}
             />
             <TextField
+              required
               fullWidth
               id="last_name"
               name="last_name"
@@ -145,12 +149,11 @@ function UserDetail() {
               variant="outlined"
               value={userInfo.last_name}
               onChange={handleChange}
-              //   error={!isFormValid.lname}
-              //   helperText={!isFormValid.lname ? "Last Name can not be blank." : ""}
             />
           </Stack>
 
           <TextField
+            required
             id="email"
             name="email"
             label="Email"
@@ -158,15 +161,12 @@ function UserDetail() {
             placeholder="Enter your email"
             value={userInfo.email}
             onChange={handleChange}
-            // error={!isFormValid.email}
-            // helperText={!isFormValid.email ? "Please enter a valid email." : ""}
           />
-
-          {/* {registerError && <Alert severity="error">{registerError}</Alert>} */}
 
           <FormControl fullWidth>
             <InputLabel id="role-label">Role</InputLabel>
             <Select
+              required
               labelId="role-label"
               id="role_id"
               name="role_id"
@@ -181,27 +181,29 @@ function UserDetail() {
             </Select>
           </FormControl>
 
-          <FormControl fullWidth>
-            <InputLabel id="manager-label">Manager</InputLabel>
-            <Select
-              labelId="manager-label"
-              id="manager_user_id"
-              name="manager_user_id"
-              value={userInfo.manager_user_id || -1}
-              label="Manager"
-              onChange={handleChange}
-            >
-              <MenuItem value={-1}>Not Assigned</MenuItem>
-              {managers.map((user) => {
-                return (
-                  <MenuItem key={user.user_id} value={user.user_id}>
-                    {user.user_name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-
+          {userInfo.role_id !== 4 && (
+            <FormControl fullWidth>
+              <InputLabel id="manager-label">Manager</InputLabel>
+              <Select
+                labelId="manager-label"
+                id="manager_user_id"
+                name="manager_user_id"
+                value={userInfo.manager_user_id || -1}
+                label="Manager"
+                onChange={handleChange}
+              >
+                <MenuItem value={-1}>Not Assigned</MenuItem>
+                {managers.map((user) => {
+                  return (
+                    <MenuItem key={user.user_id} value={user.user_id}>
+                      {user.user_name}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          )}
+          {submitError && <Alert severity="error">{submitError}</Alert>}
           <Stack
             className="stack"
             direction={{ xs: "column", sm: "row" }}
@@ -212,14 +214,20 @@ function UserDetail() {
               <Button
                 variant="contained"
                 color="error"
-                onClick={() => navigate(-1)}
+                onClick={() => {
+                  setSubmitError(null);
+                  navigate(-1);
+                }}
               >
                 Cancel
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => setUserInfo(initialValues)}
+                onClick={() => {
+                  setUserInfo(initialValues);
+                  setSubmitError(null);
+                }}
               >
                 Reset
               </Button>
