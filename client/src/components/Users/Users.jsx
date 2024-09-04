@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -7,6 +7,7 @@ import {
   Link,
   Paper,
   Divider,
+  IconButton,
 } from "@mui/material";
 
 import {
@@ -17,9 +18,12 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
+
 import { useEffect, useState } from "react";
 import "./Users.scss";
 function Users() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [customers, setCustomers] = useState([]);
 
@@ -32,7 +36,7 @@ function Users() {
         throw new Error("User not logged in or session expired");
       }
       const response = await axios.get(
-        `http://localhost:8080/users/${user_id}`,
+        `http://localhost:8080/users/${user_id}/reportingUsers`,
         {
           withCredentials: true,
         }
@@ -100,8 +104,17 @@ function Users() {
                     component="th"
                     scope="row"
                   >
+                    <IconButton
+                      color="primary"
+                      onClick={() =>
+                        navigate(`/dashboard/users/${user.user_id}`)
+                      }
+                    >
+                      <EditNoteTwoToneIcon />
+                    </IconButton>
                     {user.user_name}
                   </TableCell>
+
                   <TableCell align="left">{user.user_email}</TableCell>
                   <TableCell align="right">{user.user_role}</TableCell>
                   <TableCell align="right">{user.manager_name}</TableCell>

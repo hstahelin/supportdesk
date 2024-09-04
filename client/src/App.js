@@ -12,6 +12,7 @@ import TicketDetails from "./components/TicketDetails/TicketDetails";
 import ViewKB from "./components/ViewKB/ViewKB";
 import CreateKB from "./components/CreateKB/CreateKB";
 import EditTicket from "./EditTicket/EditTicket";
+import UserDetail from "./components/UserDetail/UserDetail";
 
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const Overview = lazy(() => import("./components/Overview/Overview"));
@@ -58,6 +59,7 @@ function DashboardRoutes() {
         path="createticket"
         element={<Dashboard Content={CreateTicket} />}
       />
+      <Route path="users/:id" element={<Dashboard Content={UserDetail} />} />
 
       <Route path="users" element={<Dashboard Content={Users} />} />
       <Route
