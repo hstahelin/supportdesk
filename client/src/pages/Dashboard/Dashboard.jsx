@@ -4,7 +4,7 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Sidebar from "../../components/Sidebar/Sidebar";
 
-function Dashboard({ Content }) {
+function Dashboard({ Content, ticketsFilter }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ function Dashboard({ Content }) {
   }
 
   if (isLoggedIn) {
-    return <Sidebar Content={Content} />;
+    return <Sidebar Content={Content} ticketsFilter={ticketsFilter} />;
   }
 
   return null;

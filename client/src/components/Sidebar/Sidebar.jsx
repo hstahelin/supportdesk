@@ -37,7 +37,7 @@ import UserMenu from "../UserMenu/UserMenu";
 import "./Sidebar.scss";
 import axios from "axios";
 
-const drawerWidth = 220;
+const drawerWidth = 235;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -104,7 +104,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-function Sidebar({ Content }) {
+function Sidebar({ Content, ticketsFilter }) {
   const navigate = useNavigate();
   let user = null;
   const userJson = sessionStorage.getItem("user");
@@ -290,6 +290,23 @@ function Sidebar({ Content }) {
                   justifyContent: open ? "initial" : "center",
                   px: 10,
                 }}
+                selected={selectedIndex === 7}
+                onClick={(event) => handleListItemClick(event, 7)}
+                component={Link}
+                to="/dashboard/unassignedtickets"
+              >
+                <ListItemText
+                  primary="Unassigned Tickets"
+                  sx={{ opacity: open ? 1 : 0, color: "primary.dark" }}
+                />
+              </ListItemButton>
+
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 10,
+                }}
                 selected={selectedIndex === 6}
                 onClick={(event) => handleListItemClick(event, 6)}
                 component={Link}
@@ -449,7 +466,7 @@ function Sidebar({ Content }) {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Content />
+        <Content ticketsFilter={ticketsFilter} />
       </Box>
     </Box>
   );

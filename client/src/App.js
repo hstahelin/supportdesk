@@ -59,6 +59,10 @@ function DashboardRoutes() {
         path="createticket"
         element={<Dashboard Content={CreateTicket} />}
       />
+      <Route
+        path="unassignedtickets"
+        element={<Dashboard Content={MyTickets} ticketsFilter="unassigned" />}
+      />
       <Route path="users/:id" element={<Dashboard Content={UserDetail} />} />
 
       <Route path="users" element={<Dashboard Content={Users} />} />

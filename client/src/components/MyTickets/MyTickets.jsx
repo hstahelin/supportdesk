@@ -11,7 +11,7 @@ import { formatDate } from "../../utils/utils";
 
 import "./MyTickets.scss";
 
-function MyTickets({ user }) {
+function MyTickets({ user, ticketsFilter }) {
   const navigate = useNavigate();
 
   const userJson = sessionStorage.getItem("user");
@@ -21,20 +21,29 @@ function MyTickets({ user }) {
     console.error("No user found.");
   }
   const [tickets, setTickets] = useState([]);
-
+  // const [ticketsFilter, setTicketsFilter] = useState("unassigned");
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:8080/tickets", {
         withCredentials: true,
       });
-      setTickets(response.data);
+      let fetchedTickets = response.data;
+
+      if (ticketsFilter === "unassigned") {
+        fetchedTickets = fetchedTickets.filter(
+          (ticket) => ticket.assign_user_id === null
+        );
+      }
+
+      setTickets(fetchedTickets);
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
     fetchData();
-  }, []);
+    // eslint-disable-next-line
+  }, [ticketsFilter]);
 
   const [columnVisibilityModel, setColumnVisibilityModel] = useState({});
 
@@ -225,7 +234,9 @@ function MyTickets({ user }) {
           Dashboard
         </Link>
 
-        <Typography color="text.primary">Tickets</Typography>
+        <Typography color="text.primary">
+          {ticketsFilter === "unassigned" ? "Unassigned " : "All "}Tickets
+        </Typography>
       </Breadcrumbs>
       <Paper elevation={4} className="paper" square={false}>
         <DataGrid
