@@ -65,6 +65,83 @@ function Overview() {
     fetchData();
   }, []);
 
+  function unassignedTickets(data) {
+    const total = data.length;
+    const unassigned = data.filter((element) => !element.assign_user_id).length;
+    const temperature = unassigned / total;
+
+    return {
+      value: unassigned,
+      unit: "tickets",
+      temperature:
+        temperature >= 0.6 ? "high" : temperature >= 0.4 ? "warning" : "normal",
+    };
+  }
+
+  function backlog(data) {
+    const total = data.length;
+
+    const open = data.filter(
+      (element) => element.status !== "Solved" || element.status !== "Canceled"
+    ).length;
+    const temperature = open / total;
+
+    return {
+      value: open,
+      unit: "tickets",
+      temperature:
+        temperature >= 0.6 ? "high" : temperature >= 0.4 ? "warning" : "normal",
+    };
+  }
+
+  function resolutionTime(data) {
+    // const total = data.length;
+
+    const closed = data.filter((element) => element.status === "Solved");
+
+    let resTime = closed.reduce((acc, ticket) => {
+      const lastChangeDate = new Date(ticket.last_change_date);
+      const createdAt = new Date(ticket.created_at);
+
+      return acc + (lastChangeDate - createdAt);
+    }, 0);
+
+    resTime = resTime / (1000 * 60 * 60) / closed.length;
+
+    return {
+      value: resTime.toFixed(2),
+      unit: "hours/ticket",
+      temperature: resTime >= 8 ? "high" : resTime >= 4 ? "warning" : "normal",
+    };
+  }
+
+  function agentUtilization(data) {
+    const assigned = data.filter((element) => element.assign_user_id);
+    const agentCounts = assigned.reduce((accumulator, ticket) => {
+      if (accumulator[ticket.assign_email]) {
+        accumulator[ticket.assign_email]++;
+      } else {
+        accumulator[ticket.assign_email] = 1;
+      }
+      return accumulator;
+    }, {});
+
+    const totalTickets = assigned.length;
+    const totalAgents = Object.keys(agentCounts).length;
+    const averageTicketsPerAgent = totalTickets / totalAgents;
+
+    return {
+      value: averageTicketsPerAgent.toFixed(1),
+      unit: "tickets/agent",
+      temperature:
+        averageTicketsPerAgent >= 8
+          ? "high"
+          : averageTicketsPerAgent >= 5
+          ? "warning"
+          : "normal",
+    };
+  }
+
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
@@ -81,30 +158,10 @@ function Overview() {
           alignItems="stretch"
           padding={2}
         >
-          <KPI
-            label={"First Response Time"}
-            value={"2.5"}
-            unit="hours"
-            temperature="high"
-          />
-          <KPI
-            label={"Resolution Time"}
-            value={"0.72"}
-            unit="days"
-            temperature="normal"
-          />
-          <KPI
-            label={"Backlog"}
-            value={"25"}
-            unit="tickets"
-            temperature="warning"
-          />
-          <KPI
-            label={"First Day Resolution"}
-            value={"12"}
-            unit="tickets"
-            temperature="normal"
-          />
+          <KPI label={"Resolution Time"} data={resolutionTime(tickets)} />
+          <KPI label={"Agent Utilization"} data={agentUtilization(tickets)} />
+          <KPI label={"Backlog"} data={backlog(tickets)} />
+          <KPI label={"Unanswered"} data={unassignedTickets(tickets)} />
           <Grid item xs={12} md={6}>
             <Card>
               <CardHeader
@@ -117,13 +174,13 @@ function Overview() {
             </Card>
           </Grid>
 
-          <Grid item xs md lg>
+          <Grid item xs={12} md={6}>
             <Card className="card-container">
               <CardHeader
                 title="Ticket Priority Insights"
                 className="card-header"
               />
-              <CardContent className="card-content" sx={{ height: "100" }}>
+              <CardContent className="card-content">
                 <PieTest data={priorityData} />
               </CardContent>
             </Card>

@@ -28,8 +28,7 @@ export default function PieTest({ data }) {
         width: "100%",
         height: 300,
         maxWidth: "500px",
-        display: "flex",
-        justifyContent: "center",
+        m: "auto",
       }}
     >
       <PieChart
@@ -42,7 +41,7 @@ export default function PieTest({ data }) {
             data: formattedData,
             highlightScope: { faded: "global", highlighted: "item" },
             faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
-            valueFormatter: (e) => `${e.percentage}%`,
+            valueFormatter: (e) => `${e.value} tickets`,
           },
         ]}
         width={400}
