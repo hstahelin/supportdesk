@@ -16,6 +16,7 @@ import {
 import "./Overview.scss";
 import PieTest from "../PieTest/PieTest";
 import KPI from "../KPI/KPI";
+import Barchart from "../BarChart/BarChart";
 
 function Overview() {
   const [statusData, setStatusData] = useState([]);
@@ -182,6 +183,15 @@ function Overview() {
               />
               <CardContent className="card-content">
                 <PieTest data={priorityData} />
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Card className="card-container">
+              <CardHeader title="Tickets by Month" className="card-header" />
+              <CardContent className="card-content">
+                <Barchart data={tickets} />
               </CardContent>
             </Card>
           </Grid>
