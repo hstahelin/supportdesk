@@ -25,10 +25,18 @@ function Users() {
 
   const fetchUsersData = async () => {
     try {
-      console.log("FIX API CALL, hardcoded user id");
-      const response = await axios.get("http://localhost:8080/users/2", {
-        withCredentials: true,
-      });
+      const storedUser = JSON.parse(sessionStorage.getItem("user"));
+      const user_id = storedUser?.user_id;
+
+      if (!user_id) {
+        throw new Error("User not logged in or session expired");
+      }
+      const response = await axios.get(
+        `http://localhost:8080/users/${user_id}`,
+        {
+          withCredentials: true,
+        }
+      );
       setUsers(response.data);
     } catch (error) {
       console.error(error);

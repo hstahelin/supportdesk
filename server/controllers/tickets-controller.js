@@ -167,6 +167,77 @@ const getTimeline = async (req, res) => {
   }
 };
 
+const updateTicket = async (req, res) => {
+  const trx = await knex.transaction();
+
+  try {
+    const ticket_id = req.params.id;
+    const { status_id, priority_id, assign_user_id, description, user_id } =
+      req.body;
+
+    if (!ticket_id || !user_id) {
+      throw new Error("Missing required fields");
+    }
+
+    const ticketFound = await trx("tickets_current")
+      .where("ticket_id", ticket_id)
+      .first();
+
+    if (!ticketFound) {
+      throw new Error("Ticket not found");
+    }
+
+    // STATUS
+    if (ticketFound.status_id != status_id && status_id) {
+      const newStatus = { ticket_id, status_id, created_by_user_id: user_id };
+      await trx("status_history").insert(newStatus);
+    }
+
+    // PRIORITY
+    if (ticketFound.priority_id != priority_id && priority_id) {
+      const newPriority = {
+        ticket_id,
+        priority_id,
+        created_by_user_id: user_id,
+      };
+      await trx("priority_history").insert(newPriority);
+    }
+
+    // ASSIGN
+    if (ticketFound.assign_user_id != assign_user_id && assign_user_id) {
+      const newAssign = {
+        ticket_id,
+        assign_user_id,
+        created_by_user_id: user_id,
+      };
+      await trx("assign_history").insert(newAssign);
+    }
+
+    // DESCRIPTION
+    if (ticketFound.description != description && description) {
+      await trx("tickets")
+        .update({ description })
+        .where("ticket_id", ticket_id);
+    }
+
+    await trx.commit();
+
+    const ticketUpdated = await knex("tickets_current")
+      .where("ticket_id", ticket_id)
+      .first();
+
+    res.status(200).json(ticketUpdated);
+  } catch (error) {
+    await trx.rollback();
+    console.error(`Error updating ticket: ${error.message}`);
+    res
+      .status(500)
+      .json({ message: `Unable to update Ticket: ${error.message}` });
+  } finally {
+    trx.destroy();
+  }
+};
+
 module.exports = {
   getAll,
   getStatusSummary,
@@ -176,4 +247,5 @@ module.exports = {
   getComments,
   createComment,
   getTimeline,
+  updateTicket,
 };

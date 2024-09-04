@@ -21,11 +21,17 @@ function Notifications() {
 
   async function fetchNotifications() {
     try {
+      const storedUser = JSON.parse(sessionStorage.getItem("user"));
+      const user_id = storedUser?.user_id;
+
+      if (!user_id) {
+        throw new Error("User not logged in or session expired");
+      }
+
       const response = await axios.get(
-        "http://localhost:8080/users/2/notifications",
+        `http://localhost:8080/users/${user_id}/notifications`,
         { withCredentials: true }
       );
-      console.log("FIX HARDCODED USER ID");
 
       setNotifications(response.data);
     } catch (error) {

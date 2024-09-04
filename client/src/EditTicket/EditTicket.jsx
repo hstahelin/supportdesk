@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 import {
   Box,
   Typography,
@@ -6,82 +8,119 @@ import {
   Link,
   Paper,
   Grid,
-  Stack,
   Card,
   CardHeader,
   CardContent,
-  Chip,
+  CardActions,
+  Button,
 } from "@mui/material";
+
+import {
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  TextField,
+} from "@mui/material";
+import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
 
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { formatDate } from "../utils/utils";
 
 function EditTicket() {
+  const navigate = useNavigate();
   const { id } = useParams();
+  const [initialValues, setInitialvalues] = useState(null);
   const [ticketInfo, setTicketInfo] = useState(null);
+  const [assignList, setAssignList] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleChange = (e) => {
+    setTicketInfo({
+      ...ticketInfo,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const storedUser = JSON.parse(sessionStorage.getItem("user"));
+      const user_id = storedUser?.user_id;
+
+      if (!user_id) {
+        throw new Error("User not logged in or session expired");
+      }
+
+      const updateValues = {
+        status_id: ticketInfo.status_id,
+        priority_id: ticketInfo.priority_id,
+        description: ticketInfo.description,
+        assign_user_id: ticketInfo.assign_user_id,
+        user_id: user_id,
+      };
+
+      await axios.put(`http://localhost:8080/tickets/${id}`, updateValues, {
+        withCredentials: true,
+      });
+
+      navigate(`/dashboard/tickets/${id}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   async function fetchTicketInfo() {
     try {
       const response = await axios.get(`http://localhost:8080/tickets/${id}`, {
         withCredentials: true,
       });
-      console.log(response.data);
 
+      setInitialvalues(response.data);
       setTicketInfo(response.data);
     } catch (error) {
       console.error(error);
-      //   setErrorMessage(error.response?.data?.message || "An error occurred");
+      const newMessage = error.response?.data?.message || "An error occurred";
+      setErrorMessage((prevMessage) =>
+        prevMessage ? `${prevMessage} | ${newMessage}` : newMessage
+      );
     }
   }
+
+  async function fetchStatus() {
+    console.log("FIX HARDCODED STATUS");
+  }
+
+  const fetchAgents = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/users", {
+        params: { role: "Agent" },
+        withCredentials: true,
+      });
+
+      setAssignList(response.data);
+    } catch (error) {
+      console.error(error);
+      const newMessage = error.response?.data?.message || "An error occurred";
+      setErrorMessage((prevMessage) =>
+        prevMessage ? `${prevMessage} | ${newMessage}` : newMessage
+      );
+    }
+  };
 
   useEffect(() => {
+    fetchStatus();
+    fetchAgents();
     fetchTicketInfo();
     // eslint-disable-next-line
-  }, [id]);
-
-  function formatStatus(value) {
-    const status = value;
-    let color = "default";
-    let variant = "outlined";
-    let disabled = false;
-
-    if (status === "New") color = "primary";
-    else if (status === "In Progress") color = "secondary";
-    else if (status === "Escalated") {
-      color = "error";
-      variant = "default";
-    } else if (status === "Solved") color = "success";
-    else if (status === "Canceled") {
-      color = "default";
-      disabled = true;
-      variant = "default";
-    }
-
-    return (
-      <Chip
-        label={status}
-        color={color}
-        variant={variant}
-        disabled={disabled}
-      />
-    );
-  }
-
-  function formatPriority(value) {
-    const priority = value;
-    let color = "default";
-    let variant = "outlined";
-
-    if (priority === "High") color = "error";
-    else if (priority === "Medium") color = "warning";
-    else if (priority === "Low") color = "success";
-
-    return <Chip label={priority} color={color} variant={variant} />;
-  }
+  }, []);
 
   if (!ticketInfo) {
-    return <h1>{"errorMessage"}</h1>;
+    return <h1>{errorMessage}</h1>;
   }
   return (
     <Box component="section" sx={{ p: 2 }}>
@@ -114,107 +153,182 @@ function EditTicket() {
         }}
       >
         <Typography variant="h5">Edit Ticket</Typography>
-        <Grid
-          container
-          spacing={3}
-          direction="row"
-          justifyContent="space-evenly"
-          alignItems="stretch"
-        >
-          <Grid item xs={12} md={8}>
-            <Stack spacing={2}>
-              <Card>
-                <CardHeader
-                  title={ticketInfo.title}
-                  className="card-header"
-                  titleTypographyProps={{ variant: "h6" }}
-                />
-                <CardContent>
-                  <Grid
-                    container
-                    spacing={2}
-                    alignItems="stretch"
-                    justifyContent="center"
-                  >
-                    <Grid item xs={12}>
-                      <Grid container justifyContent="flex-end" spacing={2}>
-                        <Grid item>
-                          {/* <Chip label={ticketInfo.status} /> */}
-                          {formatStatus(ticketInfo.status)}
-                        </Grid>
-                        <Grid item>
-                          {/* <Chip label={ticketInfo.priority} /> */}
-                          {formatPriority(ticketInfo.priority)}
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Paper elevation={0} sx={{ p: 2 }}>
-                        <Typography variant="button" gutterBottom>
-                          Description
-                        </Typography>
-                        <Typography variant="body1" gutterBottom>
-                          {ticketInfo.description}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Paper sx={{ p: 2 }}>
-                        <Typography variant="button" gutterBottom>
-                          Creation Date
-                        </Typography>
-                        <Typography variant="body1" gutterBottom>
-                          {formatDate(ticketInfo.created_at)}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Paper sx={{ p: 2 }}>
-                        <Typography variant="button" gutterBottom>
-                          Last Update Date
-                        </Typography>
-                        <Typography variant="body1" gutterBottom>
-                          {formatDate(ticketInfo.last_change_date)}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Paper sx={{ p: 2 }}>
-                        <Typography variant="button" gutterBottom>
-                          Assigned to
-                        </Typography>
-                        <Typography variant="body1" gutterBottom>
-                          {ticketInfo.assign_first_name
-                            ? `${ticketInfo.assign_first_name} ${ticketInfo.assign_last_name}`
-                            : "Not Assigned"}
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Paper sx={{ p: 2 }}>
-                        <Typography variant="button" gutterBottom>
-                          Created by
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          gutterBottom
-                          sx={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            maxWidth: "100%",
-                          }}
-                        >
-                          {ticketInfo.created_email}
-                        </Typography>
-                      </Paper>
-                    </Grid>
+
+        <Card>
+          <CardHeader
+            title={ticketInfo.title}
+            className="card-header"
+            titleTypographyProps={{ variant: "h6" }}
+          />
+          <CardContent>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Grid
+                  container
+                  justifyContent="space-between"
+                  alignItems="flex-end"
+                  spacing={2}
+                  flexDirection="row"
+                >
+                  <Grid item>
+                    <FormControl>
+                      <InputLabel id="status-label">Status</InputLabel>
+                      <Select
+                        sx={{ width: "22svw" }}
+                        labelId="status-label"
+                        id="status"
+                        name="status_id"
+                        value={ticketInfo.status_id}
+                        label="Status"
+                        onChange={handleChange}
+                      >
+                        <MenuItem value={1}>New</MenuItem>
+                        <MenuItem value={2}>In Progress</MenuItem>
+                        <MenuItem value={3}>Escalated</MenuItem>
+                        <MenuItem value={4}>Solved</MenuItem>
+                        <MenuItem value={5}>Pending</MenuItem>
+                        <MenuItem value={6}>Cancelled</MenuItem>
+                      </Select>
+                    </FormControl>
                   </Grid>
-                </CardContent>
-              </Card>
-            </Stack>
-          </Grid>
-        </Grid>
+                  <Grid item>
+                    <FormControl>
+                      <FormLabel id="priority-group-label">Priority</FormLabel>
+                      <RadioGroup
+                        row
+                        aria-labelledby="priority-group-label"
+                        name="priority_id"
+                        value={ticketInfo.priority_id}
+                        onChange={handleChange}
+                      >
+                        <FormControlLabel
+                          value="3"
+                          control={<Radio />}
+                          label="Low"
+                        />
+                        <FormControlLabel
+                          value="2"
+                          control={<Radio color="warning" />}
+                          label="Medium"
+                        />
+                        <FormControlLabel
+                          value="1"
+                          control={<Radio color="error" />}
+                          label="High"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <Paper elevation={0}>
+                  <TextField
+                    id="description"
+                    name="description"
+                    label="Description"
+                    variant="outlined"
+                    fullWidth
+                    multiline
+                    rows={6}
+                    value={ticketInfo.description}
+                    required
+                    onChange={handleChange}
+                  />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Paper sx={{ p: 2 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="assign-label">Assign To</InputLabel>
+                    <Select
+                      labelId="assign-label"
+                      id="assign_user_id"
+                      value={ticketInfo.assign_user_id}
+                      label="assign"
+                      name="assign_user_id"
+                      onChange={handleChange}
+                    >
+                      {assignList.map((agent) => (
+                        <MenuItem key={agent.user_id} value={agent.user_id}>
+                          {agent.user_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Paper sx={{ p: 2 }}>
+                  <Typography variant="button" gutterBottom>
+                    Creation Date
+                  </Typography>
+                  <Typography variant="body1" gutterBottom>
+                    {formatDate(ticketInfo.created_at)}
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Paper sx={{ p: 2 }}>
+                  <Typography variant="button" gutterBottom>
+                    Last Update Date
+                  </Typography>
+                  <Typography variant="body1" gutterBottom>
+                    {formatDate(ticketInfo.last_change_date)}
+                  </Typography>
+                </Paper>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Paper sx={{ p: 2 }}>
+                  <Typography variant="button" gutterBottom>
+                    Created by
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    gutterBottom
+                    sx={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: "100%",
+                    }}
+                  >
+                    {ticketInfo.created_email}
+                  </Typography>
+                </Paper>
+              </Grid>
+            </Grid>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "space-between" }}>
+            <Box>
+              <Button
+                color="error"
+                variant="contained"
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => setTicketInfo(initialValues)}
+                sx={{ ml: 1 }}
+              >
+                Reset
+              </Button>
+            </Box>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              endIcon={<EditNoteTwoToneIcon />}
+            >
+              Update
+            </Button>
+          </CardActions>
+        </Card>
       </Paper>
     </Box>
   );
