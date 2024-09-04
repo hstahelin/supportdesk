@@ -12,6 +12,8 @@ import axios from "axios";
 
 function UserMenu() {
   const navigate = useNavigate();
+  const storedUser = JSON.parse(sessionStorage.getItem("user"));
+  const loggedUserId = storedUser?.user_id;
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -66,8 +68,14 @@ function UserMenu() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} divider>
-          Profile
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate(`/dashboard/users/${loggedUserId}`);
+          }}
+          divider
+        >
+          User Details
         </MenuItem>
         <MenuItem onClick={colorMode.toggleColorMode} divider>
           {theme.palette.mode.charAt(0).toUpperCase() +
