@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import Sidebar from "../../components/Sidebar/Sidebar";
-import { getUserRole, isLoggedIn } from "../../utils/session";
+import { isLoggedIn } from "../../utils/session";
 import NotLoggedIn from "../../components/NotLoggedIn/NotLoggedIn";
+import { useEffect, useState } from "react";
 
 function Dashboard({ Content, ticketsFilter }) {
-  // const [isUserLoggedIn, setIsUserLoggedIn] = useState(isLoggedIn());
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(isLoggedIn());
+
   // const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   // useEffect(() => {
   //   try {
@@ -43,11 +40,13 @@ function Dashboard({ Content, ticketsFilter }) {
   //     </div>
   //   );
   // }
-  // useEffect(() => {
-  //   setIsUserLoggedIn(isLoggedIn());
-  // });
+  useEffect(() => {
+    console.log("Checking user: ", isLoggedIn());
 
-  if (isLoggedIn()) {
+    setIsUserLoggedIn(isLoggedIn());
+  });
+
+  if (isLoggedIn() && isUserLoggedIn) {
     return <Sidebar Content={Content} ticketsFilter={ticketsFilter} />;
   }
 

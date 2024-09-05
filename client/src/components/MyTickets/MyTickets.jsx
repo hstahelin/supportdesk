@@ -10,6 +10,7 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { formatDate } from "../../utils/utils";
 
 import "./MyTickets.scss";
+import NotData from "../NoData/NoData";
 
 function MyTickets({ user, ticketsFilter }) {
   const navigate = useNavigate();
@@ -238,24 +239,28 @@ function MyTickets({ user, ticketsFilter }) {
           {ticketsFilter === "unassigned" ? "Unassigned " : "All "}Tickets
         </Typography>
       </Breadcrumbs>
-      <Paper elevation={4} className="paper" square={false}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          columnVisibilityModel={columnVisibilityModel}
-          onColumnVisibilityChange={(newModel) =>
-            setColumnVisibilityModel(newModel)
-          }
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 25,
+      {tickets.length === 0 ? (
+        <NotData />
+      ) : (
+        <Paper elevation={4} className="paper" square={false}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            columnVisibilityModel={columnVisibilityModel}
+            onColumnVisibilityChange={(newModel) =>
+              setColumnVisibilityModel(newModel)
+            }
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 25,
+                },
               },
-            },
-          }}
-          pageSizeOptions={[10, 25, 50]}
-        />
-      </Paper>
+            }}
+            pageSizeOptions={[10, 25, 50]}
+          />
+        </Paper>
+      )}
     </Box>
   );
 }

@@ -10,13 +10,13 @@ import {
   Breadcrumbs,
   Paper,
   Grid,
-  Divider,
 } from "@mui/material";
 
 import "./Overview.scss";
 import PieTest from "../PieTest/PieTest";
 import KPI from "../KPI/KPI";
 import Barchart from "../BarChart/BarChart";
+import NotData from "../NoData/NoData";
 
 function Overview() {
   const [statusData, setStatusData] = useState([]);
@@ -99,6 +99,13 @@ function Overview() {
     // const total = data.length;
 
     const closed = data.filter((element) => element.status === "Solved");
+    if (closed.length === 0) {
+      return {
+        value: "No Data",
+        unit: "",
+        temperature: "nodata",
+      };
+    }
 
     let resTime = closed.reduce((acc, ticket) => {
       const lastChangeDate = new Date(ticket.last_change_date);
@@ -118,6 +125,13 @@ function Overview() {
 
   function agentUtilization(data) {
     const assigned = data.filter((element) => element.assign_user_id);
+    if (assigned.length === 0) {
+      return {
+        value: "No Data",
+        unit: "",
+        temperature: "nodata",
+      };
+    }
     const agentCounts = assigned.reduce((accumulator, ticket) => {
       if (accumulator[ticket.assign_email]) {
         accumulator[ticket.assign_email]++;
@@ -149,53 +163,66 @@ function Overview() {
         <Typography color="text.primary">Dashboard</Typography>
       </Breadcrumbs>
 
-      <Paper elevation={4} square={false}>
-        <Divider />
-        <Grid
-          container
-          spacing={3}
-          direction="row"
-          justifyContent="space-evenly"
-          alignItems="stretch"
-          padding={2}
-        >
-          <KPI label={"Resolution Time"} data={resolutionTime(tickets)} />
-          <KPI label={"Agent Utilization"} data={agentUtilization(tickets)} />
-          <KPI label={"Backlog"} data={backlog(tickets)} />
-          <KPI label={"Unanswered"} data={unassignedTickets(tickets)} />
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardHeader
-                title="Ticket Status Insights"
-                className="card-header"
-              />
-              <CardContent className="card-content">
-                <PieTest data={statusData} />
-              </CardContent>
-            </Card>
-          </Grid>
+      <Paper
+        elevation={4}
+        square={false}
+        sx={{
+          padding: 2,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          marginTop: 2,
+        }}
+      >
+        {tickets.length === 0 ? (
+          <NotData />
+        ) : (
+          <Grid
+            container
+            spacing={3}
+            direction="row"
+            justifyContent="space-evenly"
+            alignItems="stretch"
+            padding={2}
+          >
+            <KPI label={"Resolution Time"} data={resolutionTime(tickets)} />
+            <KPI label={"Agent Utilization"} data={agentUtilization(tickets)} />
+            <KPI label={"Backlog"} data={backlog(tickets)} />
+            <KPI label={"Unanswered"} data={unassignedTickets(tickets)} />
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardHeader
+                  title="Ticket Status Insights"
+                  className="card-header"
+                />
+                <CardContent className="card-content">
+                  <PieTest data={statusData} />
+                </CardContent>
+              </Card>
+            </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Card className="card-container">
-              <CardHeader
-                title="Ticket Priority Insights"
-                className="card-header"
-              />
-              <CardContent className="card-content">
-                <PieTest data={priorityData} />
-              </CardContent>
-            </Card>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <Card className="card-container">
+                <CardHeader
+                  title="Ticket Priority Insights"
+                  className="card-header"
+                />
+                <CardContent className="card-content">
+                  <PieTest data={priorityData} />
+                </CardContent>
+              </Card>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Card className="card-container">
-              <CardHeader title="Tickets by Month" className="card-header" />
-              <CardContent className="card-content">
-                <Barchart data={tickets} />
-              </CardContent>
-            </Card>
+            <Grid item xs={12}>
+              <Card className="card-container">
+                <CardHeader title="Tickets by Month" className="card-header" />
+                <CardContent className="card-content">
+                  <Barchart data={tickets} />
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </Paper>
     </Box>
   );

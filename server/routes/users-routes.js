@@ -1,7 +1,6 @@
 const express = require("express");
 const {
   ensureAuthenticated,
-  ensureAdmin,
   ensureAgent,
 } = require("../middlewares/authMiddlewares");
 const { canAccessUser } = require("../middlewares/userMiddlewares");
@@ -10,7 +9,6 @@ const router = express.Router();
 
 router.route("/").get(ensureAuthenticated, ensureAgent, usersController.getAll);
 
-// router.route("/:id").get(ensureAuthenticated, usersController.getOne);
 router
   .route("/notifications")
   .get(ensureAuthenticated, usersController.getNotifications);

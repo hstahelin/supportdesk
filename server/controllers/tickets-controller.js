@@ -1,72 +1,5 @@
 const knex = require("knex")(require("../knexfile"));
 
-const getAll = async (req, res) => {
-  const currentUserId = req.user.user_id;
-  const currentUserRoleId = req.user.role_id;
-
-  try {
-    const { email } = req.query;
-
-    // Recursive CTE query to fetch tickets assigned to users under the current user
-    let queryAssigned = knex
-      .withRecursive("user_hierarchy", (qb) => {
-        qb.select("user_id")
-          .from("USERS")
-          .where("user_id", currentUserId)
-          .unionAll(function () {
-            this.select("u.user_id")
-              .from("USERS as u")
-              .innerJoin(
-                "user_hierarchy as uh",
-                "u.manager_user_id",
-                "uh.user_id"
-              );
-          });
-      })
-      .select("tc.*")
-      .from("tickets_current as tc")
-      .join("user_hierarchy as uh", "uh.user_id", "tc.assign_user_id");
-
-    // Filter by email if provided
-    if (email) {
-      queryAssigned = queryAssigned.where("tc.created_email", email);
-    }
-
-    // If the user's role is 2 or 3, include unassigned tickets
-    let query;
-    if (currentUserRoleId === 2 || currentUserRoleId === 3) {
-      const queryUnassigned = knex
-        .select("*")
-        .from("tickets_current")
-        .whereNull("assign_user_id");
-
-      // Combine the two queries using UNION ALL
-      query = knex
-        .select("*")
-        .from({ result: queryAssigned.unionAll(queryUnassigned) });
-    } else if (currentUserRoleId === 4) {
-      const queryCustomer = knex
-        .select("*")
-        .from("tickets_current")
-        .where("created_user_id", currentUserId);
-
-      // Combine the two queries using UNION ALL
-      query = knex
-        .select("*")
-        .from({ result: queryAssigned.unionAll(queryCustomer) });
-    } else {
-      // If no role check is needed, just use the assigned tickets query
-      query = queryAssigned;
-    }
-
-    // Execute the query and return the results
-    const tickets = await query.orderBy("created_at", "desc");
-    res.status(200).json(tickets);
-  } catch (err) {
-    res.status(400).send(`Error retrieving tickets: ${err}`);
-  }
-};
-
 const buildTicketIdSubquery = (knex, currentUserId, currentUserRoleId) => {
   if (currentUserRoleId == 2 || currentUserRoleId == 3) {
     return knex
@@ -105,6 +38,31 @@ const buildTicketIdSubquery = (knex, currentUserId, currentUserRoleId) => {
   }
   return null;
   // Add more filters as needed
+};
+
+const getAll = async (req, res) => {
+  const currentUserId = req.user.user_id;
+  const currentUserRoleId = req.user.role_id;
+
+  try {
+    const ticketIdSubquery = buildTicketIdSubquery(
+      knex,
+      currentUserId,
+      currentUserRoleId
+    );
+    const { email } = req.query;
+
+    let query = knex("tickets_current").whereIn("ticket_id", ticketIdSubquery);
+
+    if (email) {
+      query = query.where("created_email", email);
+    }
+
+    const tickets = await query.orderBy("created_at", "desc");
+    res.status(200).json(tickets);
+  } catch (err) {
+    res.status(400).send(`Error retrieving tickets: ${err}`);
+  }
 };
 
 const getPrioritySummary = async (req, res) => {

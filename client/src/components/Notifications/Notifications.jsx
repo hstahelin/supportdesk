@@ -15,6 +15,7 @@ import ConfirmationNumberTwoToneIcon from "@mui/icons-material/ConfirmationNumbe
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../../utils/utils";
+import NotData from "../NoData/NoData";
 
 function Notifications() {
   const [notifications, setNotifications] = useState([]);
@@ -43,6 +44,9 @@ function Notifications() {
     fetchNotifications();
   }, []);
 
+  // if (notifications.length === 0) {
+  //   return <NotData />;
+  // }
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
@@ -64,39 +68,43 @@ function Notifications() {
         }}
       >
         <Typography variant="h5">Notifications</Typography>
-        <List>
-          {notifications.map((item) => (
-            <React.Fragment
-              key={`${item.ticket_id}-${item.name}-${item.created_at}`}
-            >
-              <ListItem>
-                <ListItemIcon>
-                  <ConfirmationNumberTwoToneIcon fontSize="large" />
-                </ListItemIcon>
-                <Card sx={{ width: "100%" }} raised>
-                  <CardHeader
-                    title={`Ticket: ${item.title}`}
-                    subheader={formatDate(item.created_at)}
-                  />
+        {notifications.length === 0 ? (
+          <NotData />
+        ) : (
+          <List>
+            {notifications.map((item) => (
+              <React.Fragment
+                key={`${item.ticket_id}-${item.name}-${item.created_at}`}
+              >
+                <ListItem>
+                  <ListItemIcon>
+                    <ConfirmationNumberTwoToneIcon fontSize="large" />
+                  </ListItemIcon>
+                  <Card sx={{ width: "100%" }} raised>
+                    <CardHeader
+                      title={`Ticket: ${item.title}`}
+                      subheader={formatDate(item.created_at)}
+                    />
 
-                  {item.category === "COMMENT" ? (
-                    <CardContent>
-                      <Typography variant="h6">
-                        New <b>{item.category}</b> by: <b>{item.name}</b>
-                      </Typography>
-                    </CardContent>
-                  ) : (
-                    <CardContent>
-                      <Typography variant="h6">
-                        <b>{item.category}</b> set to: <b>{item.name}</b>
-                      </Typography>
-                    </CardContent>
-                  )}
-                </Card>
-              </ListItem>
-            </React.Fragment>
-          ))}
-        </List>
+                    {item.category === "COMMENT" ? (
+                      <CardContent>
+                        <Typography variant="h6">
+                          New <b>{item.category}</b> by: <b>{item.name}</b>
+                        </Typography>
+                      </CardContent>
+                    ) : (
+                      <CardContent>
+                        <Typography variant="h6">
+                          <b>{item.category}</b> set to: <b>{item.name}</b>
+                        </Typography>
+                      </CardContent>
+                    )}
+                  </Card>
+                </ListItem>
+              </React.Fragment>
+            ))}
+          </List>
+        )}
       </Paper>
     </Box>
   );
