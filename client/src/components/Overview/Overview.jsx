@@ -196,7 +196,7 @@ function Overview() {
                   className="card-header"
                 />
                 <CardContent className="card-content">
-                  <PieTest data={statusData} />
+                  <PieTest data={statusData} category="status" />
                 </CardContent>
               </Card>
             </Grid>
@@ -208,7 +208,7 @@ function Overview() {
                   className="card-header"
                 />
                 <CardContent className="card-content">
-                  <PieTest data={priorityData} />
+                  <PieTest data={priorityData} category="priority" />
                 </CardContent>
               </Card>
             </Grid>

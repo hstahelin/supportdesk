@@ -1,19 +1,21 @@
 import React, { useRef } from "react";
 import { Box } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { useNavigate } from "react-router-dom";
 
-export default function PieTest({ data }) {
+export default function PieTest({ data, category }) {
+  const navigate = useNavigate();
   const formattedData = data.map((elem) => {
     if (elem.name === "High" || elem.name === "Escalated") {
       return {
-        label: elem.name,
+        label: `${elem.name}: ${elem.tickets}`,
         value: elem.tickets,
         percentage: elem.percentage,
         color: "#d32f2f",
       };
     }
     return {
-      label: elem.name,
+      label: `${elem.name}: ${elem.tickets}`,
       value: elem.tickets,
       percentage: elem.percentage,
     };
@@ -41,9 +43,13 @@ export default function PieTest({ data }) {
             data: formattedData,
             highlightScope: { faded: "global", highlighted: "item" },
             faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
-            valueFormatter: (e) => `${e.value} tickets`,
+            // valueFormatter: (e) => `${e.value} tickets`,
+            valueFormatter: (e) => "",
           },
         ]}
+        onItemClick={(event, d) =>
+          navigate(`/dashboard/tickets?${category}=${data[d.dataIndex].name}`)
+        }
         width={400}
         height={300}
       />

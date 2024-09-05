@@ -1,6 +1,7 @@
 import axios from "axios";
+import queryString from "query-string";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { Box, Chip, Typography, Breadcrumbs, Link, Paper } from "@mui/material";
 import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
@@ -15,6 +16,8 @@ import NotData from "../NoData/NoData";
 function MyTickets({ user, ticketsFilter }) {
   const navigate = useNavigate();
 
+  const location = useLocation();
+
   const userJson = sessionStorage.getItem("user");
   if (userJson) {
     user = JSON.parse(userJson);
@@ -25,9 +28,19 @@ function MyTickets({ user, ticketsFilter }) {
   // const [ticketsFilter, setTicketsFilter] = useState("unassigned");
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/tickets", {
+      const queryParams = queryString.parse(location.search);
+      const queryStringParams = queryString.stringify(queryParams);
+
+      const url = `http://localhost:8080/tickets${
+        queryStringParams ? `?${queryStringParams}` : ""
+      }`;
+
+      console.log("url: ", url);
+
+      const response = await axios.get(url, {
         withCredentials: true,
       });
+
       let fetchedTickets = response.data;
 
       if (ticketsFilter === "unassigned") {

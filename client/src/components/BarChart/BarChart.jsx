@@ -45,9 +45,11 @@ function BarChart({ data }) {
         label: ticket.label,
         month: ticket.month,
         year: ticket.year,
-        solved: 0,
         new: 0,
+        inProgress: 0,
+        pending: 0,
         escalated: 0,
+        solved: 0,
         canceled: 0,
       };
       accumulator.push(existingEntry);
@@ -72,21 +74,25 @@ function BarChart({ data }) {
   return (
     <Box
       sx={{
-        width: "100%",
+        // width: "100%",
         height: 300,
-        maxWidth: "500px",
+        maxWidth: "700px",
         m: "auto",
       }}
     >
       <BarChartMUI
+        barLabel="value"
+        borderRadius={25}
         dataset={sortedData}
         xAxis={[{ scaleType: "band", dataKey: "label" }]}
-        width={500}
+        width={700}
         height={300}
         series={[
           { dataKey: "new", label: "New", valueFormatter },
-          { dataKey: "solved", label: "Solved", valueFormatter },
+          { dataKey: "inProgress", label: "In Progress", valueFormatter },
+          { dataKey: "pending", label: "Pending", valueFormatter },
           { dataKey: "escalated", label: "Escalated", valueFormatter },
+          { dataKey: "solved", label: "Solved", valueFormatter },
           { dataKey: "canceled", label: "Canceled", valueFormatter },
         ]}
         //   series={[

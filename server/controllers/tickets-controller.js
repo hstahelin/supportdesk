@@ -50,14 +50,19 @@ const getAll = async (req, res) => {
       currentUserId,
       currentUserRoleId
     );
-    const { email } = req.query;
+    const { email, priority, status } = req.query;
 
     let query = knex("tickets_current").whereIn("ticket_id", ticketIdSubquery);
 
     if (email) {
       query = query.where("created_email", email);
     }
-
+    if (priority) {
+      query = query.where("priority", priority);
+    }
+    if (status) {
+      query = query.where("status", status);
+    }
     const tickets = await query.orderBy("created_at", "desc");
     res.status(200).json(tickets);
   } catch (err) {
