@@ -36,6 +36,7 @@ import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
 import UserMenu from "../UserMenu/UserMenu";
 import "./Sidebar.scss";
 import axios from "axios";
+import { isRoleAuthorized } from "../../utils/utils";
 
 const drawerWidth = 235;
 
@@ -283,23 +284,28 @@ function Sidebar({ Content, ticketsFilter }) {
                   sx={{ opacity: open ? 1 : 0, color: "primary.dark" }}
                 />
               </ListItemButton>
-
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 10,
-                }}
-                selected={selectedIndex === 7}
-                onClick={(event) => handleListItemClick(event, 7)}
-                component={Link}
-                to="/dashboard/unassignedtickets"
-              >
-                <ListItemText
-                  primary="Unassigned Tickets"
-                  sx={{ opacity: open ? 1 : 0, color: "primary.dark" }}
-                />
-              </ListItemButton>
+              {isRoleAuthorized(user.role_id, [
+                "Agent",
+                "Manager",
+                "Team Lead",
+              ]) && (
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 10,
+                  }}
+                  selected={selectedIndex === 7}
+                  onClick={(event) => handleListItemClick(event, 7)}
+                  component={Link}
+                  to="/dashboard/unassignedtickets"
+                >
+                  <ListItemText
+                    primary="Unassigned Tickets"
+                    sx={{ opacity: open ? 1 : 0, color: "primary.dark" }}
+                  />
+                </ListItemButton>
+              )}
 
               <ListItemButton
                 sx={{
@@ -335,38 +341,44 @@ function Sidebar({ Content, ticketsFilter }) {
           </Collapse>
           {/* NEW */}
           {/* TICKETS */}
-          <ListItem
-            disablePadding
-            sx={{ display: "block", color: "primary.dark" }}
-            component={Link}
-            to="/dashboard/users"
-          >
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-              selected={selectedIndex === 2}
-              onClick={(event) => handleListItemClick(event, 2)}
+          {isRoleAuthorized(user.role_id, [
+            "Agent",
+            "Manager",
+            "Team Lead",
+          ]) && (
+            <ListItem
+              disablePadding
+              sx={{ display: "block", color: "primary.dark" }}
+              component={Link}
+              to="/dashboard/users"
             >
-              <Tooltip title="Users / Roles">
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <PersonOutlineTwoToneIcon />
-                </ListItemIcon>
-              </Tooltip>
-              <ListItemText
-                primary="Users / Roles"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+                selected={selectedIndex === 2}
+                onClick={(event) => handleListItemClick(event, 2)}
+              >
+                <Tooltip title="Users / Roles">
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <PersonOutlineTwoToneIcon />
+                  </ListItemIcon>
+                </Tooltip>
+                <ListItemText
+                  primary="Users / Roles"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          )}
 
           <ListItem
             disablePadding

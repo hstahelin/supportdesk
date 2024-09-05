@@ -35,3 +35,8 @@ export function scrollToTop() {
     behavior: "smooth",
   });
 }
+
+export function isRoleAuthorized(userRole, roleList) {
+  const roles = ["Agent", "Manager", "Team Lead", "Customer"];
+  return roleList.includes(roles[userRole - 1]);
+}

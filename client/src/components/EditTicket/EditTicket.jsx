@@ -30,9 +30,16 @@ import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
 
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { formatDate } from "../../utils/utils";
+import { formatDate, isRoleAuthorized } from "../../utils/utils";
 
 function EditTicket() {
+  let user = null;
+  const userJson = sessionStorage.getItem("user");
+  if (userJson) {
+    user = JSON.parse(userJson);
+  } else {
+    console.error("No user found.");
+  }
   const navigate = useNavigate();
   const { id } = useParams();
   const [initialValues, setInitialvalues] = useState(null);
@@ -237,27 +244,33 @@ function EditTicket() {
                   />
                 </Paper>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Paper sx={{ p: 2 }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="assign-label">Assign To</InputLabel>
-                    <Select
-                      labelId="assign-label"
-                      id="assign_user_id"
-                      value={ticketInfo.assign_user_id}
-                      label="assign"
-                      name="assign_user_id"
-                      onChange={handleChange}
-                    >
-                      {assignList.map((agent) => (
-                        <MenuItem key={agent.user_id} value={agent.user_id}>
-                          {agent.user_name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Paper>
-              </Grid>
+              {isRoleAuthorized(user.role_id, [
+                "Agent",
+                "Manager",
+                "Team Lead",
+              ]) && (
+                <Grid item xs={12} sm={6}>
+                  <Paper sx={{ p: 2 }}>
+                    <FormControl fullWidth>
+                      <InputLabel id="assign-label">Assign To</InputLabel>
+                      <Select
+                        labelId="assign-label"
+                        id="assign_user_id"
+                        value={ticketInfo.assign_user_id}
+                        label="assign"
+                        name="assign_user_id"
+                        onChange={handleChange}
+                      >
+                        {assignList.map((agent) => (
+                          <MenuItem key={agent.user_id} value={agent.user_id}>
+                            {agent.user_name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Paper>
+                </Grid>
+              )}
               <Grid item xs={12} sm={6}>
                 <Paper sx={{ p: 2 }}>
                   <Typography variant="button" gutterBottom>

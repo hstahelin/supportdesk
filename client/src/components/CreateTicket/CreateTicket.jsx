@@ -21,6 +21,7 @@ import {
   Select,
   Alert,
 } from "@mui/material";
+import { isRoleAuthorized } from "../../utils/utils";
 import "./CreateTicket.scss";
 
 function CreateTicket() {
@@ -164,23 +165,29 @@ function CreateTicket() {
               />
             </RadioGroup>
           </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="assign-label">Assign to</InputLabel>
-            <Select
-              labelId="assign-label"
-              id="assign"
-              name="assign"
-              value={formValues.assign}
-              label="Assign to"
-              onChange={handleChange}
-            >
-              {agents.map((agent) => (
-                <MenuItem key={agent.user_id} value={agent.user_id}>
-                  {agent.user_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          {isRoleAuthorized(user.role_id, [
+            "Agent",
+            "Manager",
+            "Team Lead",
+          ]) && (
+            <FormControl fullWidth>
+              <InputLabel id="assign-label">Assign to</InputLabel>
+              <Select
+                labelId="assign-label"
+                id="assign"
+                name="assign"
+                value={formValues.assign}
+                label="Assign to"
+                onChange={handleChange}
+              >
+                {agents.map((agent) => (
+                  <MenuItem key={agent.user_id} value={agent.user_id}>
+                    {agent.user_name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
           <Divider />
           {submitError && <Alert severity="error">{submitError}</Alert>}
           <Stack

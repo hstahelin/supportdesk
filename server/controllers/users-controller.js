@@ -51,6 +51,8 @@ const getReportingUsers = async (req, res) => {
 };
 
 const getNotifications = async (req, res) => {
+  console.log("FIX NOTIFICATION FOR CUSTOMERS - created_user_id");
+
   try {
     const userId = req.params.id;
 

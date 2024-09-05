@@ -22,8 +22,16 @@ import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import ReactQuill from "react-quill";
+import { isRoleAuthorized } from "../../utils/utils";
 
 function ViewKB() {
+  let user = null;
+  const userJson = sessionStorage.getItem("user");
+  if (userJson) {
+    user = JSON.parse(userJson);
+  } else {
+    console.error("No user found.");
+  }
   const navigate = useNavigate();
 
   const { id } = useParams();
@@ -173,9 +181,15 @@ function ViewKB() {
           alignItems="stretch"
         >
           {isReadOnly ? (
-            <Button variant="contained" onClick={() => setIsReadOnly(false)}>
-              Edit
-            </Button>
+            isRoleAuthorized(user.role_id, [
+              "Agent",
+              "Manager",
+              "Team Lead",
+            ]) && (
+              <Button variant="contained" onClick={() => setIsReadOnly(false)}>
+                Edit
+              </Button>
+            )
           ) : (
             <>
               <Button
