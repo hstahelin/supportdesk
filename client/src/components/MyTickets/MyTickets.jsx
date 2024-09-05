@@ -3,12 +3,23 @@ import queryString from "query-string";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { Box, Chip, Typography, Breadcrumbs, Link, Paper } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Typography,
+  Breadcrumbs,
+  Link,
+  Paper,
+  Button,
+  Fab,
+  Tooltip,
+} from "@mui/material";
 import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-
+import KeyboardDoubleArrowUpTwoToneIcon from "@mui/icons-material/KeyboardDoubleArrowUpTwoTone";
+import PlaylistAddTwoToneIcon from "@mui/icons-material/PlaylistAddTwoTone";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { formatDate } from "../../utils/utils";
+import { formatDate, scrollToTop } from "../../utils/utils";
 
 import "./MyTickets.scss";
 import NotData from "../NoData/NoData";
@@ -34,8 +45,6 @@ function MyTickets({ user, ticketsFilter }) {
       const url = `http://localhost:8080/tickets${
         queryStringParams ? `?${queryStringParams}` : ""
       }`;
-
-      console.log("url: ", url);
 
       const response = await axios.get(url, {
         withCredentials: true,
@@ -97,16 +106,20 @@ function MyTickets({ user, ticketsFilter }) {
       flex: 0.9,
       headerClassName: "grid--header",
       getActions: (params) => [
-        <GridActionsCellItem
-          icon={<InfoOutlinedIcon />}
-          label="Info"
-          onClick={() => ticketDetails(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<EditNoteTwoToneIcon />}
-          label="Edit"
-          onClick={() => ticketEdit(params.id)}
-        />,
+        <Tooltip title="Ticket Details">
+          <GridActionsCellItem
+            icon={<InfoOutlinedIcon />}
+            label="Info"
+            onClick={() => ticketDetails(params.id)}
+          />
+        </Tooltip>,
+        <Tooltip title="Edit Ticket">
+          <GridActionsCellItem
+            icon={<EditNoteTwoToneIcon />}
+            label="Edit"
+            onClick={() => ticketEdit(params.id)}
+          />
+        </Tooltip>,
       ],
     },
     // {
@@ -255,7 +268,26 @@ function MyTickets({ user, ticketsFilter }) {
       {tickets.length === 0 ? (
         <NotData />
       ) : (
-        <Paper elevation={4} className="paper" square={false}>
+        <Paper
+          elevation={4}
+          className="paper"
+          square={false}
+          sx={{
+            padding: 2,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            marginTop: 2,
+          }}
+        >
+          <Button
+            startIcon={<PlaylistAddTwoToneIcon />}
+            variant="contained"
+            sx={{ width: "20%", marginLeft: "auto" }}
+            onClick={() => navigate("/dashboard/createticket")}
+          >
+            Create Ticket
+          </Button>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -272,6 +304,16 @@ function MyTickets({ user, ticketsFilter }) {
             }}
             pageSizeOptions={[10, 25, 50]}
           />
+          <Tooltip title="Scroll Up">
+            <Fab
+              color="secondary"
+              size="small"
+              sx={{ marginLeft: "auto" }}
+              onClick={() => scrollToTop()}
+            >
+              <KeyboardDoubleArrowUpTwoToneIcon />
+            </Fab>
+          </Tooltip>
         </Paper>
       )}
     </Box>

@@ -85,13 +85,10 @@ function CreateTicket() {
   const [agents, setAgents] = useState([]);
   const fetchAgents = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/users",
-        {
-          params: { role: "Agent" },
-        },
-        { withCredentials: true }
-      );
+      const response = await axios.get("http://localhost:8080/users", {
+        params: { role: "Agent" },
+        withCredentials: true,
+      });
 
       setAgents(response.data);
     } catch (error) {
