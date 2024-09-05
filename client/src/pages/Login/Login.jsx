@@ -111,6 +111,9 @@ function Login() {
             onChange={handleChange}
             error={!isFormValid.password}
             helperText={!isFormValid.password && "Password can not be blank."}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSubmit(e);
+            }}
           />
           {loginError && <Alert severity="error">{loginError}</Alert>}
           <Button variant="contained" size="large" onClick={handleSubmit}>

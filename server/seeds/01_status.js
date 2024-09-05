@@ -21,5 +21,9 @@ exports.seed = async function (knex) {
       status_id: 5,
       name: "Canceled",
     },
+    {
+      status_id: 6,
+      name: "Pending",
+    },
   ]);
 };

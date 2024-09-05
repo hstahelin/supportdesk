@@ -22,6 +22,7 @@ import axios from "axios";
 import TicketComments from "../TicketComments/TicketComments";
 import { formatDate } from "../../utils/utils";
 import TicketHistory from "../TicketHistory/TicketHistory";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
 
 function TicketDetails() {
   const navigate = useNavigate();
@@ -121,7 +122,7 @@ function TicketDetails() {
   };
 
   if (!ticketInfo) {
-    return <h1>{errorMessage}</h1>;
+    return <NotLoggedIn errorMessage={errorMessage} />;
   }
   return (
     <Box component="section" sx={{ p: 2 }}>

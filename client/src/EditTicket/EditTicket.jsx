@@ -186,8 +186,8 @@ function EditTicket() {
                         <MenuItem value={2}>In Progress</MenuItem>
                         <MenuItem value={3}>Escalated</MenuItem>
                         <MenuItem value={4}>Solved</MenuItem>
-                        <MenuItem value={5}>Pending</MenuItem>
-                        <MenuItem value={6}>Cancelled</MenuItem>
+                        <MenuItem value={5}>Canceled</MenuItem>
+                        <MenuItem value={6}>Pending</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
