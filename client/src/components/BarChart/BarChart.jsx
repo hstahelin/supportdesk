@@ -33,8 +33,6 @@ function BarChart({ data }) {
     return { label, month, year, status: ticket.status };
   });
 
-  console.log("formattedData: ", formattedData);
-
   const transformedData = formattedData.reduce((accumulator, ticket) => {
     // Find if the combination of month and year already exists
     let existingEntry = accumulator.find(
@@ -60,8 +58,6 @@ function BarChart({ data }) {
 
     return accumulator;
   }, []);
-
-  console.log("transformedData: ", transformedData);
 
   const sortedData = transformedData.sort((a, b) => {
     // First, compare by year

@@ -30,7 +30,7 @@ import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
 
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { formatDate } from "../utils/utils";
+import { formatDate } from "../../utils/utils";
 
 function EditTicket() {
   const navigate = useNavigate();

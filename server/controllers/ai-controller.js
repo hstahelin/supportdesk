@@ -36,9 +36,9 @@ const getResponse = async (req, res) => {
     // );
 
     // const summary = response.data.choices[0].message.content.trim();
-    const greeting = "Thank you for contacting SupportDesk,\n";
+    const greeting = "Thank you for contacting SupportDesk, \n\n";
     const goodbye =
-      "\nYour inquiry is important to us. This response was auto-generated, so please verify the information provided.";
+      "\n\nYour inquiry is important to us. This response was auto-generated, so please verify the information provided.";
     const summary =
       greeting + "CHAT GPT RESPONSE TEXT PLACEHOLDER . . ." + goodbye;
     res.json({ summary });

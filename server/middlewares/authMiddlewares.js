@@ -6,10 +6,23 @@ const ensureAuthenticated = (req, res, next) => {
 };
 
 const ensureAdmin = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role_id === 2) {
+  if (
+    req.isAuthenticated() &&
+    (req.user.role_id === 2 || req.user.role_id === 3)
+  ) {
     return next();
   }
   res.status(403).json({ message: "Access denied" });
 };
 
-module.exports = { ensureAuthenticated, ensureAdmin };
+const ensureAgent = (req, res, next) => {
+  if (
+    req.isAuthenticated() &&
+    (req.user.role_id === 2 || req.user.role_id === 3 || req.user.role_id === 1)
+  ) {
+    return next();
+  }
+  res.status(403).json({ message: "Access denied" });
+};
+
+module.exports = { ensureAuthenticated, ensureAdmin, ensureAgent };

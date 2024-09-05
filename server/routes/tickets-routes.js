@@ -2,6 +2,7 @@ const express = require("express");
 const {
   ensureAuthenticated,
   ensureAdmin,
+  ensureAgent,
 } = require("../middlewares/authMiddlewares");
 const router = express.Router();
 const ticketsController = require("../controllers/tickets-controller");
@@ -22,7 +23,7 @@ router
 router
   .route("/:id")
   .get(ensureAuthenticated, ticketsController.getOne)
-  .put(ticketsController.updateTicket);
+  .put(ensureAuthenticated, ticketsController.updateTicket);
 
 router
   .route("/:id/comments")

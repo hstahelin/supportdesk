@@ -11,7 +11,7 @@ import CreateTicket from "./components/CreateTicket/CreateTicket";
 import TicketDetails from "./components/TicketDetails/TicketDetails";
 import ViewKB from "./components/ViewKB/ViewKB";
 import CreateKB from "./components/CreateKB/CreateKB";
-import EditTicket from "./EditTicket/EditTicket";
+import EditTicket from "./components/EditTicket/EditTicket";
 import UserDetail from "./components/UserDetail/UserDetail";
 
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));

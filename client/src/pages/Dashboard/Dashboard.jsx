@@ -3,48 +3,55 @@ import { useNavigate } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import { getUserRole, isLoggedIn } from "../../utils/session";
+import NotLoggedIn from "../../components/NotLoggedIn/NotLoggedIn";
 
 function Dashboard({ Content, ticketsFilter }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isUserLoggedIn, setIsUserLoggedIn] = useState(isLoggedIn());
+  // const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  useEffect(() => {
-    try {
-      const user = JSON.parse(sessionStorage.getItem("user"));
-      if (user) {
-        setIsLoggedIn(true);
-      }
-    } catch (error) {
-      console.error("Failed to parse user data from sessionStorage:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
 
-  useEffect(() => {
-    if (!isLoading && !isLoggedIn) {
-      navigate("/"); // Redirect to the home page if not logged in
-    }
-  }, [isLoading, isLoggedIn, navigate]);
+  // useEffect(() => {
+  //   try {
+  //     const user = JSON.parse(sessionStorage.getItem("user"));
+  //     if (user) {
+  //       setIsLoggedIn(true);
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to parse user data from sessionStorage:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }, []);
 
-  if (isLoading) {
-    return (
-      <div>
-        <Backdrop
-          sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
-          open={true}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      </div>
-    );
-  }
+  // useEffect(() => {
 
-  if (isLoggedIn) {
+  //   if (!isLoading && !isLoggedIn()) {
+  //     navigate("/"); // Redirect to the home page if not logged in
+  //   }
+  // }, [isLoading, isLoggedIn, navigate]);
+
+  // if (isLoading) {
+  //   return (
+  //     <div>
+  //       <Backdrop
+  //         sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+  //         open={true}
+  //       >
+  //         <CircularProgress color="inherit" />
+  //       </Backdrop>
+  //     </div>
+  //   );
+  // }
+  // useEffect(() => {
+  //   setIsUserLoggedIn(isLoggedIn());
+  // });
+
+  if (isLoggedIn()) {
     return <Sidebar Content={Content} ticketsFilter={ticketsFilter} />;
   }
 
-  return null;
+  return <NotLoggedIn />;
 }
 
 export default Dashboard;
