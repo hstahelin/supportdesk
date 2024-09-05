@@ -105,7 +105,7 @@ const getNotifications = async (req, res) => {
       .from("tickets_current as tc")
       .join("tickets_timeline as tt", "tc.ticket_id", "tt.ticket_id")
       .whereIn("tc.ticket_id", ticketIdSubquery)
-      .orderBy("tt.created_at");
+      .orderBy("tt.created_at", "desc");
     res.status(200).json(notifications);
   } catch (error) {
     res.status(400).send(`Error retrieving data: ${error}`);

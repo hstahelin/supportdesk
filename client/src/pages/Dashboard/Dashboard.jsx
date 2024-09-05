@@ -41,8 +41,6 @@ function Dashboard({ Content, ticketsFilter }) {
   //   );
   // }
   useEffect(() => {
-    console.log("Checking user: ", isLoggedIn());
-
     setIsUserLoggedIn(isLoggedIn());
   });
 
