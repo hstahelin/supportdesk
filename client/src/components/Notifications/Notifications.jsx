@@ -29,7 +29,7 @@ function Notifications() {
       }
 
       const response = await axios.get(
-        `http://localhost:8080/users/${user_id}/notifications`,
+        `http://localhost:8080/users/notifications`,
         { withCredentials: true }
       );
 

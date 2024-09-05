@@ -12,6 +12,10 @@ router.route("/").get(ensureAuthenticated, ensureAgent, usersController.getAll);
 
 // router.route("/:id").get(ensureAuthenticated, usersController.getOne);
 router
+  .route("/notifications")
+  .get(ensureAuthenticated, usersController.getNotifications);
+
+router
   .route("/:id")
   .get(ensureAuthenticated, canAccessUser, usersController.getOne)
   .post(ensureAuthenticated, canAccessUser, usersController.updateUser);
@@ -19,9 +23,5 @@ router
 router
   .route("/:id/reportingUsers")
   .get(ensureAuthenticated, ensureAgent, usersController.getReportingUsers);
-
-router
-  .route("/:id/notifications")
-  .get(ensureAuthenticated, usersController.getNotifications);
 
 module.exports = router;

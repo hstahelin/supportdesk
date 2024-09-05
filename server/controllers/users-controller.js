@@ -50,17 +50,13 @@ const getReportingUsers = async (req, res) => {
   }
 };
 
-const getNotifications = async (req, res) => {
-  console.log("FIX NOTIFICATION FOR CUSTOMERS - created_user_id");
-
-  try {
-    const userId = req.params.id;
-
-    const notifications = await knex
+const buildTicketIdSubquery = (knex, currentUserId, currentUserRoleId) => {
+  if (currentUserRoleId == 2 || currentUserRoleId == 3) {
+    return knex
       .withRecursive("user_hierarchy", (qb) => {
         qb.select("user_id")
           .from("USERS")
-          .where("user_id", userId)
+          .where("user_id", currentUserId)
           .unionAll(function () {
             this.select("u.user_id")
               .from("USERS as u")
@@ -71,10 +67,44 @@ const getNotifications = async (req, res) => {
               );
           });
       })
-      .select("uh.user_id", "tt.*", "tc.title")
-      .from("user_hierarchy as uh")
-      .join("tickets_current as tc", "uh.user_id", "tc.assign_user_id")
+      .select("tc.ticket_id")
+      .from("tickets_current as tc")
+      .join("user_hierarchy as uh", function () {
+        this.on(
+          "uh.user_id",
+          knex.raw("coalesce(tc.assign_user_id, ?)", [currentUserId])
+        );
+      }); //Manager or Team Lead
+  } else if (currentUserRoleId == 4) {
+    return knex
+      .select("ticket_id")
+      .from("tickets_current")
+      .where("created_user_id", currentUserId); //Customer
+  } else if (currentUserRoleId == 1) {
+    return knex
+      .select("ticket_id")
+      .from("tickets_current")
+      .where("assign_user_id", currentUserId); //Agent
+  }
+  return null;
+  // Add more filters as needed
+};
+
+const getNotifications = async (req, res) => {
+  const currentUserId = req.user.user_id;
+  const currentUserRoleId = req.user.role_id;
+  try {
+    const ticketIdSubquery = buildTicketIdSubquery(
+      knex,
+      currentUserId,
+      currentUserRoleId
+    );
+
+    const notifications = await knex
+      .select("tt.*", "tc.title")
+      .from("tickets_current as tc")
       .join("tickets_timeline as tt", "tc.ticket_id", "tt.ticket_id")
+      .whereIn("tc.ticket_id", ticketIdSubquery)
       .orderBy("tt.created_at");
     res.status(200).json(notifications);
   } catch (error) {

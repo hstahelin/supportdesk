@@ -67,15 +67,6 @@ const getAll = async (req, res) => {
   }
 };
 
-const getStatusSummary = async (req, res) => {
-  try {
-    const tickets = await knex("status_summary");
-    res.status(200).json(tickets);
-  } catch (error) {
-    res.status(400).send(`Error retrieving info: ${err}`);
-  }
-};
-
 const buildTicketIdSubquery = (knex, currentUserId, currentUserRoleId) => {
   if (currentUserRoleId == 2 || currentUserRoleId == 3) {
     return knex
@@ -150,6 +141,49 @@ const getPrioritySummary = async (req, res) => {
     res.status(400).send(`Error retrieving info: ${err}`);
   }
 };
+
+const getStatusSummary = async (req, res) => {
+  const currentUserId = req.user.user_id;
+  const currentUserRoleId = req.user.role_id;
+  try {
+    const ticketIdSubquery = buildTicketIdSubquery(
+      knex,
+      currentUserId,
+      currentUserRoleId
+    );
+
+    const tickets = await knex
+      .with("TicketCounts", (qb) => {
+        qb.select("status")
+          .count({ tickets: 9 }) // COUNT(9)
+          .from("tickets_current")
+          .whereIn("ticket_id", ticketIdSubquery)
+          .groupBy("status")
+          .orderBy("status");
+      })
+      .select(
+        "status as name",
+        "tickets",
+        knex.raw(
+          "ROUND(tickets * 100.0 / SUM(tickets) OVER (), 2) AS percentage"
+        )
+      )
+      .from("TicketCounts");
+
+    res.status(200).json(tickets);
+  } catch (error) {
+    res.status(400).send(`Error retrieving info: ${err}`);
+  }
+};
+
+// const getStatusSummary = async (req, res) => {
+//   try {
+//     const tickets = await knex("status_summary");
+//     res.status(200).json(tickets);
+//   } catch (error) {
+//     res.status(400).send(`Error retrieving info: ${err}`);
+//   }
+// };
 
 // const getPrioritySummary = async (req, res) => {
 //   try {
