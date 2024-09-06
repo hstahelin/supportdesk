@@ -41,7 +41,7 @@ exports.seed = async function (knex) {
       title: "Dealing with laptop overheating",
       solution:
         "<h1>Prevent and manage laptop overheating.</h1><ol><li>Keep your laptop on a hard surface.</li><li>Clean the fans.</li><li>Use cooling pads.</li></ol>",
-      is_public: true,
+      is_public: false,
     },
     {
       kb_id: 7,
