@@ -4,7 +4,7 @@ import "./KPI.scss";
 function KPI({ label, unit, value, temperature, data }) {
   return (
     <Grid item xs={12} md={6} lg={3}>
-      <Paper elevation={8}>
+      <Paper elevation={4} className="kpi-container kpi-container__hover">
         {/* <Card>
           <CardHeader title={label} className="card-header--small" />
           <CardContent className="card-content">{value}</CardContent>
