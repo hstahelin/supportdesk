@@ -19,6 +19,14 @@ import Barchart from "../BarChart/BarChart";
 import NotData from "../NoData/NoData";
 
 function Overview() {
+  let user = null;
+  const userJson = sessionStorage.getItem("user");
+  if (userJson) {
+    user = JSON.parse(userJson);
+  } else {
+    console.error("No user found.");
+  }
+
   const [statusData, setStatusData] = useState([]);
   const [priorityData, setPriorityData] = useState([]);
 
@@ -57,7 +65,13 @@ function Overview() {
       const response = await axios.get("http://localhost:8080/tickets", {
         withCredentials: true,
       });
-      setTickets(response.data);
+      let fetchedTickets = response.data;
+      if (user.role_id === 1) {
+        fetchedTickets = fetchedTickets.filter(
+          (ticket) => ticket.assign_user_id
+        );
+      }
+      setTickets(fetchedTickets);
     } catch (error) {
       console.error(error);
     }

@@ -1,7 +1,16 @@
 const knex = require("knex")(require("../knexfile"));
 
-const buildTicketIdSubquery = (knex, currentUserId, currentUserRoleId) => {
-  if (currentUserRoleId == 2 || currentUserRoleId == 3) {
+const buildTicketIdSubquery = (
+  knex,
+  currentUserId,
+  currentUserRoleId,
+  source = "all"
+) => {
+  if (
+    currentUserRoleId == 2 ||
+    currentUserRoleId == 3 ||
+    (currentUserRoleId == 1 && source === "all")
+  ) {
     return knex
       .withRecursive("user_hierarchy", (qb) => {
         qb.select("user_id")
@@ -30,7 +39,7 @@ const buildTicketIdSubquery = (knex, currentUserId, currentUserRoleId) => {
       .select("ticket_id")
       .from("tickets_current")
       .where("created_user_id", currentUserId); //Customer
-  } else if (currentUserRoleId == 1) {
+  } else if (currentUserRoleId == 1 && source === "filter") {
     return knex
       .select("ticket_id")
       .from("tickets_current")
@@ -77,7 +86,8 @@ const getPrioritySummary = async (req, res) => {
     const ticketIdSubquery = buildTicketIdSubquery(
       knex,
       currentUserId,
-      currentUserRoleId
+      currentUserRoleId,
+      "filter"
     );
 
     const tickets = await knex
@@ -101,7 +111,7 @@ const getPrioritySummary = async (req, res) => {
     // const tickets = await knex("priority_summary");
     res.status(200).json(tickets);
   } catch (error) {
-    res.status(400).send(`Error retrieving info: ${err}`);
+    res.status(400).send(`Error retrieving info: ${error}`);
   }
 };
 
@@ -112,7 +122,8 @@ const getStatusSummary = async (req, res) => {
     const ticketIdSubquery = buildTicketIdSubquery(
       knex,
       currentUserId,
-      currentUserRoleId
+      currentUserRoleId,
+      "filter"
     );
 
     const tickets = await knex

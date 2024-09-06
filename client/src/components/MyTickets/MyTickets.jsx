@@ -58,6 +58,12 @@ function MyTickets({ user, ticketsFilter }) {
         );
       }
 
+      if (user.role_id === 1 && !ticketsFilter) {
+        fetchedTickets = fetchedTickets.filter(
+          (ticket) => ticket.assign_user_id
+        );
+      }
+
       setTickets(fetchedTickets);
     } catch (error) {
       console.error(error);
