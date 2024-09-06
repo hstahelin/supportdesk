@@ -22,11 +22,13 @@ const getOne = async (req, res) => {
 
 const createKB = async (req, res) => {
   try {
-    const { title, solution } = req.body;
+    const { title, solution, is_public } = req.body;
     const newKB = {
       title,
       solution,
+      is_public,
     };
+
     const insertResult = await knex("kb").insert(newKB);
     const newKBId = insertResult[0];
 
@@ -43,11 +45,12 @@ const createKB = async (req, res) => {
 const updateKB = async (req, res) => {
   try {
     const kbId = req.params.id;
-    const { title, solution } = req.body;
+    const { title, solution, is_public } = req.body;
 
     const newKBData = {
       title,
       solution,
+      is_public,
     };
 
     const rowsUpdated = await knex("kb").where("kb_id", kbId).update(newKBData);

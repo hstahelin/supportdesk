@@ -101,7 +101,7 @@ function KB() {
             </TableHead>
             <TableBody>
               {kbs.map((kb) => {
-                if (user.role_id !== 4 || kb.is_public)
+                if (user.role_id !== 4 || kb.is_public) {
                   return (
                     <TableRow key={kb.kb_id}>
                       <TableCell align="left" component="th" scope="row">
@@ -125,6 +125,8 @@ function KB() {
                       </TableCell>
                     </TableRow>
                   );
+                }
+                return;
               })}
             </TableBody>
           </Table>

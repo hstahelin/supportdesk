@@ -1,5 +1,13 @@
 import "react-quill/dist/quill.snow.css";
-import { Alert, Button, Divider, Stack, TextField } from "@mui/material";
+import {
+  Alert,
+  Button,
+  FormControlLabel,
+  FormGroup,
+  Stack,
+  Switch,
+  TextField,
+} from "@mui/material";
 import { Box, Typography, Breadcrumbs, Link, Paper } from "@mui/material";
 import {
   Dialog,
@@ -24,7 +32,11 @@ function CreateKB() {
   const [editorContent, setEditorContent] = useState(initialValues.solution);
   const [submitError, setSubmitError] = useState(null);
   const [createConfirmation, setCreateConfirmation] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
 
+  const handleChange = (event) => {
+    setIsPublic(event.target.checked);
+  };
   const handleEditorChange = (value) => {
     setEditorContent(value);
   };
@@ -44,6 +56,7 @@ function CreateKB() {
         {
           title,
           solution: editorContent,
+          is_public: isPublic,
         },
         { withCredentials: true }
       );
@@ -131,8 +144,15 @@ function CreateKB() {
           direction={{ xs: "column-reverse", sm: "row" }}
           justifyContent="flex-end"
           alignItems="stretch"
+          gap={2}
         >
-          <Divider />
+          <FormGroup>
+            <FormControlLabel
+              control={<Switch checked={isPublic} onChange={handleChange} />}
+              label="Public?"
+              labelPlacement="start"
+            />
+          </FormGroup>
           <Button variant="contained" onClick={handleSubmit}>
             Save
           </Button>

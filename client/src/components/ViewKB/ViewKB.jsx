@@ -1,5 +1,12 @@
 import "react-quill/dist/quill.snow.css";
-import { Button, Stack, TextField } from "@mui/material";
+import {
+  Button,
+  FormControlLabel,
+  FormGroup,
+  Stack,
+  Switch,
+  TextField,
+} from "@mui/material";
 import {
   Box,
   Typography,
@@ -38,9 +45,11 @@ function ViewKB() {
   const [initialValues, setInitialValues] = useState({
     title: "",
     solution: "",
+    is_public: true,
   });
   const [title, setTitle] = useState(initialValues.title);
   const [editorContent, setEditorContent] = useState(initialValues.solution);
+  const [isPublic, setIsPublic] = useState(true);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [submitError, setSubmitError] = useState(null);
   const [updateConfirmation, setUpdateConfirmation] = useState(false);
@@ -74,8 +83,13 @@ function ViewKB() {
     if (initialValues) {
       setTitle(initialValues.title);
       setEditorContent(initialValues.solution);
+      setIsPublic(initialValues.is_public);
     }
   }, [initialValues]);
+
+  const handleChange = (event) => {
+    setIsPublic(event.target.checked);
+  };
 
   const handleEditorChange = (value) => {
     setEditorContent(value);
@@ -96,6 +110,7 @@ function ViewKB() {
         {
           title,
           solution: editorContent,
+          is_public: isPublic,
         },
         { withCredentials: true }
       );
@@ -180,6 +195,19 @@ function ViewKB() {
           justifyContent="flex-end"
           alignItems="stretch"
         >
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={isPublic}
+                  onChange={handleChange}
+                  disabled={isReadOnly}
+                />
+              }
+              label="Public?"
+              labelPlacement="start"
+            />
+          </FormGroup>
           {isReadOnly ? (
             isRoleAuthorized(user.role_id, [
               "Agent",
