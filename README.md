@@ -148,5 +148,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 # Setup and Installation
 
-- [Client Setup](https://github.com/hstahelin/supportdesk/tree/main/client)
-- [Server Setup](https://github.com/hstahelin/supportdesk/tree/main/server)
+- [Client Setup](/client)
+- [Server Setup](/server)
