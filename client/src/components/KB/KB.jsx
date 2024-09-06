@@ -9,8 +9,6 @@ import {
   Button,
   Fab,
   Tooltip,
-} from "@mui/material";
-import {
   Table,
   TableBody,
   TableCell,
@@ -18,22 +16,31 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import KeyboardDoubleArrowUpTwoToneIcon from "@mui/icons-material/KeyboardDoubleArrowUpTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import HighlightOffTwoToneIcon from "@mui/icons-material/HighlightOffTwoTone";
 import { scrollToTop } from "../../utils/utils";
 import "./KB.scss";
+import Loading from "../Loading/Loading";
 
 function KB() {
-  let user = null;
-  const userJson = sessionStorage.getItem("user");
-  if (userJson) {
-    user = JSON.parse(userJson);
-  } else {
-    console.error("No user found.");
-  }
+  const [user, setUser] = useState(null);
   const [kbs, setKBs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userJson = sessionStorage.getItem("user");
+    if (userJson) {
+      setUser(JSON.parse(userJson));
+      fetchKBData();
+    } else {
+      setIsNotLoggedIn(true);
+      setIsLoading(false);
+    }
+  }, []);
 
   const fetchKBData = async () => {
     try {
@@ -42,13 +49,19 @@ function KB() {
       });
       setKBs(response.data);
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 401) {
+        setIsNotLoggedIn(true);
+      } else {
+        console.error(error);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchKBData();
-  }, []);
+  if (isNotLoggedIn) return <NotLoggedIn />;
+  if (isLoading) return <Loading />;
+
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
@@ -85,7 +98,7 @@ function KB() {
           Create New KB
         </Button>
         <TableContainer component={Paper} elevation={6}>
-          <Table aria-label="Users table" stickyHeader>
+          <Table aria-label="Knowledge Base table" stickyHeader>
             <TableHead>
               <TableRow>
                 <TableCell align="left" className="table--header">
@@ -95,13 +108,13 @@ function KB() {
                   Title
                 </TableCell>
                 <TableCell align="right" className="table--header">
-                  is Public?
+                  Is Public?
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {kbs.map((kb) => {
-                if (user.role_id !== 4 || kb.is_public) {
+                if (!user || user.role_id !== 4 || kb.is_public) {
                   return (
                     <TableRow key={kb.kb_id}>
                       <TableCell align="left" component="th" scope="row">
@@ -115,8 +128,7 @@ function KB() {
                           {kb.title}
                         </Link>
                       </TableCell>
-                      <TableCell align="right" component="th" scope="row">
-                        {/* HighlightOffTwoToneIcon, CheckCircleTwoToneIcon */}
+                      <TableCell align="right">
                         {kb.is_public ? (
                           <CheckCircleTwoToneIcon color="success" />
                         ) : (
@@ -126,7 +138,7 @@ function KB() {
                     </TableRow>
                   );
                 }
-                return;
+                return null; // Explicit return for better readability
               })}
             </TableBody>
           </Table>
@@ -141,20 +153,6 @@ function KB() {
             <KeyboardDoubleArrowUpTwoToneIcon />
           </Fab>
         </Tooltip>
-        {/* <Button
-          variant="contained"
-          endIcon={<PostAddIcon />}
-          href="/dashboard/kb/create"
-          sx={{
-            width: {
-              sm: "100%",
-              md: "25%",
-            },
-            marginLeft: "auto",
-          }}
-        >
-          Create New KB
-        </Button> */}
       </Paper>
     </Box>
   );
