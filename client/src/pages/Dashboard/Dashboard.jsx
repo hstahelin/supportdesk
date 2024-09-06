@@ -40,6 +40,7 @@ function Dashboard({ Content, ticketsFilter }) {
   //     </div>
   //   );
   // }
+  // eslint-disable-next-line
   useEffect(() => {
     setIsUserLoggedIn(isLoggedIn());
   });

@@ -19,6 +19,14 @@ import {
   Collapse,
 } from "@mui/material";
 
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
+
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -31,7 +39,7 @@ import LogoutTwoToneIcon from "@mui/icons-material/LogoutTwoTone";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
-import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
+import SupportDeskIcon from "../../assets/icons/supportdesk.icon.png";
 
 import UserMenu from "../UserMenu/UserMenu";
 import "./Sidebar.scss";
@@ -142,16 +150,24 @@ function Sidebar({ Content, ticketsFilter }) {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:8080/auth/logout",
-        {},
-        { withCredentials: true }
-      );
+      await axios.post("http://localhost:8080/auth/logout", {
+        withCredentials: true,
+      });
       sessionStorage.removeItem("user");
       navigate("/");
     } catch (error) {
       console.error("Logout failed:", error.response?.data || error.message);
     }
+  };
+
+  const [openLogout, setOpenLogout] = useState(false);
+
+  const handleClickOpenLogout = () => {
+    setOpenLogout(true);
+  };
+
+  const handleCloseLogout = () => {
+    setOpenLogout(false);
   };
 
   return (
@@ -458,7 +474,7 @@ function Sidebar({ Content, ticketsFilter }) {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              onClick={handleLogout}
+              onClick={handleClickOpenLogout}
             >
               <Tooltip title="Logout">
                 <ListItemIcon
@@ -474,6 +490,27 @@ function Sidebar({ Content, ticketsFilter }) {
               <ListItemText primary="Logout" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
+
+          <Dialog open={openLogout} onClose={handleCloseLogout}>
+            <DialogTitle>
+              <Typography variant="h5">
+                Are you sure you want to log out?
+              </Typography>
+            </DialogTitle>
+            <DialogContent>
+              <Typography variant="body1" color="textSecondary">
+                You will need to log in again to access your dashboard.
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" onClick={handleCloseLogout}>
+                Stay
+              </Button>
+              <Button variant="contained" color="error" onClick={handleLogout}>
+                Logout
+              </Button>
+            </DialogActions>
+          </Dialog>
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

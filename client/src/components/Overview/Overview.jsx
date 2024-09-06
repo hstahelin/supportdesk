@@ -80,18 +80,16 @@ function Overview() {
   }
 
   function backlog(data) {
-    const total = data.length;
-
     const open = data.filter(
-      (element) => element.status !== "Solved" || element.status !== "Canceled"
+      (element) => element.status !== "Solved" && element.status !== "Canceled"
     ).length;
-    const temperature = open / total;
+    const temperature = open;
 
     return {
       value: open,
       unit: "tickets",
       temperature:
-        temperature >= 0.6 ? "high" : temperature >= 0.4 ? "warning" : "normal",
+        temperature >= 6 ? "high" : temperature >= 4 ? "warning" : "normal",
     };
   }
 
@@ -114,12 +112,13 @@ function Overview() {
       return acc + (lastChangeDate - createdAt);
     }, 0);
 
-    resTime = resTime / (1000 * 60 * 60) / closed.length;
+    resTime = resTime / (1000 * 60 * 60 * 24) / closed.length;
 
     return {
-      value: resTime.toFixed(2),
-      unit: "hours/ticket",
-      temperature: resTime >= 8 ? "high" : resTime >= 4 ? "warning" : "normal",
+      value: resTime.toFixed(1),
+      unit: "days/ticket",
+      temperature:
+        resTime >= 1 ? "high" : resTime >= 0.5 ? "warning" : "normal",
     };
   }
 

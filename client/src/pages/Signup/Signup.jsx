@@ -12,7 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
+import SupportDeskIcon from "../../assets/icons/supportdesk.icon.png";
 import { useState } from "react";
 import axios from "axios";
 import "./Signup.scss";
@@ -62,6 +62,11 @@ function Signup() {
     }
     if (formValues.password !== formValues.verifyPassword) {
       setIsFormValid({ ...isFormValid, verifyPassword: false });
+      return;
+    }
+    if (formValues.password.length <= 8) {
+      setIsFormValid({ ...isFormValid, verifyPassword: false });
+      setRegisterError("Password must be at least 8 characters.");
       return;
     }
     try {

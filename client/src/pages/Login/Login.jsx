@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import SupportDeskIcon from "../../assets/icons/supportdesk.icon.svg";
+import SupportDeskIcon from "../../assets/icons/supportdesk.icon.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -61,6 +61,25 @@ function Login() {
         {
           email: formValues.email,
           password: formValues.password,
+        },
+        { withCredentials: true }
+      );
+
+      const user = response.data.user;
+      sessionStorage.setItem("user", JSON.stringify(user));
+      navigate("/dashboard");
+    } catch (error) {
+      setLoginError(error.response.data.message);
+    }
+  };
+
+  const handleDemoLogin = async (email) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/auth/login",
+        {
+          email: email,
+          password: "password",
         },
         { withCredentials: true }
       );
@@ -128,14 +147,70 @@ function Login() {
           >
             New user? Sign up
           </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="small"
-            onClick={handleOpenForgetPassword}
+          {loginError && (
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="small"
+              onClick={handleOpenForgetPassword}
+            >
+              Forgot your password?
+            </Button>
+          )}
+
+          <Divider />
+
+          <Paper
+            elevation={10}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              // justifyContent: "center",
+              alignItems: "center",
+              gap: 3,
+              padding: 4,
+              backgroundColor: "#f5f5f5",
+            }}
           >
-            Forgot your password?
-          </Button>
+            <Typography variant="h6">Login as Demo User</Typography>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent={"space-evenly"}
+              gap={1}
+            >
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={() => handleDemoLogin("robinnico@supportdesk.com")}
+              >
+                Manager
+              </Button>
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={() => handleDemoLogin("janesmith@supportdesk.com")}
+              >
+                Team Lead
+              </Button>
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={() => handleDemoLogin("frankclark@supportdesk.com")}
+              >
+                Support Agent
+              </Button>
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={() => handleDemoLogin("ivy.moore@company.com")}
+              >
+                Customer
+              </Button>
+            </Box>
+          </Paper>
+
           <Snackbar
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             open={openForgot}
