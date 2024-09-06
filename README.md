@@ -2,7 +2,7 @@
 
 ## Overview
 
-SupportDesk is a platform designed to streamline and enhance the efficiency of customer support teams. It provides tools to manage the entire lifecycle of support tickets, from creation and prioritization to assignment, resolution, and closure. By addressing the common challenges faced by support teams, SupportDesk aims to promote a more responsive, organized, and effective approach to customer support.
+SupportDesk is a platform designed to streamline and enhance the efficiency of customer support teams. It provides tools to manage the entire lifecycle of support tickets, from creation and prioritization to assignment, resolution, and closure. SupportDesk aims to promote a responsive, organized, and effective approach to customer support.
 
 ### Problem
 
@@ -16,7 +16,7 @@ SupportDesk is intended for use by customer support teams across various industr
 
   - **Create, View, Edit Tickets**: Can create new support tickets, view assigned tickets, and update ticket status, priority or details.
   - **Comment on Tickets**: Add comments to tickets they are working on or assigned to.
-  - **Access Knowledge Base**: Search and view articles in the Knowledge Base to resolve issues.
+  - **Access Knowledge Base**: Create, search and view articles in the Knowledge Base to resolve issues.
 
 - **Team Lead / Managers**
 
@@ -34,13 +34,13 @@ SupportDesk is intended for use by customer support teams across various industr
 
 ### Features
 
-- **Ticket Creation and Management**: Users can create new support tickets, including details like customer information, issue description, and priority level.
+- **Ticket Creation and Management**: Users can create new support tickets, including details like issue description, and priority level.
 - **Ticket Prioritization**: Tickets can be prioritized based on factors such as urgency, customer importance, and issue type.
-- **Assignment and Escalation**: Tickets can be assigned to specific agents or teams, with the ability to escalate tickets if needed.
+- **Assignment and Escalation**: Tickets can be assigned to specific agents, with the ability to escalate tickets if needed.
 - **Status Tracking**: Real-time tracking of ticket status, including updates on progress and resolution.
-- **Automated Responses**: When a ticket is created, an automated response is created with first troubleshooting steps, based on the ticket description, reducing response times.
+- **Automated Responses**: When a ticket is created, an automated response can be created with first troubleshooting steps, based on the ticket description, reducing response times.
 - **Knowledge Base/FAQ**: A centralized repository of information that both agents and customers can access for self-service.
-- **Reporting and Analytics**: Comprehensive reports on ticket volume, response times, customer satisfaction, and team performance.
+- **Reporting and Analytics**: Comprehensive reports on ticket volume, backlog, resolution times, and team performance.
 - **Role-Based Access Control**: Different access levels for agents, team leads, and managers, ensuring data security and relevant visibility.
   ![User Interaction](/images/UserInteraction.png)
 
@@ -48,59 +48,73 @@ SupportDesk is intended for use by customer support teams across various industr
 
 ### Tech Stack
 
-- **Styling**: CSS/Sass for custom styles and animations.
+- **Styling**: Material UI, Sass and CSS for custom styles and animations.
 - **Frontend**: React.js for building dynamic user interfaces.
 - **Backend**: Node.js with Express for building the server-side logic.
 - **Database**: MySQL for managing relational data.
 - **Authentication**: Passport.js.
 - **Libraries**:
   - `Knex.js` for SQL query building.
-  - `express-validator` for input validation.
+  - `axios` for making Http Requests from the browser.
+  - `react-quill` for adding a WYSIWYG text editor.
+  - `mui` Material UI, for styled components.
+  - `passport` for authentication in Node.js.
 
 ### APIs
 
-- **Third-Party Email API**: For sending automated email notifications (SendGrid: https://www.twilio.com/docs/sendgrid/for-developers/sending-email/quickstart-nodejs#nodejs).
 - **Third-Party AI**: For creating automated responses (OpenAI: https://platform.openai.com/docs/libraries/node-js-library).
 
 ### Sitemap
 
 1. **Login/Sign Up**: User authentication pages.
-2. **Dashboard**: Overview of current tickets, quick stats, and alerts.
+2. **Dashboard**: Comprehensive overview of team performance, including ticket statistics, and KPIs.
 3. **Ticket Management**: Create, view, edit, and manage support tickets.
-4. **Knowledge Base/FAQ**: Access to common issues and resolutions.
-5. **Reports & Analytics**: Detailed reports on support performance.
-6. **User Profile**: Manage user information and settings.
-7. **Admin Panel**: Role management, system settings, and user permissions.
-
-### Mockups
-
-- **Login Page**: Clean and simple login interface with branding.
-- **Dashboard**: Overview screen with ticket summaries and quick actions.
-- **Ticket Details**: Detailed view of a support ticket with all relevant information.
-- **Reports Page**: Graphical representation of data for easy analysis.
+4. **User & Roles**: Manage user information and roles.
+5. **Notifications**: Real time update on ticket changes.
+6. **Knowledge Base/FAQ**: Access to common issues and resolutions.
 
 ### Data
 
 - **SQL Diagram**
   ![SQL Diagram](images/ER.Diagram.png)
 - **ER Considerations**:
-  - **USER_ROLES**: A user could have multiple roles.
   - **ROLES, STATUS & PRIORITIES**: Tables to store roles, status and priority options, making it easier to populate dropdowns or lists.
 
 ### Endpoints
 
-- **GET /api/tickets**: Fetch all tickets.
-- **GET /api/tickets/:id**: Fetch single ticket.
-- **POST /api/tickets**: Create a new ticket.
-- **PUT /api/tickets/:id**: Update ticket information.
-- **DELETE /api/tickets/:id**: Delete a ticket.
-- **GET /api/users**: Fetch users information.
-- **GET /api/users/:id**: Fetch user information.
-- **GET /api/users/:id/tickets**: Fetch all tickets for a user.
+- **Tickets**
+
+  - **GET /tickets**: Fetch all tickets.
+  - **POST /tickets**: Create a new ticket.
+  - **GET /tickets/status-summary**: Get a summary of ticket statuses.
+  - **GET /tickets/priority-summary**: Get a summary of ticket priorities.
+  - **GET /tickets/:id**: Fetch a single ticket by ID.
+  - **PUT /tickets/:id**: Update a ticket by ID.
+  - **GET /tickets/:id/comments**: Fetch comments for a specific ticket.
+  - **POST /tickets/:id/comments**: Add a comment to a specific ticket.
+  - **GET /tickets/:id/timeline**: Fetch the timeline of a specific ticket.
+
+- **Users**
+
+  - **GET /users**: Fetch all users.
+  - **GET /users/notifications**: Get notifications for the authenticated user.
+  - **GET /users/:id**: Fetch a specific user by ID.
+  - **POST /users/:id**: Update a specific user by ID.
+  - **GET /users/:id/reportingUsers**: Fetch reporting users for a specific user by ID.
+
+- **KB**
+
+  - **GET /kb**: Fetch all knowledge base articles.
+  - **POST /kb**: Create a new knowledge base article.
+  - **GET /kb/:id**: Fetch a specific knowledge base article by ID.
+  - **PUT /kb/:id**: Update a specific knowledge base article by ID.
+
+- **AI**
+  - **POST /ai**: Get a ticket possible solution from the AI.
 
 ### Auth
 
-Authentication will be implemented using Passport.js. Users will need to sign in to access most features, with role-based access control ensuring that each user can only access appropriate data.
+Authentication will be implemented using Passport.js. Users will need to sign in to access features, with role-based access control ensuring that each user can only access appropriate data.
 
 ## Roadmap
 
@@ -124,4 +138,15 @@ Authentication will be implemented using Passport.js. Users will need to sign in
 
 ## Nice-to-haves
 
+- **Teams**: Manage different Support Teams, each with their own set of data , not shared between teams.
+- **Email API**: Sending automated email notifications.
 - **AI-Powered Suggestions**: Integrate AI to suggest responses based on historical data.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+# Setup and Installation
+
+- [Client Setup](https://github.com/hstahelin/supportdesk/tree/main/client)
+- [Server Setup](https://github.com/hstahelin/supportdesk/tree/main/server)
