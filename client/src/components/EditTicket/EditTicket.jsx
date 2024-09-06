@@ -13,6 +13,7 @@ import {
   CardContent,
   CardActions,
   Button,
+  Alert,
 } from "@mui/material";
 
 import {
@@ -46,6 +47,7 @@ function EditTicket() {
   const [ticketInfo, setTicketInfo] = useState(null);
   const [assignList, setAssignList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isEditable, setIsEditable] = useState(true);
 
   const handleChange = (e) => {
     setTicketInfo({
@@ -89,6 +91,9 @@ function EditTicket() {
 
       setInitialvalues(response.data);
       setTicketInfo(response.data);
+      setIsEditable(
+        response.data.status !== "Solved" && response.data.status !== "Canceled"
+      );
     } catch (error) {
       console.error(error);
       const newMessage = error.response?.data?.message || "An error occurred";
@@ -160,6 +165,12 @@ function EditTicket() {
         }}
       >
         <Typography variant="h5">Edit Ticket</Typography>
+        {!isEditable && (
+          <Alert severity="info">
+            Editing is disabled for {ticketInfo.status} tickets. Update the
+            status to make changes.
+          </Alert>
+        )}
 
         <Card>
           <CardHeader
@@ -212,16 +223,19 @@ function EditTicket() {
                           value="3"
                           control={<Radio />}
                           label="Low"
+                          disabled={!isEditable}
                         />
                         <FormControlLabel
                           value="2"
                           control={<Radio color="warning" />}
                           label="Medium"
+                          disabled={!isEditable}
                         />
                         <FormControlLabel
                           value="1"
                           control={<Radio color="error" />}
                           label="High"
+                          disabled={!isEditable}
                         />
                       </RadioGroup>
                     </FormControl>
@@ -241,6 +255,7 @@ function EditTicket() {
                     value={ticketInfo.description}
                     required
                     onChange={handleChange}
+                    disabled={!isEditable}
                   />
                 </Paper>
               </Grid>
@@ -260,6 +275,7 @@ function EditTicket() {
                         label="assign"
                         name="assign_user_id"
                         onChange={handleChange}
+                        disabled={!isEditable}
                       >
                         {assignList.map((agent) => (
                           <MenuItem key={agent.user_id} value={agent.user_id}>

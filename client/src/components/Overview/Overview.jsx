@@ -76,8 +76,10 @@ function Overview() {
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   function unassignedTickets(data) {

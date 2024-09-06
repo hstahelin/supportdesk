@@ -24,6 +24,7 @@ function UserDetail() {
   const [userInfo, setUserInfo] = useState(null);
   const [managers, setManagers] = useState([]);
   const [submitError, setSubmitError] = useState(null);
+  const [fetchError, setFetchError] = useState(null);
 
   const handleChange = (e) => {
     setUserInfo({
@@ -40,7 +41,8 @@ function UserDetail() {
       setUserInfo(response.data);
       setInitialValues(response.data);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      setFetchError(error.response.data.message);
     }
   }
 
@@ -64,7 +66,7 @@ function UserDetail() {
 
   useEffect(() => {
     fetchUsersData();
-    fetchManagerData();
+    if (storedUser.role_id !== 4) fetchManagerData();
     // eslint-disable-next-line
   }, []);
 
@@ -77,7 +79,6 @@ function UserDetail() {
       !isFieldValid(userInfo.last_name) ||
       !isFieldValid(userInfo.email)
     ) {
-      console.log("DISPLAY ERROR ON FAILED VALIDATION");
       setSubmitError("Please fill the required fields.");
       return;
     }
@@ -94,7 +95,11 @@ function UserDetail() {
   };
 
   if (!userInfo) {
-    return <h1>errorMessage</h1>;
+    return (
+      <Alert severity="error">
+        <Typography variant="h5">{fetchError}</Typography>
+      </Alert>
+    );
   }
   return (
     <Box component="section" sx={{ p: 2 }}>
@@ -162,24 +167,25 @@ function UserDetail() {
             value={userInfo.email}
             onChange={handleChange}
           />
-
-          <FormControl fullWidth>
-            <InputLabel id="role-label">Role</InputLabel>
-            <Select
-              required
-              labelId="role-label"
-              id="role_id"
-              name="role_id"
-              value={userInfo.role_id}
-              label="Role"
-              onChange={handleChange}
-            >
-              <MenuItem value={1}>Agent</MenuItem>
-              <MenuItem value={2}>Manager</MenuItem>
-              <MenuItem value={3}>Team Lead</MenuItem>
-              <MenuItem value={4}>Customer</MenuItem>
-            </Select>
-          </FormControl>
+          {storedUser.role_id !== 4 && (
+            <FormControl fullWidth>
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select
+                required
+                labelId="role-label"
+                id="role_id"
+                name="role_id"
+                value={userInfo.role_id}
+                label="Role"
+                onChange={handleChange}
+              >
+                <MenuItem value={1}>Agent</MenuItem>
+                <MenuItem value={2}>Manager</MenuItem>
+                <MenuItem value={3}>Team Lead</MenuItem>
+                <MenuItem value={4}>Customer</MenuItem>
+              </Select>
+            </FormControl>
+          )}
 
           {userInfo.role_id !== 4 && (
             <FormControl fullWidth>

@@ -64,7 +64,7 @@ function Signup() {
       setIsFormValid({ ...isFormValid, verifyPassword: false });
       return;
     }
-    if (formValues.password.length <= 8) {
+    if (formValues.password.length < 8) {
       setIsFormValid({ ...isFormValid, verifyPassword: false });
       setRegisterError("Password must be at least 8 characters.");
       return;

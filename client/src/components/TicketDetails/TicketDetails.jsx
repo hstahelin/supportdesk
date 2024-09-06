@@ -93,14 +93,18 @@ function TicketDetails() {
       color = "default";
       disabled = true;
       variant = "default";
+    } else if (status === "Pending") {
+      color = "warning";
+      disabled = true;
     }
 
     return (
       <Chip
-        label={status}
+        label={`STATUS: ${status}`}
         color={color}
         variant={variant}
         disabled={disabled}
+        sx={{ padding: 2, fontSize: "18px", fontWeight: "bold" }}
       />
     );
   }
@@ -114,7 +118,14 @@ function TicketDetails() {
     else if (priority === "Medium") color = "warning";
     else if (priority === "Low") color = "success";
 
-    return <Chip label={priority} color={color} variant={variant} />;
+    return (
+      <Chip
+        label={`PRIORITY: ${priority}`}
+        color={color}
+        variant={variant}
+        sx={{ padding: 2, fontSize: "18px", fontWeight: "bold" }}
+      />
+    );
   }
 
   const ticketEdit = (ticketId) => {
@@ -191,14 +202,8 @@ function TicketDetails() {
                   >
                     <Grid item xs={12}>
                       <Grid container justifyContent="flex-end" spacing={2}>
-                        <Grid item>
-                          {/* <Chip label={ticketInfo.status} /> */}
-                          {formatStatus(ticketInfo.status)}
-                        </Grid>
-                        <Grid item>
-                          {/* <Chip label={ticketInfo.priority} /> */}
-                          {formatPriority(ticketInfo.priority)}
-                        </Grid>
+                        <Grid item>{formatStatus(ticketInfo.status)}</Grid>
+                        <Grid item>{formatPriority(ticketInfo.priority)}</Grid>
                       </Grid>
                     </Grid>
                     <Grid item xs={12}>
@@ -274,6 +279,7 @@ function TicketDetails() {
                 addComment={addComment}
                 setRemountKey={setRemountKey}
                 input={ticketInfo.description}
+                ticketInfo={ticketInfo}
               />
               {/* <Card>
                 <CardHeader title="Comments" className="card-header" />

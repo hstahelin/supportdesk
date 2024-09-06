@@ -200,6 +200,9 @@ function MyTickets({ user, ticketsFilter }) {
           color = "default";
           disabled = true;
           variant = "default";
+        } else if (status === "Pending") {
+          color = "warning";
+          disabled = true;
         }
 
         return (

@@ -11,6 +11,7 @@ import {
   ListItemIcon,
   Typography,
   Button,
+  Alert,
 } from "@mui/material";
 import SmartToyTwoToneIcon from "@mui/icons-material/SmartToyTwoTone";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
@@ -22,7 +23,13 @@ import { formatDate } from "../../utils/utils";
 import NewComment from "../NewComment/NewComment";
 const AIResponse = lazy(() => import("../AIResponse/AIResponse"));
 
-function TicketComments({ ticketId, addComment, setRemountKey, input }) {
+function TicketComments({
+  ticketId,
+  addComment,
+  setRemountKey,
+  input,
+  ticketInfo,
+}) {
   const [comments, setComments] = useState([]);
   const [trigger, setTrigger] = useState(false);
 
@@ -61,29 +68,31 @@ function TicketComments({ ticketId, addComment, setRemountKey, input }) {
         className="card-header"
       />
       <CardContent>
-        {comments.length === 0 && (
-          <React.Fragment>
-            <Button
-              size="large"
-              variant="contained"
-              color="secondary"
-              endIcon={<AutoFixHighTwoToneIcon />}
-              onClick={handleClickOpenAI}
-            >
-              AI Response?
-            </Button>
-            <Suspense fallback={<div>Loading...</div>}>
-              {openAI && (
-                <AIResponse
-                  input={input}
-                  openAI={openAI}
-                  setOpenAI={setOpenAI}
-                  handleAddComment={handleAddComment}
-                />
-              )}
-            </Suspense>
-          </React.Fragment>
-        )}
+        {comments.length === 0 &&
+          ticketInfo.status !== "Solved" &&
+          ticketInfo.status !== "Canceled" && (
+            <React.Fragment>
+              <Button
+                size="large"
+                variant="contained"
+                color="secondary"
+                endIcon={<AutoFixHighTwoToneIcon />}
+                onClick={handleClickOpenAI}
+              >
+                AI Response?
+              </Button>
+              <Suspense fallback={<div>Loading...</div>}>
+                {openAI && (
+                  <AIResponse
+                    input={input}
+                    openAI={openAI}
+                    setOpenAI={setOpenAI}
+                    handleAddComment={handleAddComment}
+                  />
+                )}
+              </Suspense>
+            </React.Fragment>
+          )}
         <List>
           {comments.map((comment) => {
             return (
@@ -113,7 +122,15 @@ function TicketComments({ ticketId, addComment, setRemountKey, input }) {
             );
           })}
         </List>
-        <NewComment addComment={handleAddComment} />
+        {ticketInfo.status !== "Solved" && ticketInfo.status !== "Canceled" ? (
+          <NewComment addComment={handleAddComment} />
+        ) : (
+          // <Chip label={ticketInfo.status} />
+          <Alert severity="info">
+            No comments can be added as this ticket is marked as{" "}
+            {ticketInfo.status}.
+          </Alert>
+        )}
       </CardContent>
     </Card>
   );
