@@ -36,6 +36,17 @@ function TicketComments({
   const [comments, setComments] = useState([]);
   const [trigger, setTrigger] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const userJson = sessionStorage.getItem("user");
+    if (userJson) {
+      setUser(JSON.parse(userJson));
+      // fetchKBData();
+    } else {
+      setIsLoading(false);
+    }
+  }, []);
 
   async function fetchComments() {
     try {
@@ -55,7 +66,7 @@ function TicketComments({
   useEffect(() => {
     fetchComments();
     // eslint-disable-next-line
-  }, [ticketId, trigger]);
+  }, [ticketId, trigger, user]);
 
   async function handleAddComment(comment, userId) {
     await addComment(comment, userId);
@@ -77,6 +88,7 @@ function TicketComments({
       />
       <CardContent>
         {comments.length === 0 &&
+          user.role_id !== 4 &&
           ticketInfo.status !== "Solved" &&
           ticketInfo.status !== "Canceled" && (
             <React.Fragment>
