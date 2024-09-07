@@ -66,9 +66,12 @@ function ViewKB() {
 
   async function fetchKB(kbId) {
     try {
-      const response = await axios.get(`http://localhost:8080/kb/${kbId}`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/kb/${kbId}`,
+        {
+          withCredentials: true,
+        }
+      );
       setInitialValues(response.data);
     } catch (error) {
       console.error(error);
@@ -106,7 +109,7 @@ function ViewKB() {
 
     try {
       await axios.put(
-        `http://localhost:8080/kb/${id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/kb/${id}`,
         {
           title,
           solution: editorContent,

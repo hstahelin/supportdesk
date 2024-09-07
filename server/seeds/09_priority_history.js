@@ -58,7 +58,7 @@ exports.seed = async function (knex) {
     {
       ticket_id: 10,
       priority_id: 2,
-      created_at: "2024-08-05 8:30:00",
+      created_at: "2024-09-06 8:30:00",
       created_by_user_id: 12,
     },
     {

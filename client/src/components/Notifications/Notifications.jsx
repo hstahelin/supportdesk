@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Box,
   Typography,
@@ -12,41 +14,53 @@ import {
 
 import { List, ListItem } from "@mui/material";
 import ConfirmationNumberTwoToneIcon from "@mui/icons-material/ConfirmationNumberTwoTone";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { formatDate } from "../../utils/utils";
 import NotData from "../NoData/NoData";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+import Loading from "../Loading/Loading";
 
 function Notifications() {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false);
   const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const userJson = sessionStorage.getItem("user");
+    if (userJson) {
+      const parsedUser = JSON.parse(userJson);
+      setUser(parsedUser);
+    } else {
+      setIsNotLoggedIn(true);
+      setIsLoading(false);
+    }
+  }, []);
 
   async function fetchNotifications() {
     try {
-      const storedUser = JSON.parse(sessionStorage.getItem("user"));
-      const user_id = storedUser?.user_id;
-
-      if (!user_id) {
-        throw new Error("User not logged in or session expired");
-      }
-
       const response = await axios.get(
-        `http://localhost:8080/users/notifications`,
+        `${process.env.REACT_APP_API_BASE_URL}/users/notifications`,
         { withCredentials: true }
       );
 
       setNotifications(response.data);
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 401) {
+        setIsNotLoggedIn(true);
+      } else {
+        console.error(error);
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
     fetchNotifications();
-  }, []);
+  }, [user]);
 
-  // if (notifications.length === 0) {
-  //   return <NotData />;
-  // }
+  if (isNotLoggedIn) return <NotLoggedIn />;
+  if (isLoading) return <Loading />;
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">

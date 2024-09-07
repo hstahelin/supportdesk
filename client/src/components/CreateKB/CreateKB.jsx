@@ -52,7 +52,7 @@ function CreateKB() {
 
     try {
       await axios.post(
-        "http://localhost:8080/kb",
+        `${process.env.REACT_APP_API_BASE_URL}/kb`,
         {
           title,
           solution: editorContent,

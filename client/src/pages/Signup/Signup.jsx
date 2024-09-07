@@ -70,7 +70,7 @@ function Signup() {
       return;
     }
     try {
-      await axios.post("http://localhost:8080/auth/register", {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, {
         first_name: formValues.fname,
         last_name: formValues.lname,
         email: formValues.email,

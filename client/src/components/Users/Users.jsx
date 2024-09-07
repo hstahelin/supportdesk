@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -19,49 +20,68 @@ import {
   TableRow,
 } from "@mui/material";
 import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
-
-import { useEffect, useState } from "react";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+import Loading from "../Loading/Loading";
 import "./Users.scss";
+
 function Users() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [customers, setCustomers] = useState([]);
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false);
 
-  const fetchUsersData = async () => {
-    try {
-      const storedUser = JSON.parse(sessionStorage.getItem("user"));
-      const user_id = storedUser?.user_id;
-
-      if (!user_id) {
-        throw new Error("User not logged in or session expired");
-      }
-      const response = await axios.get(
-        `http://localhost:8080/users/${user_id}/reportingUsers`,
-        {
-          withCredentials: true,
-        }
-      );
-      setUsers(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const fetchCustomersData = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/users?role=Customer",
-        { withCredentials: true }
-      );
-      setCustomers(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   useEffect(() => {
-    fetchUsersData();
-    fetchCustomersData();
+    const userJson = sessionStorage.getItem("user");
+    if (userJson) {
+      const parsedUser = JSON.parse(userJson);
+      setUser(parsedUser);
+    } else {
+      setIsNotLoggedIn(true);
+      setIsLoading(false);
+    }
   }, []);
 
+  const fetchDataWithErrorHandling = async (url, setData) => {
+    try {
+      const response = await axios(url, { withCredentials: true });
+      setData(response.data);
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setIsNotLoggedIn(true);
+      } else {
+        console.error(error);
+      }
+    }
+  };
+
+  const fetchUsersData = () =>
+    fetchDataWithErrorHandling(
+      `${process.env.REACT_APP_API_BASE_URL}/users/${user.user_id}/reportingUsers`,
+      setUsers
+    );
+
+  const fetchCustomersData = () =>
+    fetchDataWithErrorHandling(
+      `${process.env.REACT_APP_API_BASE_URL}/users?role=Customer`,
+      setCustomers
+    );
+
+  useEffect(() => {
+    if (user) {
+      const fetchAllData = async () => {
+        setIsLoading(true);
+        await Promise.all([fetchUsersData(), fetchCustomersData()]);
+        setIsLoading(false);
+      };
+      fetchAllData();
+    }
+    // eslint-disable-next-line
+  }, [user]);
+
+  if (isNotLoggedIn) return <NotLoggedIn />;
+  if (isLoading) return <Loading />;
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">

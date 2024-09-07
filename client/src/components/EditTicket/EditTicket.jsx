@@ -73,9 +73,13 @@ function EditTicket() {
         user_id: user_id,
       };
 
-      await axios.put(`http://localhost:8080/tickets/${id}`, updateValues, {
-        withCredentials: true,
-      });
+      await axios.put(
+        `${process.env.REACT_APP_API_BASE_URL}/tickets/${id}`,
+        updateValues,
+        {
+          withCredentials: true,
+        }
+      );
 
       navigate(`/dashboard/tickets/${id}`);
     } catch (error) {
@@ -85,9 +89,12 @@ function EditTicket() {
 
   async function fetchTicketInfo() {
     try {
-      const response = await axios.get(`http://localhost:8080/tickets/${id}`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/tickets/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
 
       setInitialvalues(response.data);
       setTicketInfo(response.data);
@@ -109,10 +116,13 @@ function EditTicket() {
 
   const fetchAgents = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/users", {
-        params: { role: "Agent" },
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users`,
+        {
+          params: { role: "Agent" },
+          withCredentials: true,
+        }
+      );
 
       setAssignList(response.data);
     } catch (error) {

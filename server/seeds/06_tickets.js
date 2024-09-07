@@ -79,7 +79,7 @@ exports.seed = async function (knex) {
       description:
         "My monitor is flickering intermittently. This flickering is not only distracting but also makes it difficult to view and work with content on the screen. Could you please help diagnose and resolve this issue?",
       created_by_user_id: 12,
-      created_at: "2024-08-05 08:30:00",
+      created_at: "2024-09-06 08:30:00",
     },
     {
       ticket_id: 11,

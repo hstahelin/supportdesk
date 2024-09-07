@@ -79,15 +79,21 @@ exports.seed = async function (knex) {
     },
     {
       ticket_id: 10,
-      comments: "We require additional context to diagnose the problem.",
+      comments: "Have you tried using different HDMI cable?.",
       comments_by_user_id: 8,
       created_at: "2024-09-06 10:05:00",
     },
     {
       ticket_id: 10,
-      comments: "Message received, Ill get back to you with the information",
+      comments: "Let me try that and I'll get back to you.",
       comments_by_user_id: 12,
-      created_at: "2024-09-07 10:05:00",
+      created_at: "2024-09-06 13:05:00",
+    },
+    {
+      ticket_id: 10,
+      comments: "Using a different cable helped, this ticket can be closed.",
+      comments_by_user_id: 12,
+      created_at: "2024-09-06 15:12:00",
     },
     {
       ticket_id: 13,

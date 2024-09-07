@@ -44,9 +44,12 @@ function KB() {
 
   const fetchKBData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/kb", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/kb`,
+        {
+          withCredentials: true,
+        }
+      );
       setKBs(response.data);
     } catch (error) {
       if (error.response && error.response.status === 401) {

@@ -35,9 +35,12 @@ function UserDetail() {
 
   async function fetchUsersData() {
     try {
-      const response = await axios.get(`http://localhost:8080/users/${id}`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
       setUserInfo(response.data);
       setInitialValues(response.data);
     } catch (error) {
@@ -52,7 +55,7 @@ function UserDetail() {
         throw new Error("User not logged in or session expired");
       }
       const response = await axios.get(
-        `http://localhost:8080/users/${loggedUserId}/reportingUsers`,
+        `${process.env.REACT_APP_API_BASE_URL}/users/${loggedUserId}/reportingUsers`,
         {
           withCredentials: true,
         }
@@ -83,9 +86,13 @@ function UserDetail() {
       return;
     }
     try {
-      await axios.post(`http://localhost:8080/users/${id}`, userInfo, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/users/${id}`,
+        userInfo,
+        {
+          withCredentials: true,
+        }
+      );
 
       navigate("/dashboard/users");
     } catch (error) {

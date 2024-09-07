@@ -57,7 +57,7 @@ function Login() {
     }
     try {
       const response = await axios.post(
-        "http://localhost:8080/auth/login",
+        `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
         {
           email: formValues.email,
           password: formValues.password,
@@ -76,7 +76,7 @@ function Login() {
   const handleDemoLogin = async (email) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/auth/login",
+        `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
         {
           email: email,
           password: "password",

@@ -17,54 +17,63 @@ import PieTest from "../PieTest/PieTest";
 import KPI from "../KPI/KPI";
 import Barchart from "../BarChart/BarChart";
 import NotData from "../NoData/NoData";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+import Loading from "../Loading/Loading";
 
 function Overview() {
-  let user = null;
-  const userJson = sessionStorage.getItem("user");
-  if (userJson) {
-    user = JSON.parse(userJson);
-  } else {
-    console.error("No user found.");
-  }
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userJson = sessionStorage.getItem("user");
+    if (userJson) {
+      const parsedUser = JSON.parse(userJson);
+      setUser(parsedUser);
+    } else {
+      setIsNotLoggedIn(true);
+      setIsLoading(false);
+    }
+  }, []);
 
   const [statusData, setStatusData] = useState([]);
   const [priorityData, setPriorityData] = useState([]);
 
-  const fetchStatusData = async () => {
+  const fetchDataWithErrorHandling = async (url, setData) => {
     try {
-      const response = await axios(
-        "http://localhost:8080/tickets/status-summary",
-        { withCredentials: true }
-      );
-      setStatusData(response.data);
+      const response = await axios(url, { withCredentials: true });
+      setData(response.data);
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 401) {
+        setIsNotLoggedIn(true);
+      } else {
+        console.error(error);
+      }
     }
   };
 
-  const fetchPriorityData = async () => {
-    try {
-      const response = await axios(
-        "http://localhost:8080/tickets/priority-summary",
-        { withCredentials: true }
-      );
-      setPriorityData(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    fetchStatusData();
-    fetchPriorityData();
-  }, []);
+  const fetchStatusData = () =>
+    fetchDataWithErrorHandling(
+      `${process.env.REACT_APP_API_BASE_URL}/tickets/status-summary`,
+      setStatusData
+    );
+
+  const fetchPriorityData = () =>
+    fetchDataWithErrorHandling(
+      `${process.env.REACT_APP_API_BASE_URL}/tickets/priority-summary`,
+      setPriorityData
+    );
 
   const [tickets, setTickets] = useState([]);
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/tickets", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/tickets`,
+        {
+          withCredentials: true,
+        }
+      );
       let fetchedTickets = response.data;
       if (user.role_id === 1) {
         fetchedTickets = fetchedTickets.filter(
@@ -73,14 +82,29 @@ function Overview() {
       }
       setTickets(fetchedTickets);
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 401) {
+        setIsNotLoggedIn(true);
+      } else {
+        console.error(error);
+      }
     }
   };
 
   useEffect(() => {
-    fetchData();
+    if (user) {
+      const fetchAllData = async () => {
+        setIsLoading(true);
+        await Promise.all([
+          fetchData(),
+          fetchStatusData(),
+          fetchPriorityData(),
+        ]);
+        setIsLoading(false);
+      };
+      fetchAllData();
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [user]);
 
   function unassignedTickets(data) {
     const total = data.length;
@@ -122,8 +146,8 @@ function Overview() {
     }
 
     let resTime = closed.reduce((acc, ticket) => {
-      const lastChangeDate = new Date(ticket.last_change_date);
-      const createdAt = new Date(ticket.created_at);
+      const lastChangeDate = new Date(ticket.last_change_date || 0);
+      const createdAt = new Date(ticket.created_at || 0);
 
       return acc + (lastChangeDate - createdAt);
     }, 0);
@@ -148,11 +172,8 @@ function Overview() {
       };
     }
     const agentCounts = assigned.reduce((accumulator, ticket) => {
-      if (accumulator[ticket.assign_email]) {
-        accumulator[ticket.assign_email]++;
-      } else {
-        accumulator[ticket.assign_email] = 1;
-      }
+      accumulator[ticket.assign_email] =
+        (accumulator[ticket.assign_email] || 0) + 1;
       return accumulator;
     }, {});
 
@@ -172,6 +193,8 @@ function Overview() {
     };
   }
 
+  if (isNotLoggedIn) return <NotLoggedIn />;
+  if (isLoading) return <Loading />;
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">

@@ -1,5 +1,7 @@
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { formatDate } from "../../utils/utils";
 
 import {
   Box,
@@ -16,51 +18,69 @@ import {
   Button,
 } from "@mui/material";
 import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
-import "./TicketDetails.scss";
-import { useEffect, useState } from "react";
-import axios from "axios";
+
 import TicketComments from "../TicketComments/TicketComments";
-import { formatDate } from "../../utils/utils";
 import TicketHistory from "../TicketHistory/TicketHistory";
 import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+import Loading from "../Loading/Loading";
+
+import "./TicketDetails.scss";
 
 function TicketDetails() {
   const navigate = useNavigate();
-
-  let user = null;
-  const userJson = sessionStorage.getItem("user");
-  if (userJson) {
-    user = JSON.parse(userJson);
-  } else {
-    console.error("No user found.");
-  }
   const { id } = useParams();
+
   const [ticketInfo, setTicketInfo] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [remountKey, setRemountKey] = useState(true);
 
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userJson = sessionStorage.getItem("user");
+    if (userJson) {
+      const parsedUser = JSON.parse(userJson);
+      setUser(parsedUser);
+    } else {
+      setIsNotLoggedIn(true);
+      setIsLoading(false);
+    }
+  }, []);
+
   async function fetchTicketInfo() {
     try {
-      const response = await axios.get(`http://localhost:8080/tickets/${id}`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/tickets/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
 
       setTicketInfo(response.data);
     } catch (error) {
-      console.error(error);
-      setErrorMessage(error.response?.data?.message || "An error occurred");
+      if (error.response && error.response.status === 401) {
+        setIsNotLoggedIn(true);
+        setErrorMessage(error.response?.data?.message || "Not Authorized");
+      } else {
+        console.error(error);
+        setErrorMessage(error.response?.data?.message || "An error occurred");
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
     fetchTicketInfo();
     // eslint-disable-next-line
-  }, [id, remountKey]);
+  }, [id, remountKey, user]);
 
   async function addComment(newComment, userId = user.user_id) {
     try {
       await axios.post(
-        `http://localhost:8080/tickets/${id}/comments`,
+        `${process.env.REACT_APP_API_BASE_URL}/tickets/${id}/comments`,
         {
           comments: newComment,
           comments_by: userId,
@@ -132,9 +152,10 @@ function TicketDetails() {
     navigate(`/dashboard/tickets/${ticketId}/edit`);
   };
 
-  if (!ticketInfo) {
-    return <NotLoggedIn errorMessage={errorMessage} />;
-  }
+  if (isNotLoggedIn) return <NotLoggedIn errorMessage={errorMessage} />;
+  if (isLoading) return <Loading />;
+  if (!ticketInfo) return <NotLoggedIn errorMessage={errorMessage} />;
+
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">

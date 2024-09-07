@@ -13,21 +13,27 @@ import axios from "axios";
 function AIResponse({ input, openAI, setOpenAI, handleAddComment }) {
   const [responseAI, setResponseAI] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const handleCloseAI = () => {
     setOpenAI(false);
   };
 
   async function fetchDataAI(text) {
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await axios.post(
-        "http://localhost:8080/ai",
+        `${process.env.REACT_APP_API_BASE_URL}/ai`,
         { text },
         { withCredentials: true }
       );
       setResponseAI(response.data.summary);
-      setIsLoading(false);
     } catch (error) {
       console.error(error);
+      setError("Failed to fetch AI response.");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -56,6 +62,10 @@ function AIResponse({ input, openAI, setOpenAI, handleAddComment }) {
               <Skeleton />
               <Skeleton animation="wave" />
               <Skeleton animation={false} />
+            </DialogContentText>
+          ) : error ? ( // Display error message if there was an error
+            <DialogContentText id="alert-dialog-description" color="error">
+              {error}
             </DialogContentText>
           ) : (
             <DialogContentText id="alert-dialog-description">

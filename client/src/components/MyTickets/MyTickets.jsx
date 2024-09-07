@@ -23,26 +23,42 @@ import { formatDate, scrollToTop } from "../../utils/utils";
 
 import "./MyTickets.scss";
 import NotData from "../NoData/NoData";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+import Loading from "../Loading/Loading";
 
-function MyTickets({ user, ticketsFilter }) {
+function MyTickets({ ticketsFilter }) {
   const navigate = useNavigate();
-
   const location = useLocation();
 
-  const userJson = sessionStorage.getItem("user");
-  if (userJson) {
-    user = JSON.parse(userJson);
-  } else {
-    console.error("No user found.");
-  }
   const [tickets, setTickets] = useState([]);
-  // const [ticketsFilter, setTicketsFilter] = useState("unassigned");
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userJson = sessionStorage.getItem("user");
+    if (userJson) {
+      const parsedUser = JSON.parse(userJson);
+      setUser(parsedUser);
+    } else {
+      setIsNotLoggedIn(true);
+      setIsLoading(false);
+    }
+  }, [ticketsFilter]);
+
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+    // eslint-disable-next-line
+  }, [user, ticketsFilter]);
+
   const fetchData = async () => {
     try {
       const queryParams = queryString.parse(location.search);
       const queryStringParams = queryString.stringify(queryParams);
 
-      const url = `http://localhost:8080/tickets${
+      const url = `${process.env.REACT_APP_API_BASE_URL}/tickets${
         queryStringParams ? `?${queryStringParams}` : ""
       }`;
 
@@ -66,13 +82,15 @@ function MyTickets({ user, ticketsFilter }) {
 
       setTickets(fetchedTickets);
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 401) {
+        setIsNotLoggedIn(true);
+      } else {
+        console.error(error);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line
-  }, [ticketsFilter]);
 
   const [columnVisibilityModel, setColumnVisibilityModel] = useState({});
 
@@ -262,6 +280,9 @@ function MyTickets({ user, ticketsFilter }) {
       assignedLastName: ticket.assign_last_name,
     };
   });
+
+  if (isNotLoggedIn) return <NotLoggedIn />;
+  if (isLoading) return <Loading />;
 
   return (
     <Box component="section" sx={{ p: 2 }}>

@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { lazy, Suspense, useEffect, useState } from "react";
+import { formatDate } from "../../utils/utils";
 
 import {
   Box,
@@ -13,14 +15,15 @@ import {
   Button,
   Alert,
 } from "@mui/material";
+
 import SmartToyTwoToneIcon from "@mui/icons-material/SmartToyTwoTone";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import SupportAgentTwoToneIcon from "@mui/icons-material/SupportAgentTwoTone";
 import AutoFixHighTwoToneIcon from "@mui/icons-material/AutoFixHighTwoTone";
-import "./TicketComments.scss";
-import axios from "axios";
-import { formatDate } from "../../utils/utils";
 import NewComment from "../NewComment/NewComment";
+import Loading from "../Loading/Loading";
+import "./TicketComments.scss";
+
 const AIResponse = lazy(() => import("../AIResponse/AIResponse"));
 
 function TicketComments({
@@ -32,17 +35,20 @@ function TicketComments({
 }) {
   const [comments, setComments] = useState([]);
   const [trigger, setTrigger] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function fetchComments() {
     try {
       const response = await axios.get(
-        `http://localhost:8080/tickets/${ticketId}/comments`,
+        `${process.env.REACT_APP_API_BASE_URL}/tickets/${ticketId}/comments`,
         { withCredentials: true }
       );
 
       setComments(response.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -61,6 +67,8 @@ function TicketComments({
   const handleClickOpenAI = () => {
     setOpenAI(true);
   };
+
+  if (isLoading) return <Loading />;
   return (
     <Card>
       <CardHeader

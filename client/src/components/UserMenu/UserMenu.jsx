@@ -50,7 +50,7 @@ function UserMenu() {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:8080/auth/logout",
+        `${process.env.REACT_APP_API_BASE_URL}/auth/logout`,
         {},
         { withCredentials: true }
       );
@@ -114,7 +114,7 @@ function UserMenu() {
 
       <Dialog open={openLogout} onClose={handleCloseLogout}>
         <DialogTitle>
-          <Typography variant="h5">
+          <Typography fontSize="24px">
             Are you sure you want to log out?
           </Typography>
         </DialogTitle>

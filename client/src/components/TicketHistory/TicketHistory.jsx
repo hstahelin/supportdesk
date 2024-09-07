@@ -1,4 +1,6 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { formatDate } from "../../utils/utils";
 
 import {
   Card,
@@ -10,29 +12,32 @@ import {
   CardContent,
   Divider,
 } from "@mui/material";
-
+import Loading from "../Loading/Loading";
 import "./TicketHistory.scss";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { formatDate } from "../../utils/utils";
 
 function TicketHistory({ ticketId, remountKey }) {
   const [timeline, setTimeline] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   async function fetchHistoryData(id) {
     try {
       const response = await axios.get(
-        `http://localhost:8080/tickets/${id}/timeline`,
+        `${process.env.REACT_APP_API_BASE_URL}/tickets/${id}/timeline`,
         { withCredentials: true }
       );
       setTimeline(response.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
     fetchHistoryData(ticketId);
   }, [ticketId, remountKey]);
+
+  if (isLoading) return <Loading />;
   return (
     <Card>
       <CardHeader title="History" className="card-header" />
