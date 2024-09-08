@@ -92,7 +92,7 @@ const getPrioritySummary = async (req, res) => {
     const tickets = await knex
       .with("TicketCounts", (qb) => {
         qb.select("priority")
-          .count({ tickets: 9 }) // COUNT(9)
+          .count({ tickets: 9 })
           .from("tickets_current")
           .whereIn("ticket_id", ticketIdSubquery)
           .groupBy("priority")
@@ -107,7 +107,6 @@ const getPrioritySummary = async (req, res) => {
       )
       .from("TicketCounts");
 
-    // const tickets = await knex("priority_summary");
     res.status(200).json(tickets);
   } catch (error) {
     res.status(400).send(`Error retrieving info: ${error}`);
@@ -128,7 +127,7 @@ const getStatusSummary = async (req, res) => {
     const tickets = await knex
       .with("TicketCounts", (qb) => {
         qb.select("status")
-          .count({ tickets: 9 }) // COUNT(9)
+          .count({ tickets: 9 })
           .from("tickets_current")
           .whereIn("ticket_id", ticketIdSubquery)
           .groupBy("status")
@@ -148,24 +147,6 @@ const getStatusSummary = async (req, res) => {
     res.status(400).send(`Error retrieving info: ${err}`);
   }
 };
-
-// const getStatusSummary = async (req, res) => {
-//   try {
-//     const tickets = await knex("status_summary");
-//     res.status(200).json(tickets);
-//   } catch (error) {
-//     res.status(400).send(`Error retrieving info: ${err}`);
-//   }
-// };
-
-// const getPrioritySummary = async (req, res) => {
-//   try {
-//     const tickets = await knex("priority_summary");
-//     res.status(200).json(tickets);
-//   } catch (error) {
-//     res.status(400).send(`Error retrieving info: ${err}`);
-//   }
-// };
 
 const create = async (req, res) => {
   const trx = await knex.transaction();

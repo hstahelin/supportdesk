@@ -1,3 +1,6 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Breadcrumbs, Link, Paper } from "@mui/material";
 import {
@@ -11,17 +14,15 @@ import {
   Alert,
 } from "@mui/material";
 import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+import Loading from "../Loading/Loading";
 
 function UserDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [user, setUser] = useState(null);
 
-  const storedUser = JSON.parse(sessionStorage.getItem("user"));
-  // const loggedUserId = storedUser?.user_id;
+  // const storedUser = JSON.parse(sessionStorage.getItem("user"));
   const [initialValues, setInitialValues] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [managers, setManagers] = useState([]);
@@ -34,10 +35,12 @@ function UserDetail() {
     const userJson = sessionStorage.getItem("user");
     if (userJson) {
       setUser(JSON.parse(userJson));
+      fetchUsersData();
     } else {
       setIsNotLoggedIn(true);
       setIsLoading(false);
     }
+    // eslint-disable-next-line
   }, []);
 
   const handleChange = (e) => {
@@ -58,33 +61,33 @@ function UserDetail() {
       setUserInfo(response.data);
       setInitialValues(response.data);
     } catch (error) {
-      // console.error(error);
       setFetchError(error.response.data.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   const fetchManagerData = async () => {
     try {
-      // if (!loggedUserId) {
-      if (!user.user_id) {
-        throw new Error("User not logged in or session expired");
-      }
-      const response = await axios.get(
+      const { data: managers } = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/users/${user.user_id}/reportingUsers`,
         {
           withCredentials: true,
         }
       );
 
-      setManagers(response.data);
+      const filteredManagers = managers.filter(({ user_id }) => user_id !== id);
+
+      setManagers(filteredManagers);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to fetch manager data:", error);
     }
   };
 
   useEffect(() => {
-    fetchUsersData();
-    if (storedUser.role_id !== 4) fetchManagerData();
+    if (user) {
+      fetchManagerData();
+    }
     // eslint-disable-next-line
   }, [user]);
 
@@ -116,6 +119,8 @@ function UserDetail() {
     }
   };
 
+  if (isNotLoggedIn) return <NotLoggedIn />;
+  if (isLoading) return <Loading />;
   if (!userInfo) {
     return (
       <Alert severity="error">
@@ -123,6 +128,7 @@ function UserDetail() {
       </Alert>
     );
   }
+
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
@@ -199,7 +205,7 @@ function UserDetail() {
               value={userInfo.role_id}
               label="Role"
               onChange={handleChange}
-              disabled={storedUser.role_id === 4}
+              disabled={user.role_id === 4}
             >
               <MenuItem value={1}>Agent</MenuItem>
               <MenuItem value={2}>Manager</MenuItem>

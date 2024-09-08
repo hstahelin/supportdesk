@@ -143,7 +143,7 @@ function KB() {
                     </TableRow>
                   );
                 }
-                return null; // Explicit return for better readability
+                return null;
               })}
             </TableBody>
           </Table>

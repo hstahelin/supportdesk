@@ -289,10 +289,6 @@ function TicketDetails() {
                         </Typography>
                       </Paper>
                     </Grid>
-                    {/* <Grid item xs={12} sm={6} lg={4} xl={3}>
-                      PAPER
-
-                    </Grid> */}
                   </Grid>
                 </CardContent>
               </Card>
@@ -303,16 +299,10 @@ function TicketDetails() {
                 input={ticketInfo.description}
                 ticketInfo={ticketInfo}
               />
-              {/* <Card>
-                <CardHeader title="Comments" className="card-header" />
-              </Card> */}
             </Stack>
           </Grid>
           <Grid item xs={12} md={4}>
             <TicketHistory ticketId={id} remountKey={remountKey} />
-            {/* <Card>
-              <CardHeader title="History" className="card-header" />
-            </Card> */}
           </Grid>
         </Grid>
       </Paper>

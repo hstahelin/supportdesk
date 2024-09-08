@@ -236,7 +236,6 @@ function Sidebar({ Content, ticketsFilter }) {
             </ListItemButton>
           </ListItem>
 
-          {/* TICKETS */}
           <ListItem
             disablePadding
             sx={{ display: "block", color: "primary.dark" }}
@@ -264,15 +263,8 @@ function Sidebar({ Content, ticketsFilter }) {
               {open && (openTickets ? <ExpandLess /> : <ExpandMore />)}
             </ListItemButton>
           </ListItem>
-          {/* NEW */}
           <Collapse in={openTickets} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {/* <ListItem
-                disablePadding
-                sx={{ display: "block", color: "primary.dark", pl: 4 }}
-                component={Link}
-                to="/dashboard/tickets"
-              > */}
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -284,17 +276,6 @@ function Sidebar({ Content, ticketsFilter }) {
                 component={Link}
                 to="/dashboard/tickets"
               >
-                {/* <Tooltip title="All Tickets">
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <ConfirmationNumberTwoToneIcon />
-                  </ListItemIcon>
-                </Tooltip> */}
                 <ListItemText
                   primary="All Tickets"
                   sx={{ opacity: open ? 1 : 0, color: "primary.dark" }}
@@ -334,29 +315,14 @@ function Sidebar({ Content, ticketsFilter }) {
                 component={Link}
                 to="/dashboard/createticket"
               >
-                {/* <Tooltip title="All Tickets">
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <ConfirmationNumberTwoToneIcon />
-                  </ListItemIcon>
-                </Tooltip> */}
                 <ListItemText
                   primary="Create Ticket"
                   sx={{ opacity: open ? 1 : 0, color: "primary.dark" }}
                 />
               </ListItemButton>
-
-              {/* </ListItem> */}
             </List>
             <Divider />
           </Collapse>
-          {/* NEW */}
-          {/* TICKETS */}
           {isRoleAuthorized(user.role_id, [
             "Agent",
             "Manager",

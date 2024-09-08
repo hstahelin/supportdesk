@@ -22,7 +22,6 @@ import SupportAgentTwoToneIcon from "@mui/icons-material/SupportAgentTwoTone";
 import AutoFixHighTwoToneIcon from "@mui/icons-material/AutoFixHighTwoTone";
 import NewComment from "../NewComment/NewComment";
 import Loading from "../Loading/Loading";
-import "./TicketComments.scss";
 
 const AIResponse = lazy(() => import("../AIResponse/AIResponse"));
 
@@ -42,7 +41,6 @@ function TicketComments({
     const userJson = sessionStorage.getItem("user");
     if (userJson) {
       setUser(JSON.parse(userJson));
-      // fetchKBData();
     } else {
       setIsLoading(false);
     }
@@ -145,7 +143,6 @@ function TicketComments({
         {ticketInfo.status !== "Solved" && ticketInfo.status !== "Canceled" ? (
           <NewComment addComment={handleAddComment} />
         ) : (
-          // <Chip label={ticketInfo.status} />
           <Alert severity="info">
             No comments can be added as this ticket is marked as{" "}
             {ticketInfo.status}.

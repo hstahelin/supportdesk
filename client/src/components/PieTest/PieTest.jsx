@@ -43,7 +43,6 @@ export default function PieTest({ data, category }) {
             data: formattedData,
             highlightScope: { faded: "global", highlighted: "item" },
             faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
-            // valueFormatter: (e) => `${e.value} tickets`,
             valueFormatter: (e) => "",
           },
         ]}

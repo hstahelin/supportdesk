@@ -87,7 +87,6 @@ const buildTicketIdSubquery = (knex, currentUserId, currentUserRoleId) => {
       .where("assign_user_id", currentUserId); //Agent
   }
   return null;
-  // Add more filters as needed
 };
 
 const getNotifications = async (req, res) => {

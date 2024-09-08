@@ -1,28 +1,23 @@
 import { Box, Typography, Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import NoDataIcon from "@mui/icons-material/InboxOutlined"; // Replace with your preferred icon
+import NoDataIcon from "@mui/icons-material/InboxOutlined";
 
 function NotData({ errorMessage }) {
   const navigate = useNavigate();
 
   const handleCreateTicket = () => {
-    navigate("/dashboard/createticket"); // Adjust the route to your ticket creation page
+    navigate("/dashboard/createticket");
   };
 
   return (
-    // <Container>
     <Box
       sx={{
-        //   height: "60vh",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
         bgcolor: "background.paper",
-        // borderRadius: 3,
-        //   p: 3,
-        // boxShadow: 3,
       }}
     >
       <NoDataIcon sx={{ fontSize: 100, color: "primary.main", my: 2 }} />
@@ -40,7 +35,6 @@ function NotData({ errorMessage }) {
             color="primary"
             onClick={handleCreateTicket}
             size="large"
-            // sx={{ mb: 2 }}
           >
             Create a Ticket
           </Button>
@@ -49,7 +43,6 @@ function NotData({ errorMessage }) {
         ""
       )}
     </Box>
-    // </Container>
   );
 }
 

@@ -146,38 +146,7 @@ function MyTickets({ ticketsFilter }) {
         </Tooltip>,
       ],
     },
-    // {
-    //   field: "id",
-    //   headerName: "ID",
-    //   flex: 0.8,
-    //   headerClassName: "grid--header",
-    //   renderCell: (params) => {
-    //     const id = params.value;
 
-    //     return (
-    //       <>
-    //         <IconButton
-    //           color="primary"
-    //           aria-label="Ticket details"
-    //           size="small"
-    //           onClick={() => ticketDetails(id)}
-    //         >
-    //           <InfoOutlinedIcon />
-    //         </IconButton>
-
-    //         <IconButton
-    //           color="primary"
-    //           aria-label="Ticket details"
-    //           size="small"
-    //           onClick={() => ticketDetails(id)}
-    //         >
-    //           <EditNoteTwoToneIcon />
-    //         </IconButton>
-    //         {id}
-    //       </>
-    //     );
-    //   },
-    // },
     {
       field: "id",
       headerName: "ID",

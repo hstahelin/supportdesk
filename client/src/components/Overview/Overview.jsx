@@ -134,8 +134,6 @@ function Overview() {
   }
 
   function resolutionTime(data) {
-    // const total = data.length;
-
     const closed = data.filter((element) => element.status === "Solved");
     if (closed.length === 0) {
       return {

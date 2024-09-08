@@ -21,7 +21,6 @@ function NewComment({ addComment }) {
     >
       <Grid item xs={12} sm={12} md={8} lg={10}>
         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-          {/* <AccountCircleTwoToneIcon sx={{ color: "action.active", mr: 1, my: 1.5 }}/> */}
           <TextField
             fullWidth
             multiline

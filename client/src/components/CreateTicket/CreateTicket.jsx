@@ -22,7 +22,6 @@ import {
   Alert,
 } from "@mui/material";
 import { isRoleAuthorized } from "../../utils/utils";
-import "./CreateTicket.scss";
 
 function CreateTicket() {
   let user = null;

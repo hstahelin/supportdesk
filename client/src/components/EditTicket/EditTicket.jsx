@@ -122,7 +122,7 @@ function EditTicket() {
   }
 
   async function fetchStatus() {
-    // STATUS is HARd coded nedd to retrieve list from DB
+    // STATUS is Hard coded need to retrieve list from DB
   }
 
   const fetchAgents = async () => {
@@ -221,8 +221,6 @@ function EditTicket() {
                         value={ticketInfo.status_id}
                         label="Status"
                         onChange={handleChange}
-                        // disabled={user.role_id === 4}
-                        // inputProps={{ readOnly: true }}
                       >
                         <MenuItem value={1} disabled={user.role_id === 4}>
                           New

@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import SupportDeskIcon from "../../assets/icons/supportdesk.icon.png";
 import { useState } from "react";
 import axios from "axios";
-import "./Signup.scss";
 
 function Signup() {
   const navigate = useNavigate();

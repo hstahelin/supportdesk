@@ -6,7 +6,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 import NotFound from "./pages/NotFound/NotFound";
-import "./App.scss";
 import CreateTicket from "./components/CreateTicket/CreateTicket";
 import TicketDetails from "./components/TicketDetails/TicketDetails";
 import ViewKB from "./components/ViewKB/ViewKB";

@@ -13,7 +13,6 @@ import {
   Divider,
 } from "@mui/material";
 import Loading from "../Loading/Loading";
-import "./TicketHistory.scss";
 
 function TicketHistory({ ticketId, remountKey }) {
   const [timeline, setTimeline] = useState([]);
