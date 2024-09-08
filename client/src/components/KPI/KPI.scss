@@ -1,0 +1,31 @@
+.card-header {
+  &--small {
+    background-color: #0288d1;
+    color: #fff;
+  }
+}
+
+.kpi-box {
+  color: #fff;
+  &__high {
+    background-color: #ef5350b0;
+  }
+  &__warning {
+    background-color: #ff9800b0;
+  }
+  &__normal {
+    background-color: #4caf50b0;
+  }
+  &__nodata {
+    background-color: #ba68c8;
+  }
+}
+
+.kpi-container {
+  transition: box-shadow 0.5s;
+  transition: transform 0.5s;
+  &__hover:hover {
+    box-shadow: 0px 16px 40px rgba(0, 0, 0, 0.2);
+    transform: scale3d(1.05, 1.1, 1);
+  }
+}

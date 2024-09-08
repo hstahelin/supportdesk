@@ -1,0 +1,18 @@
+@use "../../styles/partials/variables";
+@use "../../styles/partials/mixins";
+@use "../../styles/partials/globals";
+
+.container {
+  padding: 2rem 2rem;
+}
+
+.box {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.logo {
+  width: 3rem;
+}

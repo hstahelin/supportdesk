@@ -1,0 +1,26 @@
+@use "./mixins" as *;
+
+//Dynamic Padding
+:root {
+  --padding-before: 1.5rem;
+  --padding-after: 1rem;
+  --padding-half: 0.5rem;
+  --padding-side: 1rem;
+  @include tablet {
+    --padding-before: 2.25rem;
+    --padding-after: 1.5rem;
+    --padding-half: 0.75rem;
+    --padding-side: 2rem;
+  }
+  @include desktop {
+    --padding-before: 2.5rem;
+    --padding-after: 1.75rem;
+    --padding-half: 0.75rem;
+    --padding-side: 15%;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
