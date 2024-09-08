@@ -18,13 +18,27 @@ import { useParams } from "react-router-dom";
 function UserDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [user, setUser] = useState(null);
+
   const storedUser = JSON.parse(sessionStorage.getItem("user"));
-  const loggedUserId = storedUser?.user_id;
+  // const loggedUserId = storedUser?.user_id;
   const [initialValues, setInitialValues] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [managers, setManagers] = useState([]);
   const [submitError, setSubmitError] = useState(null);
   const [fetchError, setFetchError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userJson = sessionStorage.getItem("user");
+    if (userJson) {
+      setUser(JSON.parse(userJson));
+    } else {
+      setIsNotLoggedIn(true);
+      setIsLoading(false);
+    }
+  }, []);
 
   const handleChange = (e) => {
     setUserInfo({
@@ -51,11 +65,12 @@ function UserDetail() {
 
   const fetchManagerData = async () => {
     try {
-      if (!loggedUserId) {
+      // if (!loggedUserId) {
+      if (!user.user_id) {
         throw new Error("User not logged in or session expired");
       }
       const response = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/users/${loggedUserId}/reportingUsers`,
+        `${process.env.REACT_APP_API_BASE_URL}/users/${user.user_id}/reportingUsers`,
         {
           withCredentials: true,
         }
@@ -71,7 +86,7 @@ function UserDetail() {
     fetchUsersData();
     if (storedUser.role_id !== 4) fetchManagerData();
     // eslint-disable-next-line
-  }, []);
+  }, [user]);
 
   const handleSubmit = async () => {
     const isFieldValid = (field) => {
@@ -193,7 +208,7 @@ function UserDetail() {
             </Select>
           </FormControl>
 
-          {userInfo.role_id !== 4 && (
+          {userInfo.user_id !== user.user_id && userInfo.role_id !== 4 && (
             <FormControl fullWidth>
               <InputLabel id="manager-label">Manager</InputLabel>
               <Select
