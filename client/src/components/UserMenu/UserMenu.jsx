@@ -13,6 +13,7 @@ import {
   DialogActions,
   Button,
   Typography,
+  Box,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
@@ -113,30 +114,32 @@ function UserMenu() {
       </Menu>
 
       <Dialog open={openLogout} onClose={handleCloseLogout}>
-        <DialogTitle>
-          <Typography fontSize="24px">
-            Are you sure you want to log out?
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" color="textSecondary">
-            You will need to log in again to access your dashboard.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            variant="contained"
-            onClick={() => {
-              handleCloseLogout();
-              handleClose();
-            }}
-          >
-            Stay
-          </Button>
-          <Button variant="contained" color="error" onClick={handleLogout}>
-            Logout
-          </Button>
-        </DialogActions>
+        <Box sx={{ padding: "2rem" }}>
+          <DialogTitle>
+            <Typography fontSize="24px">
+              Are you sure you want to log out?
+            </Typography>
+          </DialogTitle>
+          <DialogContent>
+            <Typography variant="body1" color="textSecondary">
+              You will need to log in again to access your dashboard.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              onClick={() => {
+                handleCloseLogout();
+                handleClose();
+              }}
+            >
+              Stay
+            </Button>
+            <Button variant="contained" color="error" onClick={handleLogout}>
+              Logout
+            </Button>
+          </DialogActions>
+        </Box>
       </Dialog>
     </>
   );

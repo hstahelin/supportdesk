@@ -492,24 +492,30 @@ function Sidebar({ Content, ticketsFilter }) {
           </ListItem>
 
           <Dialog open={openLogout} onClose={handleCloseLogout}>
-            <DialogTitle>
-              <Typography fontSize="24px">
-                Are you sure you want to log out?
-              </Typography>
-            </DialogTitle>
-            <DialogContent>
-              <Typography variant="body1" color="textSecondary">
-                You will need to log in again to access your dashboard.
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="contained" onClick={handleCloseLogout}>
-                Stay
-              </Button>
-              <Button variant="contained" color="error" onClick={handleLogout}>
-                Logout
-              </Button>
-            </DialogActions>
+            <Box sx={{ padding: "2rem" }}>
+              <DialogTitle>
+                <Typography fontSize="24px">
+                  Are you sure you want to log out?
+                </Typography>
+              </DialogTitle>
+              <DialogContent>
+                <Typography variant="body1" color="textSecondary">
+                  You will need to log in again to access your dashboard.
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button variant="contained" onClick={handleCloseLogout}>
+                  Stay
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </DialogActions>
+            </Box>
           </Dialog>
         </List>
       </Drawer>
