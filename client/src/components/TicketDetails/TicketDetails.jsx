@@ -25,6 +25,7 @@ import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
 import Loading from "../Loading/Loading";
 
 import "./TicketDetails.scss";
+import NotData from "../NoData/NoData";
 
 function TicketDetails() {
   const navigate = useNavigate();
@@ -154,7 +155,7 @@ function TicketDetails() {
 
   if (isNotLoggedIn) return <NotLoggedIn errorMessage={errorMessage} />;
   if (isLoading) return <Loading />;
-  if (!ticketInfo) return <NotLoggedIn errorMessage={errorMessage} />;
+  if (!ticketInfo) return <NotData errorMessage={errorMessage} />;
 
   return (
     <Box component="section" sx={{ p: 2 }}>

@@ -2,7 +2,7 @@ import { Box, Typography, Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import NoDataIcon from "@mui/icons-material/InboxOutlined"; // Replace with your preferred icon
 
-function NotData() {
+function NotData({ errorMessage }) {
   const navigate = useNavigate();
 
   const handleCreateTicket = () => {
@@ -30,19 +30,24 @@ function NotData() {
         No Data Available
       </Typography>
       <Typography variant="body1" color="textSecondary" mb={4}>
-        It seems like there are no tickets yet. You can create one now!
+        {errorMessage ||
+          "It seems like there are no tickets yet. You can create one now!"}
       </Typography>
-      <Stack direction="row" spacing={2} paddingBottom={3}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleCreateTicket}
-          size="large"
-          // sx={{ mb: 2 }}
-        >
-          Create a Ticket
-        </Button>
-      </Stack>
+      {!errorMessage ? (
+        <Stack direction="row" spacing={2} paddingBottom={3}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCreateTicket}
+            size="large"
+            // sx={{ mb: 2 }}
+          >
+            Create a Ticket
+          </Button>
+        </Stack>
+      ) : (
+        ""
+      )}
     </Box>
     // </Container>
   );
