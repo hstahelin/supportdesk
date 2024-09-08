@@ -46,7 +46,6 @@ const buildTicketIdSubquery = (
       .where("assign_user_id", currentUserId); //Agent
   }
   return null;
-  // Add more filters as needed
 };
 
 const getAll = async (req, res) => {
