@@ -174,25 +174,24 @@ function UserDetail() {
             value={userInfo.email}
             onChange={handleChange}
           />
-          {storedUser.role_id !== 4 && (
-            <FormControl fullWidth>
-              <InputLabel id="role-label">Role</InputLabel>
-              <Select
-                required
-                labelId="role-label"
-                id="role_id"
-                name="role_id"
-                value={userInfo.role_id}
-                label="Role"
-                onChange={handleChange}
-              >
-                <MenuItem value={1}>Agent</MenuItem>
-                <MenuItem value={2}>Manager</MenuItem>
-                <MenuItem value={3}>Team Lead</MenuItem>
-                <MenuItem value={4}>Customer</MenuItem>
-              </Select>
-            </FormControl>
-          )}
+          <FormControl fullWidth>
+            <InputLabel id="role-label">Role</InputLabel>
+            <Select
+              required
+              labelId="role-label"
+              id="role_id"
+              name="role_id"
+              value={userInfo.role_id}
+              label="Role"
+              onChange={handleChange}
+              disabled={storedUser.role_id === 4}
+            >
+              <MenuItem value={1}>Agent</MenuItem>
+              <MenuItem value={2}>Manager</MenuItem>
+              <MenuItem value={3}>Team Lead</MenuItem>
+              <MenuItem value={4}>Customer</MenuItem>
+            </Select>
+          </FormControl>
 
           {userInfo.role_id !== 4 && (
             <FormControl fullWidth>
