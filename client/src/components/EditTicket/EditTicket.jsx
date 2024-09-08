@@ -28,19 +28,28 @@ import {
   TextField,
 } from "@mui/material";
 import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
-
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+import Loading from "../Loading/Loading";
+import NotData from "../NoData/NoData";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { formatDate, isRoleAuthorized } from "../../utils/utils";
 
 function EditTicket() {
-  let user = null;
-  const userJson = sessionStorage.getItem("user");
-  if (userJson) {
-    user = JSON.parse(userJson);
-  } else {
-    console.error("No user found.");
-  }
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userJson = sessionStorage.getItem("user");
+    if (userJson) {
+      setUser(JSON.parse(userJson));
+    } else {
+      setIsNotLoggedIn(true);
+      setIsLoading(false);
+    }
+  }, []);
+
   const navigate = useNavigate();
   const { id } = useParams();
   const [initialValues, setInitialvalues] = useState(null);
@@ -107,6 +116,8 @@ function EditTicket() {
       setErrorMessage((prevMessage) =>
         prevMessage ? `${prevMessage} | ${newMessage}` : newMessage
       );
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -139,11 +150,12 @@ function EditTicket() {
     fetchAgents();
     fetchTicketInfo();
     // eslint-disable-next-line
-  }, []);
+  }, [user]);
 
-  if (!ticketInfo) {
-    return <h1>{errorMessage}</h1>;
-  }
+  if (isNotLoggedIn) return <NotLoggedIn />;
+  if (isLoading) return <Loading />;
+  if (!ticketInfo) return <NotData errorMessage={errorMessage} />;
+
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
@@ -209,13 +221,25 @@ function EditTicket() {
                         value={ticketInfo.status_id}
                         label="Status"
                         onChange={handleChange}
+                        // disabled={user.role_id === 4}
+                        // inputProps={{ readOnly: true }}
                       >
-                        <MenuItem value={1}>New</MenuItem>
+                        <MenuItem value={1} disabled={user.role_id === 4}>
+                          New
+                        </MenuItem>
                         <MenuItem value={2}>In Progress</MenuItem>
-                        <MenuItem value={3}>Escalated</MenuItem>
-                        <MenuItem value={4}>Solved</MenuItem>
-                        <MenuItem value={5}>Canceled</MenuItem>
-                        <MenuItem value={6}>Pending</MenuItem>
+                        <MenuItem value={3} disabled={user.role_id === 4}>
+                          Escalated
+                        </MenuItem>
+                        <MenuItem value={4} disabled={user.role_id === 4}>
+                          Solved
+                        </MenuItem>
+                        <MenuItem value={5} disabled={user.role_id === 4}>
+                          Canceled
+                        </MenuItem>
+                        <MenuItem value={6} disabled={user.role_id === 4}>
+                          Pending
+                        </MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>

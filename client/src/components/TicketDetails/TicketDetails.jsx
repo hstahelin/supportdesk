@@ -23,9 +23,9 @@ import TicketComments from "../TicketComments/TicketComments";
 import TicketHistory from "../TicketHistory/TicketHistory";
 import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
 import Loading from "../Loading/Loading";
+import NotData from "../NoData/NoData";
 
 import "./TicketDetails.scss";
-import NotData from "../NoData/NoData";
 
 function TicketDetails() {
   const navigate = useNavigate();
