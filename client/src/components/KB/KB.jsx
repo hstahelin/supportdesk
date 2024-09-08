@@ -17,13 +17,13 @@ import {
   TableRow,
 } from "@mui/material";
 import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+import Loading from "../Loading/Loading";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import KeyboardDoubleArrowUpTwoToneIcon from "@mui/icons-material/KeyboardDoubleArrowUpTwoTone";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import HighlightOffTwoToneIcon from "@mui/icons-material/HighlightOffTwoTone";
 import { scrollToTop } from "../../utils/utils";
 import "./KB.scss";
-import Loading from "../Loading/Loading";
 
 function KB() {
   const [user, setUser] = useState(null);
@@ -86,20 +86,22 @@ function KB() {
         }}
       >
         <Typography variant="h5">Knowledge Base</Typography>
-        <Button
-          variant="contained"
-          endIcon={<PostAddIcon />}
-          href="/dashboard/kb/create"
-          sx={{
-            width: {
-              sm: "100%",
-              md: "25%",
-            },
-            marginLeft: "auto",
-          }}
-        >
-          Create New KB
-        </Button>
+        {user.role_id !== 4 && (
+          <Button
+            variant="contained"
+            endIcon={<PostAddIcon />}
+            href="/dashboard/kb/create"
+            sx={{
+              width: {
+                sm: "100%",
+                md: "25%",
+              },
+              marginLeft: "auto",
+            }}
+          >
+            Create New KB
+          </Button>
+        )}
         <TableContainer component={Paper} elevation={6}>
           <Table aria-label="Knowledge Base table" stickyHeader>
             <TableHead>

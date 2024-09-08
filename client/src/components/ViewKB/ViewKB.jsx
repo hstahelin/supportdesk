@@ -1,4 +1,6 @@
 import "react-quill/dist/quill.snow.css";
+import axios from "axios";
+import ReactQuill from "react-quill";
 import {
   Button,
   FormControlLabel,
@@ -22,24 +24,21 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import axios from "axios";
-import ReactQuill from "react-quill";
 import { isRoleAuthorized } from "../../utils/utils";
 
+import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
+import NotLoggedIn from "../NotLoggedIn/NotLoggedIn";
+import Loading from "../Loading/Loading";
+import NoData from "../NoData/NoData";
+
 function ViewKB() {
-  let user = null;
-  const userJson = sessionStorage.getItem("user");
-  if (userJson) {
-    user = JSON.parse(userJson);
-  } else {
-    console.error("No user found.");
-  }
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState(false);
 
   const { id } = useParams();
   const [initialValues, setInitialValues] = useState({
@@ -53,6 +52,16 @@ function ViewKB() {
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [submitError, setSubmitError] = useState(null);
   const [updateConfirmation, setUpdateConfirmation] = useState(false);
+
+  useEffect(() => {
+    const userJson = sessionStorage.getItem("user");
+    if (userJson) {
+      setUser(JSON.parse(userJson));
+    } else {
+      setIsNotLoggedIn(true);
+      setIsLoading(false);
+    }
+  }, []);
 
   const handleClickOpen = () => {
     setSubmitError(null);
@@ -75,12 +84,14 @@ function ViewKB() {
       setInitialValues(response.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
     fetchKB(id);
-  }, [id]);
+  }, [id, user]);
 
   useEffect(() => {
     if (initialValues) {
@@ -132,6 +143,12 @@ function ViewKB() {
     [{ align: [] }],
     ["clean"],
   ];
+
+  if (isNotLoggedIn) return <NotLoggedIn />;
+  if (isLoading) return <Loading />;
+  if (!isPublic && user.role_id === 4)
+    return <NoData errorMessage="You don't have access to this KB" />;
+
   return (
     <Box component="section" sx={{ p: 2 }}>
       <Breadcrumbs aria-label="breadcrumb">
