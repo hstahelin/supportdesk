@@ -230,17 +230,37 @@ const create = async (req, res) => {
 };
 
 const getOne = async (req, res) => {
+  const currentUserId = req.user.user_id;
+  const currentUserRoleId = req.user.role_id;
   try {
+    const ticketIdSubquery = buildTicketIdSubquery(
+      knex,
+      currentUserId,
+      currentUserRoleId
+    );
     const ticketId = req.params.id;
-    const ticketFound = await knex("tickets_current")
-      .where("ticket_id", ticketId)
-      .first();
+
+    let query = knex("tickets_current").where({ ticket_id: ticketId }).first();
+
+    let ticketFound = await query;
+
     if (!ticketFound) {
       return res.status(404).json({
         message: `Ticket ID ${ticketId} not found`,
       });
     }
-    res.status(200).json(ticketFound);
+
+    const ticketAccess = await knex("tickets_current")
+      .where({ ticket_id: ticketId })
+      .andWhere("ticket_id", "in", ticketIdSubquery)
+      .first();
+
+    if (!ticketAccess) {
+      res.status(403).json({
+        message: `You don't have access to Ticket ${ticketId}`,
+      });
+    }
+    res.status(200).json(ticketAccess);
   } catch (error) {
     res.status(500).json({
       message: `Unable to retrieve Ticket: ${error.message}`,

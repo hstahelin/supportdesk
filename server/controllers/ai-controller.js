@@ -1,8 +1,6 @@
 const axios = require("axios");
 
 const getResponse = async (req, res) => {
-  // console.log("FIX HARCODED RESPONSE");
-
   const { text } = req.body;
 
   if (!text) {
@@ -39,7 +37,6 @@ const getResponse = async (req, res) => {
     const greeting = "Thank you for contacting SupportDesk, \n\n";
     const goodbye =
       "\n\nYour inquiry is important to us. This response was auto-generated, so please verify the information provided.";
-    // const summary = greeting + "CHAT GPT RESPONSE TEXT PLACEHOLDER . . ." + goodbye;
     const summary = greeting + aiResponse + goodbye;
     res.json({ summary });
   } catch (error) {

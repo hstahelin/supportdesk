@@ -111,7 +111,7 @@ function EditTicket() {
   }
 
   async function fetchStatus() {
-    console.log("FIX HARDCODED STATUS");
+    // STATUS is HARd coded nedd to retrieve list from DB
   }
 
   const fetchAgents = async () => {
