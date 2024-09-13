@@ -33,7 +33,8 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      // secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      secure: false, // Use secure cookies in production
       httpOnly: true, // Prevents JavaScript access to cookies
       sameSite: "lax", // Provides some protection against CSRF
       maxAge: 3600000, // 1 hour
