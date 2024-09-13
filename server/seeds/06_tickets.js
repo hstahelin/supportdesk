@@ -1,6 +1,6 @@
 exports.seed = async function (knex) {
-  await knex("tickets").del();
-  await knex("tickets").insert([
+  await knex("TICKETS").del();
+  await knex("TICKETS").insert([
     {
       ticket_id: 1,
       title: "Unable to connect to VPN",

@@ -1,6 +1,6 @@
 exports.seed = async function (knex) {
-  await knex("kb").del();
-  await knex("kb").insert([
+  await knex("KB").del();
+  await knex("KB").insert([
     {
       kb_id: 1,
       title: "How to reset your VPN",

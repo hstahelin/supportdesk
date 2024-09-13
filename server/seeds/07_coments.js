@@ -1,6 +1,6 @@
 exports.seed = async function (knex) {
-  await knex("comments").del();
-  await knex("comments").insert([
+  await knex("COMMENTS").del();
+  await knex("COMMENTS").insert([
     {
       ticket_id: 1,
       comments: "Need to know if it is a Mac or Windows PC.",

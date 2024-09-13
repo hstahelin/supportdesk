@@ -1,6 +1,6 @@
 exports.seed = async function (knex) {
-  await knex("priorities").del();
-  await knex("priorities").insert([
+  await knex("PRIORITIES").del();
+  await knex("PRIORITIES").insert([
     {
       priority_id: 1,
       name: "High",

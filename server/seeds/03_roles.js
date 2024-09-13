@@ -1,6 +1,6 @@
 exports.seed = async function (knex) {
-  await knex("roles").del();
-  await knex("roles").insert([
+  await knex("ROLES").del();
+  await knex("ROLES").insert([
     {
       role_id: 1,
       name: "Agent",

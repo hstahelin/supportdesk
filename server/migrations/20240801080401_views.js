@@ -24,12 +24,12 @@ SELECT
     s.status_id,
     s.name status,
     sh.created_at
-FROM tickets t JOIN
-    status_history sh ON sh.ticket_id = t.ticket_id JOIN
-    status s ON s.status_id = sh.status_id
+FROM TICKETS t JOIN
+    STATUS_HISTORY sh ON sh.ticket_id = t.ticket_id JOIN
+    STATUS s ON s.status_id = sh.status_id
 WHERE sh.created_at = (
         SELECT MAX(sh2.created_at)
-        FROM status_history sh2
+        FROM STATUS_HISTORY sh2
         WHERE sh2.ticket_id = t.ticket_id
     )
 ;`;
@@ -41,12 +41,12 @@ SELECT
     p.priority_id,
     p.name priority,
     ph.created_at
-FROM tickets t JOIN
-    priority_history ph ON ph.ticket_id = t.ticket_id JOIN
-    priorities p ON p.priority_id = ph.priority_id
+FROM TICKETS t JOIN
+    PRIORITY_HISTORY ph ON ph.ticket_id = t.ticket_id JOIN
+    PRIORITIES p ON p.priority_id = ph.priority_id
 WHERE ph.created_at = (
         SELECT MAX(ph2.created_at)
-        FROM priority_history ph2
+        FROM PRIORITY_HISTORY ph2
         WHERE ph2.ticket_id = t.ticket_id
     )
 ;`;
@@ -60,12 +60,12 @@ SELECT
     u.last_name,
     u.email,
     ah.created_at
-FROM tickets t JOIN
-    assign_history ah ON t.ticket_id = ah.ticket_id JOIN
-    users u ON ah.assign_user_id = u.user_id
+FROM TICKETS t JOIN
+    ASSIGN_HISTORY ah ON t.ticket_id = ah.ticket_id JOIN
+    USERS u ON ah.assign_user_id = u.user_id
 WHERE ah.created_at = (
         SELECT MAX(ah2.created_at)
-        FROM assign_history ah2
+        FROM ASSIGN_HISTORY ah2
         WHERE ah2.ticket_id = t.ticket_id
     )
 ;`;
@@ -110,7 +110,7 @@ WITH TicketCounts AS (
         status, 
         COUNT(9) AS tickets
     FROM 
-        tickets_current
+        TICKETS_CURRENT
     GROUP BY 
         status
         ORDER BY status
@@ -130,7 +130,7 @@ WITH TicketCounts AS (
         priority, 
         COUNT(9) AS tickets
     FROM 
-        tickets_current
+        TICKETS_CURRENT
     GROUP BY 
         priority
         ORDER BY priority
@@ -150,7 +150,7 @@ SELECT
     c.ticket_id, 
     c.comments, 
     c.created_at, 
-    CONCAT(u.first_name, " ", u.last_name) as comments_by_name, 
+    CONCAT(u.first_name, ' ', u.last_name) as comments_by_name, 
     c.comments_by_user_id,
     r.role_id as comments_by_role_id,
     r.name as comments_by_role_name
@@ -163,37 +163,37 @@ FROM COMMENTS c JOIN
 CREATE OR REPLACE VIEW TICKETS_TIMELINE AS
 SELECT
     t.ticket_id,
-    "STATUS" as category,
+    'STATUS' as category,
     s.name,
     sh.created_at
-FROM tickets t JOIN
-    status_history sh ON t.ticket_id = sh.ticket_id JOIN
-    status s ON sh.status_id = s.status_id
+FROM TICKETS t JOIN
+    STATUS_HISTORY sh ON t.ticket_id = sh.ticket_id JOIN
+    STATUS s ON sh.status_id = s.status_id
 UNION
 SELECT
     t.ticket_id,
-    "PRIORITY" as category,
+    'PRIORITY' as category,
     p.name,
     ph.created_at
-FROM tickets t JOIN
-    priority_history ph ON t.ticket_id = ph.ticket_id JOIN
-    priorities p ON ph.priority_id = p.priority_id
+FROM TICKETS t JOIN
+    PRIORITY_HISTORY ph ON t.ticket_id = ph.ticket_id JOIN
+    PRIORITIES p ON ph.priority_id = p.priority_id
 UNION
 SELECT
     t.ticket_id,
-    "ASSIGN" as category,
-    CONCAT(u.first_name, " ", u.last_name),
+    'ASSIGN' as category,
+    CONCAT(u.first_name, ' ', u.last_name),
     ah.created_at
-FROM tickets t JOIN
-    assign_history ah ON t.ticket_id = ah.ticket_id JOIN
-    users u ON ah.assign_user_id = u.user_id
+FROM TICKETS t JOIN
+    ASSIGN_HISTORY ah ON t.ticket_id = ah.ticket_id JOIN
+    USERS u ON ah.assign_user_id = u.user_id
 UNION
 SELECT
     ticket_id,
-    "COMMENT" as category,
+    'COMMENT' as category,
     comments_by_name,
     created_at
-FROM comments_history
+FROM COMMENTS_HISTORY
 ;`;
 
   return knex.schema

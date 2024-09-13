@@ -27,7 +27,7 @@ const buildTicketIdSubquery = (
           });
       })
       .select("tc.ticket_id")
-      .from("tickets_current as tc")
+      .from("TICKETS_CURRENT as tc")
       .join("user_hierarchy as uh", function () {
         this.on(
           "uh.user_id",
@@ -37,12 +37,12 @@ const buildTicketIdSubquery = (
   } else if (currentUserRoleId == 4) {
     return knex
       .select("ticket_id")
-      .from("tickets_current")
+      .from("TICKETS_CURRENT")
       .where("created_user_id", currentUserId); //Customer
   } else if (currentUserRoleId == 1 && source === "filter") {
     return knex
       .select("ticket_id")
-      .from("tickets_current")
+      .from("TICKETS_CURRENT")
       .where("assign_user_id", currentUserId); //Agent
   }
   return null;
@@ -60,7 +60,7 @@ const getAll = async (req, res) => {
     );
     const { email, priority, status } = req.query;
 
-    let query = knex("tickets_current").whereIn("ticket_id", ticketIdSubquery);
+    let query = knex("TICKETS_CURRENT").whereIn("ticket_id", ticketIdSubquery);
 
     if (email) {
       query = query.where("created_email", email);
@@ -93,7 +93,7 @@ const getPrioritySummary = async (req, res) => {
       .with("TicketCounts", (qb) => {
         qb.select("priority")
           .count({ tickets: 9 })
-          .from("tickets_current")
+          .from("TICKETS_CURRENT")
           .whereIn("ticket_id", ticketIdSubquery)
           .groupBy("priority")
           .orderBy("priority");
@@ -128,7 +128,7 @@ const getStatusSummary = async (req, res) => {
       .with("TicketCounts", (qb) => {
         qb.select("status")
           .count({ tickets: 9 })
-          .from("tickets_current")
+          .from("TICKETS_CURRENT")
           .whereIn("ticket_id", ticketIdSubquery)
           .groupBy("status")
           .orderBy("status");
@@ -160,10 +160,10 @@ const create = async (req, res) => {
     } = req.body;
 
     const newTicket = { title, description, created_by_user_id };
-    const ticketResult = await trx("tickets").insert(newTicket);
+    const ticketResult = await trx("TICKETS").insert(newTicket);
     const newTicketId = ticketResult[0];
 
-    const createdTicket = await trx("tickets")
+    const createdTicket = await trx("TICKETS")
       .where({ ticket_id: newTicketId })
       .first();
 
@@ -173,7 +173,7 @@ const create = async (req, res) => {
       created_at: createdTicket.created_at,
       created_by_user_id: createdTicket.created_by_user_id,
     };
-    const statusTicketHistoryResult = await trx("status_history").insert(
+    const statusTicketHistoryResult = await trx("STATUS_HISTORY").insert(
       statusTicketHistory
     );
 
@@ -183,7 +183,7 @@ const create = async (req, res) => {
       created_at: createdTicket.created_at,
       created_by_user_id: createdTicket.created_by_user_id,
     };
-    const priorityTicketHistoryResult = await trx("priority_history").insert(
+    const priorityTicketHistoryResult = await trx("PRIORITY_HISTORY").insert(
       priorityTicketHistory
     );
 
@@ -194,7 +194,7 @@ const create = async (req, res) => {
         created_at: createdTicket.created_at,
         created_by_user_id: createdTicket.created_by_user_id,
       };
-      const assignTicketHistoryResult = await trx("assign_history").insert(
+      const assignTicketHistoryResult = await trx("ASSIGN_HISTORY").insert(
         assignTicketHistory
       );
     }
@@ -221,7 +221,7 @@ const getOne = async (req, res) => {
     );
     const ticketId = req.params.id;
 
-    let query = knex("tickets_current").where({ ticket_id: ticketId }).first();
+    let query = knex("TICKETS_CURRENT").where({ ticket_id: ticketId }).first();
 
     let ticketFound = await query;
 
@@ -231,7 +231,7 @@ const getOne = async (req, res) => {
       });
     }
 
-    const ticketAccess = await knex("tickets_current")
+    const ticketAccess = await knex("TICKETS_CURRENT")
       .where({ ticket_id: ticketId })
       .andWhere("ticket_id", "in", ticketIdSubquery)
       .first();
@@ -252,7 +252,7 @@ const getOne = async (req, res) => {
 const getComments = async (req, res) => {
   try {
     const ticketId = req.params.id;
-    const comments = await knex("comments_history")
+    const comments = await knex("COMMENTS_HISTORY")
       .where("ticket_id", ticketId)
       .orderBy("created_at", "desc");
     res.status(200).json(comments);
@@ -270,10 +270,10 @@ const createComment = async (req, res) => {
       comments_by_user_id: comments_by,
       ticket_id: ticketId,
     };
-    const commentResult = await knex("comments").insert(newComment);
+    const commentResult = await knex("COMMENTS").insert(newComment);
     const newCommentId = commentResult[0];
 
-    const createdComment = await knex("comments")
+    const createdComment = await knex("COMMENTS")
       .where("comment_id", newCommentId)
       .first();
 
@@ -288,7 +288,7 @@ const createComment = async (req, res) => {
 const getTimeline = async (req, res) => {
   try {
     const ticketId = req.params.id;
-    const timeline = await knex("tickets_timeline")
+    const timeline = await knex("TICKETS_TIMELINE")
       .where("ticket_id", ticketId)
       .orderBy("created_at");
 
@@ -312,7 +312,7 @@ const updateTicket = async (req, res) => {
       throw new Error("Missing required fields");
     }
 
-    const ticketFound = await trx("tickets_current")
+    const ticketFound = await trx("TICKETS_CURRENT")
       .where("ticket_id", ticket_id)
       .first();
 
@@ -323,7 +323,7 @@ const updateTicket = async (req, res) => {
     // STATUS
     if (ticketFound.status_id != status_id && status_id) {
       const newStatus = { ticket_id, status_id, created_by_user_id: user_id };
-      await trx("status_history").insert(newStatus);
+      await trx("STATUS_HISTORY").insert(newStatus);
     }
 
     // PRIORITY
@@ -333,7 +333,7 @@ const updateTicket = async (req, res) => {
         priority_id,
         created_by_user_id: user_id,
       };
-      await trx("priority_history").insert(newPriority);
+      await trx("PRIORITY_HISTORY").insert(newPriority);
     }
 
     // ASSIGN
@@ -343,19 +343,19 @@ const updateTicket = async (req, res) => {
         assign_user_id,
         created_by_user_id: user_id,
       };
-      await trx("assign_history").insert(newAssign);
+      await trx("ASSIGN_HISTORY").insert(newAssign);
     }
 
     // DESCRIPTION
     if (ticketFound.description != description && description) {
-      await trx("tickets")
+      await trx("TICKETS")
         .update({ description })
         .where("ticket_id", ticket_id);
     }
 
     await trx.commit();
 
-    const ticketUpdated = await knex("tickets_current")
+    const ticketUpdated = await knex("TICKETS_CURRENT")
       .where("ticket_id", ticket_id)
       .first();
 

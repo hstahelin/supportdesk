@@ -4,7 +4,7 @@ const getAll = async (req, res) => {
   const { role } = req.query;
 
   try {
-    let query = knex("users_list");
+    let query = knex("USERS_LIST");
     if (role) query = query.where("user_role", role);
     const tickets = await query;
     res.status(200).json(tickets);
@@ -42,7 +42,7 @@ const getReportingUsers = async (req, res) => {
       .select("ul.*")
       .select("uh.level")
       .from("user_hierarchy as uh")
-      .join("users_list as ul", "uh.user_id", "ul.user_id")
+      .join("USERS_LIST as ul", "uh.user_id", "ul.user_id")
       .orderBy("uh.path");
     res.status(200).json(users);
   } catch (error) {
@@ -68,7 +68,7 @@ const buildTicketIdSubquery = (knex, currentUserId, currentUserRoleId) => {
           });
       })
       .select("tc.ticket_id")
-      .from("tickets_current as tc")
+      .from("TICKETS_CURRENT as tc")
       .join("user_hierarchy as uh", function () {
         this.on(
           "uh.user_id",
@@ -78,12 +78,12 @@ const buildTicketIdSubquery = (knex, currentUserId, currentUserRoleId) => {
   } else if (currentUserRoleId == 4) {
     return knex
       .select("ticket_id")
-      .from("tickets_current")
+      .from("TICKETS_CURRENT")
       .where("created_user_id", currentUserId); //Customer
   } else if (currentUserRoleId == 1) {
     return knex
       .select("ticket_id")
-      .from("tickets_current")
+      .from("TICKETS_CURRENT")
       .where("assign_user_id", currentUserId); //Agent
   }
   return null;
@@ -101,8 +101,8 @@ const getNotifications = async (req, res) => {
 
     const notifications = await knex
       .select("tt.*", "tc.title")
-      .from("tickets_current as tc")
-      .join("tickets_timeline as tt", "tc.ticket_id", "tt.ticket_id")
+      .from("TICKETS_CURRENT as tc")
+      .join("TICKETS_TIMELINE as tt", "tc.ticket_id", "tt.ticket_id")
       .whereIn("tc.ticket_id", ticketIdSubquery)
       .orderBy("tt.created_at", "desc");
     res.status(200).json(notifications);
@@ -114,7 +114,7 @@ const getNotifications = async (req, res) => {
 const getOne = async (req, res) => {
   try {
     const { id } = req.params;
-    const userFound = await knex("users")
+    const userFound = await knex("USERS")
       .where("user_id", id)
       .first()
       .select(
@@ -143,7 +143,7 @@ const updateUser = async (req, res) => {
   };
 
   try {
-    const rowsUpdated = await knex("users")
+    const rowsUpdated = await knex("USERS")
       .where("user_id", userId)
       .update(userNewData);
 

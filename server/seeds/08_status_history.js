@@ -1,6 +1,6 @@
 exports.seed = async function (knex) {
-  await knex("status_history").del();
-  await knex("status_history").insert([
+  await knex("STATUS_HISTORY").del();
+  await knex("STATUS_HISTORY").insert([
     {
       ticket_id: 1,
       status_id: 1,
