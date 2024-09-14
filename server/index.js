@@ -29,6 +29,7 @@ const corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.length === 0 || allowedOrigins.indexOf(origin) !== -1) {
       // Allow the request
+
       callback(null, true);
     } else {
       // Reject the request

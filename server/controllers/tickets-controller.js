@@ -49,6 +49,12 @@ const buildTicketIdSubquery = (
 };
 
 const getAll = async (req, res) => {
+  if (!req.user || !req.user.user_id || !req.user.role_id) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: User/Role ID is required" });
+  }
+
   const currentUserId = req.user.user_id;
   const currentUserRoleId = req.user.role_id;
 
@@ -79,6 +85,11 @@ const getAll = async (req, res) => {
 };
 
 const getPrioritySummary = async (req, res) => {
+  if (!req.user || !req.user.user_id || !req.user.role_id) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: User/Role ID is required" });
+  }
   const currentUserId = req.user.user_id;
   const currentUserRoleId = req.user.role_id;
   try {
@@ -114,6 +125,11 @@ const getPrioritySummary = async (req, res) => {
 };
 
 const getStatusSummary = async (req, res) => {
+  if (!req.user || !req.user.user_id || !req.user.role_id) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: User/Role ID is required" });
+  }
   const currentUserId = req.user.user_id;
   const currentUserRoleId = req.user.role_id;
   try {
