@@ -9,29 +9,29 @@ const ticketsController = require("../controllers/tickets-controller");
 
 router
   .route("/")
-  .get(ensureAuthenticated, ticketsController.getAll)
-  .post(ensureAuthenticated, ticketsController.create);
+  .get( ticketsController.getAll)
+  .post( ticketsController.create);
 
 router
   .route("/status-summary")
-  .get(ensureAuthenticated, ticketsController.getStatusSummary);
+  .get( ticketsController.getStatusSummary);
 
 router
   .route("/priority-summary")
-  .get(ensureAuthenticated, ticketsController.getPrioritySummary);
+  .get( ticketsController.getPrioritySummary);
 
 router
   .route("/:id")
-  .get(ensureAuthenticated, ticketsController.getOne)
-  .put(ensureAuthenticated, ticketsController.updateTicket);
+  .get( ticketsController.getOne)
+  .put( ticketsController.updateTicket);
 
 router
   .route("/:id/comments")
-  .get(ensureAuthenticated, ticketsController.getComments)
-  .post(ensureAuthenticated, ticketsController.createComment);
+  .get( ticketsController.getComments)
+  .post( ticketsController.createComment);
 
 router
   .route("/:id/timeline")
-  .get(ensureAuthenticated, ticketsController.getTimeline);
+  .get( ticketsController.getTimeline);
 
 module.exports = router;
