@@ -48,6 +48,14 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", process.env.REACT_APP_BASE_URL); // Must be the client URL, not '*'
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "supportdesk_secret_key",
@@ -57,7 +65,7 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === "production", // Cookies should be sent over HTTPS in production
       httpOnly: true, // Prevents JavaScript access to cookies
-      sameSite: "Lax", // Provides some protection against CSRF
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Use "None" in production for cross-site cookies
       maxAge: 3600000, // 1 hour
     },
   })
