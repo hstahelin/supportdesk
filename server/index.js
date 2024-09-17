@@ -27,6 +27,7 @@ const allowedOrigins = process.env.CORS_ORIGINS
 
 const corsOptions = {
   origin: function (origin, callback) {
+    console.log("Request Origin:", origin);
     if (allowedOrigins.length === 0 || allowedOrigins.indexOf(origin) !== -1) {
       // Allow the request
 
